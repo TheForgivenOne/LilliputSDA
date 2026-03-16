@@ -5,32 +5,39 @@ import { SignIn } from '@clerk/nextjs'
 export default function SignInPage() {
   return (
     <div className="min-h-screen bg-stone-50 dark:bg-stone-900 flex items-center justify-center p-8">
-      <SignIn
-        appearance={{
-          baseTheme: undefined,
-          variables: {
-            colorPrimary: '#b45309', // amber-700
-            colorBackground: '#fafaf9', // stone-50
-            colorText: '#1c1917', // stone-900
-          },
-          elements: {
-            rootBox: 'shadow-xl rounded-2xl p-8 bg-white dark:bg-stone-800 w-full max-w-md',
-            card: 'bg-transparent',
-            headerTitle: 'text-2xl font-bold text-stone-900 dark:text-stone-100 text-center mb-2',
-            headerSubtitle: 'text-stone-600 dark:text-stone-400 text-center mb-6',
-            formButtonPrimary: 'bg-amber-700 hover:bg-amber-800 text-white font-medium py-3 px-4 rounded-lg transition-colors shadow-sm',
-            formButtonSecondary: 'border border-stone-300 dark:border-stone-600 text-stone-700 dark:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-700',
-            formFieldInput: 'w-full px-4 py-3 border border-stone-300 dark:border-stone-600 rounded-lg bg-stone-50 dark:bg-stone-700 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-amber-600 focus:border-transparent',
-            formFieldLabel: 'text-sm font-medium text-stone-700 dark:text-stone-300',
-            dividerRow: 'my-4',
-            dividerLine: 'bg-stone-300 dark:bg-stone-600',
-            dividerText: 'text-stone-500 dark:text-stone-400',
-            socialButtonsBlockButton: 'w-full py-3 border border-stone-300 dark:border-stone-600 rounded-lg text-stone-700 dark:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-700 flex items-center justify-center gap-3',
-            footerActionLink: 'text-amber-700 dark:text-amber-500 hover:underline',
-            footerActionText: 'text-stone-600 dark:text-stone-400',
-          },
-        }}
-      />
+      <div className="text-center max-w-md">
+        {/* Construction notice */}
+        <div className="mb-8 p-6 bg-amber-100 dark:bg-amber-900/30 rounded-xl border border-amber-200 dark:border-amber-800/50">
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-600 dark:bg-amber-400"></span>
+            </span>
+            <span className="text-sm font-semibold text-amber-800 dark:text-amber-200 tracking-wide">
+              UNDER CONSTRUCTION
+            </span>
+          </div>
+          <p className="text-amber-700 dark:text-amber-300 text-sm">
+            Authentication is currently disabled while we build the new site.
+          </p>
+        </div>
+        
+        {/* Alternative contact */}
+        <div className="bg-stone-100 dark:bg-stone-800/50 rounded-xl p-6">
+          <p className="text-stone-600 dark:text-stone-300 mb-4">
+            Need to access your account? Contact us directly:
+          </p>
+          <a 
+            href="mailto:info@lilliputsda.org" 
+            className="inline-flex items-center gap-2 px-4 py-2 bg-amber-700 dark:bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-800 dark:hover:bg-amber-700 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Email Us
+          </a>
+        </div>
+      </div>
     </div>
   )
 }

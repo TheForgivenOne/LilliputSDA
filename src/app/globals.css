@@ -3,11 +3,15 @@
 :root {
   --background: #fafaf9;
   --foreground: #1c1917;
+  --accent-warm: #b45309;
+  --accent-cool: #78716c;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-accent-warm: var(--accent-warm);
+  --color-accent-cool: var(--accent-cool);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -16,6 +20,8 @@
   :root {
     --background: #1c1917;
     --foreground: #fafaf9;
+    --accent-warm: #d97706;
+    --accent-cool: #a8a29e;
   }
 }
 
@@ -23,4 +29,87 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent-warm);
+  outline-offset: 2px;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  .animate-pulse {
+    animation: none;
+  }
+  
+  /* Disable all transitions and animations for reduced motion */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mobile menu slide-in animation */
+@keyframes slide-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.animate-slide-in {
+  animation: slide-in 0.2s ease-out;
+}
+
+/* Subtle link hover effect */
+a:not(.no-hover) {
+  transition: color 0.2s ease;
+}
+
+/* Button base styles with better interactions */
+button,
+a[href^="mailto:"] {
+  cursor: pointer;
+}
+
+/* Improved form elements */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+}
+
+/* Subtle background pattern */
+.bg-pattern {
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(180, 83, 9, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(180, 83, 9, 0.02) 0%, transparent 50%);
+}
+
+/* Smooth gradient transitions */
+.gradient-animate {
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Respect reduced motion for gradient animation */
+@media (prefers-reduced-motion: reduce) {
+  .gradient-animate {
+    animation: none;
+  }
 }
