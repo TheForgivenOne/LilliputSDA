@@ -1,101 +1,401 @@
-'use client'
+"use client";
 
-import { Church, Cross, Heart, Users } from "lucide-react";
-import ScriptureSearch from "@/components/ScriptureSearch";
+import { Clock, MapPin, Play, Calendar } from "lucide-react";
+import Link from "next/link";
+import { useMemo, useState, useEffect } from "react";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import { EventCard, SermonCard, AnnouncementCard } from "@/components/ui/Card";
+import { getPlaceholderImage } from "@/lib/utils";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { QuickInfo } from "@/components/features/QuickInfo";
+import { HeroSection } from "@/components/features/HeroSection";
+import { AboutSplit } from "@/components/features/AboutSplit";
+import { QuickMinistryCard } from "@/components/features/QuickMinistryCard";
+import { CTASection } from "@/components/features/CTASection";
+
+interface YouTubeVideo {
+  id: string;
+  title: string;
+  description: string;
+  publishedAt: string;
+  thumbnailUrl: string;
+  duration: string;
+  viewCount: string;
+}
+
+interface ChurchEvent {
+  _id: string;
+  startDate: string;
+  endDate?: string;
+  title: string;
+  location?: string;
+  category?: string;
+  description?: string;
+}
+
+interface Announcement {
+  _id: string;
+  title: string;
+  content: string;
+  date: string;
+  priority?: string;
+  category?: string;
+}
 
 export default function Home() {
-  return (
-    <div className="min-h-screen bg-stone-50 font-sans dark:bg-stone-900 overflow-hidden bg-pattern">
-      {/* Warm decorative backdrop with intentional gradient */}
-      <div className="absolute top-0 right-0 w-[700px] h-[700px] bg-gradient-to-br from-amber-200/40 to-orange-100/20 dark:from-amber-800/20 dark:to-orange-900/10 rounded-full blur-3xl gradient-animate" />
-      
-      {/* Subtle pattern overlay for texture */}
-      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]" 
-           style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+  const events = useQuery(api.eventsQueries.listUpcoming);
+  const announcements = useQuery(api.announcementsQueries.listLatest);
+  
+  const [currentTime] = useState<number>(() => {
+    if (typeof window === "undefined") return 1742236800000;
+    return 1742236800000;
+  });
+  
+  const [sermonVideos, setSermonVideos] = useState<YouTubeVideo[]>([]);
+  const [videosLoading, setVideosLoading] = useState(true);
 
-      <div className="relative z-10 flex min-h-screen items-center justify-between px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24">
-        {/* Left side - Decorative church icons with better hierarchy */}
-        <div className="hidden lg:flex flex-col gap-8 opacity-60 dark:opacity-50">
-          <div className="flex items-center gap-3 group cursor-default">
-            <Cross className="w-10 h-10 text-stone-600 dark:text-stone-400 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors duration-300" />
-            <span className="text-xs text-stone-500 dark:text-stone-500 tracking-wider group-hover:text-stone-700 dark:group-hover:text-stone-300 transition-colors duration-300">
-              COMMUNITY
-            </span>
-          </div>
-          <div className="flex items-center gap-3 ml-8 group cursor-default">
-            <Church className="w-12 h-12 text-amber-700 dark:text-amber-400 group-hover:text-amber-600 dark:group-hover:text-amber-300 transition-colors duration-300" />
-            <span className="text-xs text-stone-500 dark:text-stone-500 tracking-wider group-hover:text-stone-700 dark:group-hover:text-stone-300 transition-colors duration-300">
-              GATHERING
-            </span>
-          </div>
-          <div className="flex items-center gap-3 ml-4 group cursor-default">
-            <Heart className="w-8 h-8 text-red-700 dark:text-red-400 group-hover:text-red-600 dark:group-hover:text-red-300 transition-colors duration-300" />
-            <span className="text-xs text-stone-500 dark:text-stone-500 tracking-wider group-hover:text-stone-700 dark:group-hover:text-stone-300 transition-colors duration-300">
-              FAITH
-            </span>
-          </div>
-        </div>
+  useEffect(() => {
+    async function fetchVideos() {
+      try {
+        const response = await fetch("/api/youtube/videos?maxResults=6");
+        const data = await response.json();
+        if (data.videos && data.videos.length > 0) {
+          setSermonVideos(data.videos);
+        }
+      } catch (err) {
+        console.error("Failed to fetch sermons:", err);
+      } finally {
+        setVideosLoading(false);
+      }
+    }
+    fetchVideos();
+  }, []);
+  
+  const quickInfoContent = useMemo(() => (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <QuickInfo
+        icon={Clock}
+        label="Sabbath Service"
+        value="Saturdays at 11:00 AM"
+      />
+      <QuickInfo icon={MapPin} label="Location" value="Lilliput, Montego Bay" />
+      <QuickInfo icon={Play} label="Livestream" value="Watch Online" />
+    </div>
+  ), []);
 
-        {/* Center - Main content */}
-        <main className="flex-1 max-w-2xl text-center lg:text-left lg:ml-8 py-8">
-          {/* Status badge with better hierarchy */}
-          <div className="inline-flex items-center gap-3 px-4 py-2.5 bg-amber-100 dark:bg-amber-900/30 rounded-full mb-10 border border-amber-200 dark:border-amber-800/50">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-600 dark:bg-amber-400"></span>
-            </span>
-            <span className="text-sm text-amber-800 dark:text-amber-200 font-medium tracking-wide">
-              UNDER CONSTRUCTION
-            </span>
-          </div>
+  const ministries = useMemo(() => [
+    { name: "Youth Ministries", imageUrl: getPlaceholderImage(400, 300, "Youth+Ministry"), bgColor: "bg-gradient-to-br from-sky-400 to-cyan-500", href: "/ministries" },
+    { name: "Women's Ministry", imageUrl: getPlaceholderImage(400, 300, "Womens+Ministry"), bgColor: "bg-gradient-to-br from-rose-400 to-pink-500", href: "/ministries" },
+    { name: "Men's Ministry", imageUrl: getPlaceholderImage(400, 300, "Mens+Ministry"), bgColor: "bg-gradient-to-br from-blue-500 to-indigo-600", href: "/ministries" },
+    { name: "Music Ministry", imageUrl: getPlaceholderImage(400, 300, "Music+Ministry"), bgColor: "bg-gradient-to-br from-purple-500 to-violet-600", href: "/ministries" },
+  ], []);
 
-          <div className="mb-8">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-stone-900 dark:text-stone-100 tracking-tight leading-tight">
-              Growing together in faith,<br />
-              <span className="text-amber-700 dark:text-amber-400">building something new.</span>
-            </h1>
-          </div>
+  const featuredSermon = useMemo(() => ({
+    title: "Walking in Faith: Trusting God's Plan",
+    speaker: "Pastor Lataniel Hamilton",
+    date: new Date(currentTime - 86400000).toISOString(),
+    scripture: "Hebrews 11:1-6",
+    thumbnailUrl: getPlaceholderImage(640, 360, "Sermon+Thumbnail"),
+    duration: "42:15",
+  }), [currentTime]);
 
-          <p className="text-lg text-stone-600 dark:text-stone-300 leading-relaxed mb-10 max-w-prose mx-auto lg:mx-0">
-            We're creating a new online home for our church family. This space is still 
-            being built, but we're excited to welcome you when it's ready.
-          </p>
-          
-          <p className="text-sm text-stone-500 dark:text-stone-500 italic mb-8">
-            "For where two or three gather in my name, there am I with them." 
-            <br />— Matthew 18:20
-          </p>
+  const sermonCards = useMemo(() => {
+    if (sermonVideos.length > 0) {
+      return sermonVideos.slice(0, 3).map((video) => (
+        <Link 
+          key={video.id} 
+          href={`/media?video=${video.id}`}
+          className="w-[280px] sm:w-[320px] lg:w-[360px] flex-shrink-0 block"
+        >
+          <SermonCard
+            title={video.title}
+            speaker="Pastor Lataniel Hamilton"
+            date={video.publishedAt}
+            thumbnailUrl={video.thumbnailUrl}
+            duration={video.duration}
+          />
+        </Link>
+      ));
+    }
+    return [1, 2, 3].map((i) => (
+      <Link 
+        key={i} 
+        href="/media"
+        className="w-[280px] sm:w-[320px] lg:w-[360px] flex-shrink-0 block"
+      >
+        <SermonCard
+          title={`${featuredSermon.title} ${i > 1 ? `Part ${i}` : ""}`}
+          speaker={featuredSermon.speaker}
+          date={new Date(currentTime - i * 7 * 86400000).toISOString()}
+          scripture={featuredSermon.scripture}
+          thumbnailUrl={getPlaceholderImage(640, 360, `Sermon+${i}`)}
+          duration={featuredSermon.duration}
+        />
+      </Link>
+    ));
+  }, [sermonVideos, featuredSermon, currentTime]);
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10">
-            <a
-              href="#"
-              className="group px-8 py-4 bg-amber-700 dark:bg-amber-600 text-white rounded-xl font-semibold hover:bg-amber-800 dark:hover:bg-amber-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-3 text-base relative overflow-hidden"
-            >
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
-              <span className="w-2 h-2 bg-white/90 rounded-full" />
-              Notify Me When Ready
-            </a>
-            <a
-              href="mailto:info@lilliputsda.org"
-              className="group px-8 py-4 text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-stone-100 font-medium transition-all duration-300 flex items-center gap-3 justify-center lg:justify-start border-2 border-stone-300 dark:border-stone-600 rounded-xl hover:border-amber-500 dark:hover:border-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/20 text-base relative overflow-hidden"
-            >
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-100/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
-              <Users className="w-5 h-5" />
-              Email Us Directly
-            </a>
-          </div>
+  const eventsLoading = events === undefined;
+  const announcementsLoading = announcements === undefined;
 
-          <div className="max-w-prose mx-auto lg:mx-0">
-            <div className="inline-flex items-center gap-2 text-xs text-stone-500 dark:text-stone-400 bg-stone-100 dark:bg-stone-800/50 px-4 py-2 rounded-full">
-              <span className="w-1.5 h-1.5 bg-stone-400 dark:bg-stone-500 rounded-full"></span>
-              <span>Response time: 1-2 business days</span>
+  const renderEvents = () => {
+    if (eventsLoading) {
+      return (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-md">
+            <div className="h-48 bg-stone-200 dark:bg-stone-700 animate-pulse" />
+            <div className="p-6 space-y-3">
+              <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-1/3" />
+              <div className="h-8 bg-stone-200 dark:bg-stone-700 rounded animate-pulse" />
+              <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-2/3" />
             </div>
           </div>
+          <div className="space-y-6">
+            {[1, 2].map((i) => (
+              <div key={i} className="bg-white dark:bg-stone-800 rounded-xl p-5 shadow-sm">
+                <div className="flex gap-4">
+                  <div className="w-16 h-16 bg-stone-200 dark:bg-stone-700 rounded animate-pulse" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-3/4" />
+                    <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-1/2" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
 
-          {/* Scripture Section */}
-          <ScriptureSearch />
-        </main>
+    if (!events || events.length === 0) {
+      return (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <EventCard
+            title="Sabbath Worship Service"
+            date={new Date(currentTime + 86400000).toISOString()}
+            time="11:00 AM"
+            location="Lilliput SDA Church Sanctuary"
+            category="service"
+            description="Join us for uplifting worship and inspiring message."
+            featured
+          />
+          <div className="space-y-6">
+            <EventCard
+              title="No upcoming events"
+              date={new Date(currentTime).toISOString()}
+              time=""
+              location="Check back soon for more events"
+              category="special"
+              description="We're planning exciting events. Stay tuned!"
+              compact
+            />
+          </div>
+        </div>
+      );
+    }
+
+    const featured = events[0];
+    const others = events.slice(1, 3);
+
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="lg:col-span-1">
+          <div className="h-full">
+            <EventCard
+              title={featured.title}
+              date={featured.startDate}
+              time={featured.endDate ? `${featured.startDate.split('T')[1]?.slice(0, 5)} - ${featured.endDate.split('T')[1]?.slice(0, 5)}` : undefined}
+              location={featured.location}
+              category={featured.category}
+              description={featured.description}
+              featured
+            />
+          </div>
+        </div>
+        <div className="space-y-6">
+          {others.map((event: ChurchEvent) => (
+            <EventCard
+              key={event._id}
+              title={event.title}
+              date={event.startDate}
+              time={event.endDate ? `${event.startDate.split('T')[1]?.slice(0, 5)} - ${event.endDate.split('T')[1]?.slice(0, 5)}` : undefined}
+              location={event.location || "TBD"}
+              category={event.category as "service" | "special" | "youth" | "community" | undefined}
+              description={event.description}
+              compact
+            />
+          ))}
+        </div>
       </div>
+    );
+  };
+
+  const renderAnnouncements = () => {
+    if (announcementsLoading) {
+      return (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {[1, 2].map((i) => (
+            <div key={i} className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border-l-4 border-amber-500">
+              <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-2/3 mb-3" />
+              <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse mb-2" />
+              <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-4/5" />
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (!announcements || announcements.length === 0) {
+      return (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <AnnouncementCard
+            title="Stay Connected"
+            content="No current announcements. Check back soon for updates from our church community."
+            date={new Date().toISOString()}
+            priority="normal"
+            category="General"
+          />
+          <AnnouncementCard
+            title="Weekly Bulletin"
+            content="Our weekly bulletin is published every Friday with updates on events and ministries."
+            date={new Date().toISOString()}
+            priority="low"
+            category="General"
+          />
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {announcements.slice(0, 2).map((announcement: Announcement) => (
+          <AnnouncementCard
+            key={announcement._id}
+            title={announcement.title}
+            content={announcement.content}
+            date={announcement.date}
+            priority={announcement.priority as "low" | "normal" | "high" | undefined}
+            category={announcement.category}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen">
+      <HeroSection
+        title="Welcome to"
+        subtitle="Lilliput SDA Church"
+        description="A warm, welcoming community in the heart of St. James, Jamaica. Join us as we grow together in faith, love, and service."
+        badge="Growing together in faith since 1974"
+        backgroundImage={getPlaceholderImage(1920, 1080, "Church+Building")}
+        primaryAction={{ label: "Plan Your Visit", href: "/events" }}
+        secondaryAction={{ label: "Watch Online", href: "/media" }}
+        quickInfo={quickInfoContent}
+      />
+
+      <AboutSplit
+        label="About Our Church"
+        title="A Place to Belong, Believe, and Become"
+        description="Founded in 1974, Lilliput SDA Church has been a beacon of hope and faith in the St. James community for over 50 years. With over 700 members, we are a vibrant, welcoming congregation dedicated to sharing God's love through worship, fellowship, and service."
+        additionalText="Whether you're a lifelong Adventist or just beginning your spiritual journey, there's a place for you here. Come experience the warmth of our church family."
+        imageSrc={getPlaceholderImage(800, 600, "Church+Congregation")}
+        imageAlt="Church congregation"
+        stats={{ value: "700+", label: "Active Members", position: "bottom-left" }}
+        action={{ label: "Learn Our Story", href: "/about" }}
+      />
+
+      <section className="py-16 lg:py-24 bg-stone-50 dark:bg-stone-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            label="Latest Message"
+            title="Recent Sermons"
+            href="/media"
+            linkText="View All"
+          />
+          {videosLoading ? (
+            <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4">
+              {[1, 2].map((i) => (
+                <div key={i} className="w-[280px] sm:w-[320px] lg:w-[360px] flex-shrink-0">
+                  <div className="bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-md">
+                    <div className="aspect-video bg-stone-200 dark:bg-stone-700 shimmer" />
+                    <div className="p-4 space-y-3">
+                      <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded shimmer" />
+                      <div className="h-4 w-3/4 bg-stone-200 dark:bg-stone-700 rounded shimmer" />
+                      <div className="h-3 w-1/2 bg-stone-200 dark:bg-stone-700 rounded shimmer" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4">
+              {sermonCards.slice(0, 2)}
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            label="What's Happening"
+            title="Upcoming Events"
+            href="/events"
+            linkText="View Calendar"
+            icon={Calendar}
+          />
+          {renderEvents()}
+        </div>
+      </section>
+
+      <section className="py-16 lg:py-24 bg-stone-50 dark:bg-stone-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            label="Church News"
+            title="Latest Announcements"
+            href="/events"
+            linkText="View All"
+          />
+          {renderAnnouncements()}
+        </div>
+      </section>
+
+      <section className="py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <SectionHeader
+              label="Get Involved"
+              title="Our Ministries"
+              className="justify-center text-center"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {ministries.map((ministry) => (
+              <QuickMinistryCard key={ministry.name} {...ministry} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <CTASection
+        title="Ready to Visit?"
+        description="We'd love to welcome you to Lilliput SDA Church. Whether you're looking for a church home or just visiting, you're welcome here."
+        primaryAction={{
+          label: "Service Times",
+          href: "/events",
+          variant: "primary",
+        }}
+        secondaryAction={{
+          label: "Contact Us",
+          href: "/contact",
+          variant: "outline",
+        }}
+        backgroundColor="amber"
+      />
     </div>
   );
 }

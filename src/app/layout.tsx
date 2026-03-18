@@ -1,15 +1,24 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { DM_Sans, Playfair_Display, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ClerkProvider, Show, UserButton } from "@clerk/nextjs";
-import ConvexClientProvider from "@/components/ConvexClientProvider";
-import { Church, Menu, X } from "lucide-react";
-import Link from "next/link";
-import { MobileMenu } from "@/components/MobileMenu";
+import "@/styles/tokens.css";
+import { ClerkProvider } from "@clerk/nextjs";
+import ConvexClientProvider from "@/components/providers/ConvexClientProvider";
+import { DirectionProvider } from "@/components/providers/DirectionProvider";
+import { Header } from "@/components/navigation/Header";
+import { Footer } from "@/components/navigation/Footer";
+import { MobileBottomBar } from "@/components/navigation/MobileBottomBar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 const geistMono = Geist_Mono({
@@ -18,9 +27,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lilliput SDA Church | Under Construction",
-  description: "Growing together in faith. This site is currently being built. Thank you for your patience!",
-  robots: "noindex, nofollow",
+  title: "Lilliput SDA Church | Growing Together in Faith",
+  description:
+    "Welcome to Lilliput Seventh-day Adventist Church in St. James, Jamaica. Join us for worship, fellowship, and community service.",
+  keywords: [
+    "Lilliput SDA",
+    "Seventh-day Adventist",
+    "Montego Bay",
+    "St. James",
+    "Jamaica",
+    "Church",
+    "Worship",
+  ],
+  openGraph: {
+    title: "Lilliput SDA Church",
+    description: "Growing together in faith since 1974",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -30,59 +53,25 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <html lang="en" className="scroll-smooth">
+        <body
+          className={`${dmSans.variable} ${playfair.variable} ${geistMono.variable} antialiased bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-100`}
+        >
           <ConvexClientProvider>
-            <header className="fixed top-0 left-0 right-0 z-50 bg-stone-50/95 dark:bg-stone-900/95 backdrop-blur-sm border-b border-stone-200 dark:border-stone-800 shadow-sm/20">
-              <div className="px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 py-3">
-                <div className="flex items-center justify-between">
-                  {/* Logo */}
-                  <div className="flex items-center gap-3 group">
-                    <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg group-hover:bg-amber-200 dark:group-hover:bg-amber-800/40 transition-colors">
-                      <Church className="w-6 h-6 text-amber-700 dark:text-amber-500" />
-                    </div>
-                    <span className="text-lg font-semibold text-stone-800 dark:text-stone-100 tracking-tight">
-                      Lilliput SDA
-                    </span>
-                    <span className="hidden sm:inline-flex items-center px-2 py-0.5 text-[10px] bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded-full ml-2 font-medium tracking-wide">
-                      BETA
-                    </span>
-                  </div>
-
-                  {/* Main Navigation - Hidden until sections exist */}
-                  <nav className="hidden md:flex items-center gap-1">
-                    {/* Navigation links will be added when pages/sections exist */}
-                  </nav>
-
-                  {/* Auth buttons */}
-                  <div className="flex items-center gap-3">
-                    <Show when="signed-out">
-                      <Link
-                        href="/sign-in"
-                        className="hidden sm:inline-flex px-4 py-2 text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-stone-100 font-medium transition-colors text-sm"
-                      >
-                        Sign In
-                      </Link>
-                      <Link
-                        href="/sign-up"
-                        className="px-4 py-2 bg-amber-700 dark:bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-800 dark:hover:bg-amber-700 transition-all duration-200 shadow-sm hover:shadow-md text-sm"
-                      >
-                        Join Us
-                      </Link>
-                    </Show>
-                    <Show when="signed-in">
-                      <UserButton />
-                    </Show>
-                    
-                    {/* Mobile menu button */}
-                    <MobileMenu />
-                  </div>
-                </div>
-              </div>
-            </header>
-            <div className="pt-16 sm:pt-18 md:pt-20">
-              {children}
+            <DirectionProvider>
+              <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-amber-600 focus:text-white focus:rounded-lg focus:font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400"
+            >
+              Skip to main content
+            </a>
+            <div className="min-h-screen flex flex-col">
+              <Header />
+              <main id="main-content" className="flex-1 pt-16 pb-20 lg:pb-0">{children}</main>
+              <Footer />
+              <MobileBottomBar />
             </div>
+            </DirectionProvider>
           </ConvexClientProvider>
         </body>
       </html>

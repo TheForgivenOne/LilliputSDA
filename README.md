@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lilliput Seventh-day Adventist Church Website
+
+Official website for the Lilliput SDA Church, part of the West Jamaica Conference of Seventh-day Adventists.
+
+## About
+
+The Lilliput Seventh-day Adventist Church was founded in 1974 in the Lilliput District of St. James, Jamaica. Today, the church serves over 700 members and oversees five daughter churches in the district.
+
+## Technology Stack
+
+- **Framework**: [Next.js](https://nextjs.org/) 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Database**: [Convex](https://convex.dev/)
+- **Authentication**: [Clerk](https://clerk.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Deployment**: Vercel
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm, yarn, pnpm, or bun
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/lilliputsda/lilliputsda.git
+cd lilliputsda
+
+# Install dependencies
+npm install
+
+# Copy environment variables
+cp .env.example .env.local
+# Edit .env.local with your values
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+# Convex
+CONVEX_DEPLOYMENT=
+NEXT_PUBLIC_CONVEX_URL=
 
-## Learn More
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 
-To learn more about Next.js, take a look at the following resources:
+# YouTube API (for media page)
+YOUTUBE_API_KEY=
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+├── public/              # Static assets
+├── src/
+│   ├── app/            # Next.js App Router pages
+│   ├── components/     # React components
+│   │   ├── ui/         # Reusable UI components
+│   │   └── navigation/ # Header, Footer, MobileNav
+│   └── lib/            # Utilities and helpers
+├── convex/             # Convex backend (database schema)
+└── .github/workflows/ # CI/CD pipelines
+```
 
-## Deploy on Vercel
+## Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Responsive church website with mobile-first design
+- Events calendar with Convex backend
+- YouTube media integration for sermons
+- Contact form
+- Ministry listings
+- About page with church history (1974-present)
+- Dark mode support
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+The site is configured for deployment on Vercel. Connect your GitHub repository to Vercel for automatic deployments on push to main.
+
+```bash
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Contact
+
+**Lilliput SDA Church**
+- Location: Lilliput District, Montego Bay, St. James, Jamaica
+- Website: https://lilliputsda.interamerica.org
+
+**West Jamaica Conference**
+- Website: https://www.westjamaica.org
+- Phone: (876) 656-7800
+
+## License
+
+This project is private property of the Lilliput Seventh-day Adventist Church.

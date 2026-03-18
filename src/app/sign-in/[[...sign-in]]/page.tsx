@@ -1,7 +1,5 @@
 'use client'
 
-import { SignIn } from '@clerk/nextjs'
-
 export default function SignInPage() {
   return (
     <div className="min-h-screen bg-stone-50 dark:bg-stone-900 flex items-center justify-center p-8">

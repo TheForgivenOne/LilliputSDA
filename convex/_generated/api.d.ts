@@ -8,7 +8,15 @@
  * @module
  */
 
+import type * as announcementsMutations from "../announcementsMutations.js";
+import type * as announcementsQueries from "../announcementsQueries.js";
+import type * as contact from "../contact.js";
 import type * as env from "../env.js";
+import type * as eventsMutations from "../eventsMutations.js";
+import type * as eventsQueries from "../eventsQueries.js";
+import type * as ministries from "../ministries.js";
+import type * as prayerRequests from "../prayerRequests.js";
+import type * as staff from "../staff.js";
 
 import type {
   ApiFromModules,
@@ -17,7 +25,15 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  announcementsMutations: typeof announcementsMutations;
+  announcementsQueries: typeof announcementsQueries;
+  contact: typeof contact;
   env: typeof env;
+  eventsMutations: typeof eventsMutations;
+  eventsQueries: typeof eventsQueries;
+  ministries: typeof ministries;
+  prayerRequests: typeof prayerRequests;
+  staff: typeof staff;
 }>;
 
 /**
