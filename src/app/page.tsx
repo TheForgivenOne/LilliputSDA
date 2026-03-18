@@ -168,7 +168,41 @@ export default function Home() {
       );
     }
 
-    if (!events || events.length === 0) {
+    // Static upcoming events
+    const staticEvents = [
+      {
+        _id: "static-1",
+        title: "Global Youth Day",
+        startDate: "2026-03-21T09:00:00",
+        location: "Lilliput SDA Church",
+        category: "youth",
+        description: "Join youth around the world in a day of service and fellowship. A special day dedicated to youth ministry and community outreach."
+      },
+      {
+        _id: "static-2",
+        title: "Convention",
+        startDate: "2026-03-28T10:00:00",
+        location: "Lilliput SDA Church",
+        category: "special",
+        description: "Annual church convention featuring inspiring speakers, worship, and fellowship. All are welcome to attend this special gathering."
+      },
+      {
+        _id: "static-3",
+        title: "LILLIDISCA CAMP",
+        startDate: "2026-04-02T08:00:00",
+        endDate: "2026-04-06T18:00:00",
+        location: "Camp Site",
+        category: "youth",
+        description: "Five-day camp experience for spiritual growth, fellowship, and fun activities. An unforgettable time of learning and bonding."
+      }
+    ];
+
+    // Combine static events with database events, prioritizing static events
+    const displayEvents = events && events.length > 0 
+      ? [...staticEvents, ...events].slice(0, 3)
+      : staticEvents;
+
+    if (displayEvents.length === 0) {
       return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <EventCard
@@ -195,8 +229,8 @@ export default function Home() {
       );
     }
 
-    const featured = events[0];
-    const others = events.slice(1, 3);
+    const featured = displayEvents[0];
+    const others = displayEvents.slice(1, 3);
 
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -207,7 +241,7 @@ export default function Home() {
               date={featured.startDate}
               time={featured.endDate ? `${featured.startDate.split('T')[1]?.slice(0, 5)} - ${featured.endDate.split('T')[1]?.slice(0, 5)}` : undefined}
               location={featured.location}
-              category={featured.category}
+              category={featured.category as "service" | "special" | "youth" | "community" | undefined}
               description={featured.description}
               featured
             />
@@ -335,6 +369,63 @@ export default function Home() {
               {sermonCards.slice(0, 2)}
             </div>
           )}
+        </div>
+      </section>
+
+      <section className="py-16 lg:py-24 bg-amber-50 dark:bg-amber-900/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            label="Voices of Faith"
+            title="Member Testimonies"
+            href="/testimonies"
+            linkText="View All"
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border-l-4 border-amber-500">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                  <span className="text-amber-700 dark:text-amber-400 font-bold text-lg">S</span>
+                </div>
+                <div>
+                  <p className="font-semibold text-stone-900 dark:text-stone-100">Sister Marie T.</p>
+                  <p className="text-sm text-stone-500 dark:text-stone-400">Member since 2010</p>
+                </div>
+              </div>
+              <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
+                "When I first walked through these doors, I was searching for answers. The warmth and acceptance I found here changed my life forever. Lilliput became my family."
+              </p>
+            </div>
+
+            <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border-l-4 border-amber-500">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                  <span className="text-amber-700 dark:text-amber-400 font-bold text-lg">B</span>
+                </div>
+                <div>
+                  <p className="font-semibold text-stone-900 dark:text-stone-100">Brother David J.</p>
+                  <p className="text-sm text-stone-500 dark:text-stone-400">Youth Leader</p>
+                </div>
+              </div>
+              <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
+                "Growing up in this church, I experienced God's love through mentors who invested in my life. Now I have the privilege of pouring into the next generation."
+              </p>
+            </div>
+
+            <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border-l-4 border-amber-500 md:hidden lg:block">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                  <span className="text-amber-700 dark:text-amber-400 font-bold text-lg">A</span>
+                </div>
+                <div>
+                  <p className="font-semibold text-stone-900 dark:text-stone-100">Sister Angela R.</p>
+                  <p className="text-sm text-stone-500 dark:text-stone-400">Women's Ministry</p>
+                </div>
+              </div>
+              <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
+                "The sisterhood here is powerful. Through prayer and fellowship, I've witnessed lives transformed and bonds formed that will last for eternity."
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Church, MapPin, Phone, Mail, Clock, ExternalLink } from "lucide-react";
+import { Church, MapPin, Phone, Mail, Clock, ExternalLink, Heart } from "lucide-react";
 
 const footerLinks = {
   about: [
@@ -17,9 +17,10 @@ const footerLinks = {
     { label: "Music Ministry", href: "/ministries", key: "ministries-music" },
   ],
   resources: [
-    { label: "Sermons", href: "/media" },
-    { label: "Events & News", href: "/events" },
-    { label: "Contact", href: "/contact" },
+    { label: "Sermons", href: "/media", key: "sermons" },
+    { label: "Events & News", href: "/events", key: "events" },
+    { label: "Contact", href: "/contact", key: "contact" },
+    { label: "My Decision Card", href: "/decision-card", key: "decision-card" },
   ],
 };
 
@@ -159,7 +160,7 @@ export function Footer() {
             <h3 className="text-white font-bold text-lg mb-6 font-[family-name:var(--font-playfair)]">Resources</h3>
             <ul className="space-y-3.5">
               {footerLinks.resources.map((link) => (
-                <li key={link.href}>
+                <li key={link.key || link.href}>
                   <Link
                     href={link.href}
                     className="text-stone-400 hover:text-amber-400 transition-colors duration-300 footer-link inline-block"

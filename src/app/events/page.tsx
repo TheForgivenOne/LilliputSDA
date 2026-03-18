@@ -52,11 +52,40 @@ export default function EventsPage() {
   const eventsLoading = events === undefined;
   const announcementsLoading = announcements === undefined;
 
+  // Static upcoming events
+  const staticEvents: ChurchEvent[] = [
+    {
+      _id: "static-1",
+      title: "Global Youth Day",
+      startDate: "2026-03-21T09:00:00",
+      location: "Lilliput SDA Church",
+      category: "youth",
+      description: "Join youth around the world in a day of service and fellowship. A special day dedicated to youth ministry and community outreach."
+    },
+    {
+      _id: "static-2",
+      title: "Convention",
+      startDate: "2026-03-28T10:00:00",
+      location: "Lilliput SDA Church",
+      category: "special",
+      description: "Annual church convention featuring inspiring speakers, worship, and fellowship. All are welcome to attend this special gathering."
+    },
+    {
+      _id: "static-3",
+      title: "LILLIDISCA CAMP",
+      startDate: "2026-04-02T08:00:00",
+      endDate: "2026-04-06T18:00:00",
+      location: "Camp Site",
+      category: "youth",
+      description: "Five-day camp experience for spiritual growth, fellowship, and fun activities. An unforgettable time of learning and bonding."
+    }
+  ];
+
   const filteredEvents = events 
-    ? events.filter((event: ChurchEvent) =>
+    ? [...staticEvents, ...events].filter((event: ChurchEvent) =>
         selectedCategory === "all" ? true : event.category === selectedCategory
       )
-    : [];
+    : staticEvents;
 
   const filteredAnnouncements = announcements
     ? announcements.filter((announcement: Announcement) =>

@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef, KeyboardEvent, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Church, Menu, X, Phone, MapPin } from "lucide-react";
+import { Church, Menu, X, Phone, MapPin, Heart } from "lucide-react";
+import { DecisionCardTrigger } from "@/components/features/DecisionCardModal";
 import { cn, throttle } from "@/lib/utils";
 
 const navItems = [
@@ -126,8 +127,14 @@ export function Header() {
               ))}
             </nav>
 
-            {/* Desktop CTA - Bold button */}
+            {/* Desktop CTA - Bold buttons */}
             <div className="hidden lg:flex items-center gap-3">
+              <DecisionCardTrigger 
+                variant="terracotta" 
+                size="md"
+              >
+                Decision Card
+              </DecisionCardTrigger>
               <Link
                 href="/contact"
                 className="px-6 py-3 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-xl font-semibold hover:from-amber-700 hover:to-amber-800 transition-all duration-300 shadow-lg shadow-amber-600/25 hover:shadow-amber-600/40 hover:-translate-y-0.5"
@@ -244,6 +251,14 @@ export function Header() {
 
           {/* Quick Actions */}
           <div className="p-6 border-t border-stone-200 dark:border-stone-800 space-y-3">
+            <Link
+              href="/decision-card"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-xl font-semibold text-lg hover:from-orange-700 hover:to-orange-800 transition-all duration-300 shadow-lg shadow-orange-600/25"
+            >
+              <Heart className="w-5 h-5" />
+              My Decision Card
+            </Link>
             <Link
               href="/contact"
               onClick={() => setIsMobileMenuOpen(false)}
