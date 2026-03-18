@@ -50,6 +50,11 @@ jobs:
 
       - name: Build Next.js application
         run: npm run build
+        env:
+          NEXT_PUBLIC_CONVEX_URL: https://placeholder.convex.cloud
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: placeholder
+          CONVEX_DEPLOYMENT: placeholder
+          CLERK_SECRET_KEY: placeholder
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
