@@ -20,7 +20,7 @@ export const CHURCH_IMAGES = {
    * Hero & Background Images
    */
   hero: {
-    churchBuilding: "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1920&h=1080&fit=crop&auto=format&q=80",
+    churchBuilding: "/images/logos/current-church.jpg",
     churchExterior: "https://images.unsplash.com/photo-1519491050282-cf00c82424b4?w=1920&h=600&fit=crop&auto=format&q=80",
   },
 
@@ -72,6 +72,66 @@ export const CHURCH_IMAGES = {
   history: {
     vintage: "https://images.unsplash.com/photo-1509023464722-18d996393ca8?w=800&h=600&fit=crop&auto=format&q=80",
     oldChurch: "https://images.unsplash.com/photo-1504825676736-5e21d1b42dee?w=800&h=600&fit=crop&auto=format&q=80",
+    /** 
+     * Historical photos from old site (lilliputsda.interamerica.org)
+     * These are original church photos - labeled with year/era
+     */
+    oldSite: [
+      {
+        src: "/images/history/old_church_congregation.jpg",
+        alt: "Old photo of church",
+        caption: "Old photo of church",
+        year: "",
+      },
+      {
+        src: "/images/history/current_church_building_2016.jpg",
+        alt: "",
+        caption: "",
+        year: "",
+      },
+      {
+        src: "/images/history/pastor_taylor.jpg",
+        alt: "Pastor Taylor",
+        caption: "Pastor Taylor",
+        year: "",
+      },
+      {
+        src: "/images/history/bro_wright_slide.jpg",
+        alt: "Brother Wright",
+        caption: "Brother Wright",
+        year: "",
+      },
+      {
+        src: "/images/history/img_20161018_worship.jpg",
+        alt: "Worship service",
+        caption: "Fellowship and worship",
+        year: "October 18, 2016",
+      },
+      {
+        src: "/images/history/img_20161016_group1.jpg",
+        alt: "Pathfinder Club photo",
+        caption: "Pathfinder Club",
+        year: "October 16, 2016",
+      },
+      {
+        src: "/images/history/img_20161016_group2.jpg",
+        alt: "Church group photo",
+        caption: "Fellowship and community",
+        year: "October 16, 2016",
+      },
+      {
+        src: "/images/history/fb_img_2016_group.jpg",
+        alt: "Facebook group photo",
+        caption: "Church community",
+        year: "July 26, 2016",
+      },
+      {
+        src: "/images/history/fb_img_2016_worship.jpg",
+        alt: "Facebook worship photo",
+        caption: "Worship and praise",
+        year: "September 16, 2016",
+      },
+    ],
   },
 
   /**

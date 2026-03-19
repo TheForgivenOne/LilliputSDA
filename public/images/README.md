@@ -1,68 +1,51 @@
 # Church Images Directory
 
-This directory is for storing church-specific images when they become available.
-
 ## Directory Structure
 
 ```
-public/images/
-├── pastors/          # Pastor and staff headshots
-├── ministries/       # Ministry group photos
-├── events/          # Event-specific photos
-├── congregation/   # Congregation and worship photos
-└── historical/      # Historical church photos
+public/
+├── images/
+│   ├── logos/          # Church logo variants (dark, light, sized)
+│   ├── history/        # Historical archive photos from old site
+│   └── adventist-logo.svg
+├── favicons/           # Browser favicons and app icons
+├── books.json          # Church library data
+└── scriptures.json     # Scripture references
 ```
+
+## Organization
+
+### `/images/logos/`
+Church logo in various sizes and color variants:
+- `logo-*.png` - Sized variants (48px, 56px, 64px, 128px)
+- `logo-*-dark.png` - Dark background versions
+- `logo-*-white.png` - White/transparent versions
+- `logo-header*.png` - Header-optimized versions
+
+### `/images/history/`
+Historical archive photos from lilliputsda.interamerica.org:
+- Pastors, congregation, worship, group photos
+- Dates: 2016 (verified from filenames)
+- Metadata: `metadata.json`
+
+### `/images/adventist-logo.svg`
+Official Seventh-day Adventist church logo.
+
+### `/favicons/`
+Browser and mobile app icons:
+- `favicon.ico`, `favicon.svg`, `favicon-*.png`
+- `android-chrome-*.png`
+- `apple-touch-icon.png`
 
 ## Current Image Strategy
 
-The site currently uses high-quality Unsplash images as placeholders. These are free to use under the Unsplash License.
-
-### When Church Photos Become Available
-
-1. **Pastor/Staff Photos**: Add to `/pastors/` directory
-   - Format: JPEG or WebP
-   - Recommended size: 400x400px (headshots)
-   - Naming: `pastor-hamilton.jpg`, `deacon-chairman.jpg`
-
-2. **Ministry Photos**: Add to `/ministries/` directory
-   - Format: JPEG or WebP
-   - Recommended size: 600x400px (cards)
-   - Naming: `youth-worship.jpg`, `choir-performance.jpg`
-
-3. **Event Photos**: Add to `/events/` directory
-   - Format: JPEG or WebP
-   - Recommended size: 800x600px
-   - Naming: `vbs-2026.jpg`, `camp-meeting.jpg`
-
-4. **Congregation Photos**: Add to `/congregation/` directory
-   - Format: JPEG or WebP
-   - Recommended size: 1920x1080px (hero), 800x600px (general)
-   - Naming: `sabbath-worship.jpg`, `fellowship-meal.jpg`
-
-5. **Historical Photos**: Add to `/historical/` directory
-   - Format: JPEG (scanned) or WebP
-   - Recommended size: 800x600px
-   - Naming: `founding-members.jpg`, `old-building.jpg`
-
-## Updating Image URLs
-
-When real images are added:
-
-1. Update `src/lib/images.ts` with the new paths
-2. Or if using CMS, upload via the admin interface
-
-Example:
-```typescript
-// Before (placeholder)
-churchBuilding: "https://images.unsplash.com/photo-xxx"
-
-// After (real church photo)
-churchBuilding: "/images/congregation/church-exterior.jpg"
-```
+The site uses Unsplash placeholders in `src/lib/images.ts`. Real church photos should be added to the appropriate subfolder when available.
 
 ## Image Guidelines
 
-- **File Size**: Keep under 500KB for web optimization
-- **Format**: Use WebP for best compression, JPEG as fallback
-- **Alt Text**: Always include descriptive alt text for accessibility
-- **Orientation**: Landscape for hero/card images, square for headshots
+- **File Size**: Keep under 500KB
+- **Format**: WebP preferred, JPEG fallback
+- **Alt Text**: Always include for accessibility
+- **Hero images**: 1920x1080px (16:9)
+- **Cards**: 600x400px (3:2)
+- **Headshots**: 400x400px (1:1)

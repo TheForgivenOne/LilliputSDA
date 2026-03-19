@@ -7,6 +7,7 @@ import { api } from "../../../convex/_generated/api";
 import { CHURCH_IMAGES } from "@/lib/utils";
 import { StaffCard } from "@/components/ui/Card";
 import { LeaderCard, LeaderCardGroup } from "@/components/features/LeaderCard";
+import { HistoricalSlideshow } from "@/components/features/HistoricalSlideshow";
 import type { StaffMember } from "@/types";
 
 const milestones = [
@@ -99,14 +100,7 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="relative">
-              <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
-                <Image
-                  src={CHURCH_IMAGES.congregation.gathering}
-                  alt="Church historical photos"
-                  fill
-                  className="object-cover"
-                />
-              </div>
+              <HistoricalSlideshow slides={CHURCH_IMAGES.history.oldSite} />
             </div>
           </div>
         </div>

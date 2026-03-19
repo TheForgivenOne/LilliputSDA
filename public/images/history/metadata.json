@@ -1,0 +1,91 @@
+{
+  "images": [
+    {
+      "filename": "old_church_exterior_1980s.jpg",
+      "original_source": "https://lilliputsda.interamerica.org/uploaded_assets/168518-church_history-1.jpg",
+      "description": "Old church exterior from the 1980s era (zinc/board structure)",
+      "date": "circa 1980s",
+      "status": "deleted"
+    },
+    {
+      "filename": "old_church_congregation.jpg",
+      "original_source": "https://lilliputsda.interamerica.org/uploaded_assets/168150-FB_IMG_1476651989933.jpg",
+      "description": "Historical church exterior view from front left angle",
+      "date": "October 16, 2016",
+      "size": "43KB",
+      "dimensions": "720x476"
+    },
+    {
+      "filename": "current_church_building_2016.jpg",
+      "original_source": "https://lilliputsda.interamerica.org/uploaded_assets/168151-IMG-20160321-WA0013.jpg",
+      "description": "Current church building at present location",
+      "date": "March 21, 2016",
+      "size": "190KB",
+      "dimensions": "1536x864"
+    },
+    {
+      "filename": "pastor_taylor.jpg",
+      "original_source": "https://lilliputsda.interamerica.org/uploaded_assets/168540-pastor.JPG",
+      "description": "Portrait of church pastor",
+      "date": "unknown",
+      "size": "11KB",
+      "dimensions": "160x153"
+    },
+    {
+      "filename": "bro_wright_slide.jpg",
+      "original_source": "https://lilliputsda.interamerica.org/site_data/9540/image_assets/0001/0134/Bro._Wright_slide.jpg",
+      "description": "Bro. Wright - church leader/member",
+      "date": "unknown",
+      "size": "78KB",
+      "dimensions": "1000x450"
+    },
+    {
+      "filename": "img_20160321_worship.jpg",
+      "original_source": "https://lilliputsda.interamerica.org/site_data/9540/image_assets/0001/0133/IMG-20160321-WA0013_slide.jpg",
+      "description": "Worship service photo",
+      "date": "March 21, 2016",
+      "size": "78KB",
+      "dimensions": "1000x450"
+    },
+    {
+      "filename": "fb_img_2016_worship.jpg",
+      "original_source": "https://lilliputsda.interamerica.org/site_data/9540/image_assets/0001/0136/FB_IMG_1476651340794_slide.jpg",
+      "description": "Facebook uploaded worship/event photo",
+      "date": "2016",
+      "size": "22KB",
+      "dimensions": "1000x450"
+    },
+    {
+      "filename": "img_20161016_group1.jpg",
+      "original_source": "https://lilliputsda.interamerica.org/site_data/9540/image_assets/0001/0139/IMG-20161016-WA0017_slide.jpg",
+      "description": "Pathfinder Club group photo",
+      "date": "October 16, 2016",
+      "size": "75KB",
+      "dimensions": "1000x450"
+    },
+    {
+      "filename": "img_20161016_group2.jpg",
+      "original_source": "https://lilliputsda.interamerica.org/site_data/9540/image_assets/0001/0138/IMG-20161016-WA0068_slide.jpg",
+      "description": "Group/fellowship photo",
+      "date": "October 16, 2016",
+      "size": "70KB",
+      "dimensions": "1000x450"
+    },
+    {
+      "filename": "fb_img_2016_group.jpg",
+      "original_source": "https://lilliputsda.interamerica.org/site_data/9540/image_assets/0001/0132/FB_IMG_1469546875554_slide.jpg",
+      "description": "Facebook uploaded group/event photo",
+      "date": "July 2016",
+      "size": "56KB",
+      "dimensions": "1000x450"
+    },
+    {
+      "filename": "img_20161018_worship.jpg",
+      "original_source": "https://lilliputsda.interamerica.org/site_data/9540/image_assets/0001/0140/IMG-20161018-WA0010_slide.jpg",
+      "description": "Worship service photo",
+      "date": "October 18, 2016",
+      "size": "83KB",
+      "dimensions": "1000x450"
+    }
+  ]
+}

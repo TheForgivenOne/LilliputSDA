@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -7,6 +8,7 @@ interface QuickInfoProps {
   icon: LucideIcon;
   label: string;
   value: string;
+  href?: string;
   className?: string;
   iconClassName?: string;
 }
@@ -15,11 +17,12 @@ export function QuickInfo({
   icon: Icon,
   label,
   value,
+  href,
   className,
   iconClassName,
 }: QuickInfoProps) {
-  return (
-    <div className={cn("flex items-center gap-4 group", className)}>
+  const content = (
+    <>
       <div
         className={cn(
           "p-3 bg-amber-500/20 rounded-xl transition-transform group-hover:scale-110",
@@ -32,6 +35,26 @@ export function QuickInfo({
         <p className="text-stone-400 text-sm font-medium">{label}</p>
         <p className="text-white font-semibold text-base">{value}</p>
       </div>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className={cn(
+          "flex items-center gap-4 group transition-opacity hover:opacity-80",
+          className
+        )}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div className={cn("flex items-center gap-4 group", className)}>
+      {content}
     </div>
   );
 }

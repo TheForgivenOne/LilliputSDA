@@ -1,29 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { fetchQuery } from 'convex/nextjs';
+import { api } from "../../../../convex/_generated/api";
 import type { ScriptureResult } from "@/types";
-
-const SCRIPTURE_CACHE_TIME = 60 * 60; // 1 hour
-
-let scripturesCache: ScriptureItem[] | null = null;
-let cacheTime = 0;
-
-interface ScriptureItem {
-  o: number;
-  r: string;
-  t: string;
-  h?: number;
-}
-
-async function getScriptures() {
-  const now = Date.now();
-  if (scripturesCache && now - cacheTime < SCRIPTURE_CACHE_TIME * 1000) {
-    return scripturesCache;
-  }
-  
-  const scripturesModule = await import('../../../../public/scriptures.json');
-  scripturesCache = scripturesModule.default as ScriptureItem[];
-  cacheTime = now;
-  return scripturesCache;
-}
 
 function sanitizeQuery(query: string): string {
   return query
@@ -65,43 +43,15 @@ export async function GET(request: NextRequest) {
       limit = parsed;
     }
 
-    const data = await getScriptures();
-    const items = data as ScriptureItem[];
+    const scriptures = await fetchQuery(api.scripture.search, { 
+      query: sanitizedQuery,
+      limit 
+    });
     
-    const results: ScriptureResult[] = [];
-    
-    for (const item of items) {
-      if (item.h) continue;
-      
-      const text = item.t.toLowerCase();
-      const reference = item.r;
-      
-      if (text.includes(sanitizedQuery) || reference.toLowerCase().includes(sanitizedQuery)) {
-        const parts = reference.split(':');
-        if (parts.length >= 4) {
-          const book = parts[1];
-          const chapter = parseInt(parts[2], 10);
-          const verse = parseInt(parts[3], 10);
-          
-          if (isNaN(chapter) || isNaN(verse)) continue;
-          
-          results.push({
-            reference: `${book} ${chapter}:${verse}`,
-            text: item.t.replace(/\*[pln]/g, ''),
-            book,
-            chapter,
-            verse
-          });
-          
-          if (results.length >= limit) break;
-        }
-      }
-    }
-
     return NextResponse.json({
       query: sanitizedQuery,
-      count: results.length,
-      results
+      count: scriptures.length,
+      results: scriptures
     });
   } catch (error) {
     console.error('Scripture API error:', error);
@@ -154,42 +104,15 @@ export async function POST(request: NextRequest) {
       limitValue = parsed;
     }
 
-    const data = await getScriptures();
-    const items = data as ScriptureItem[];
-    const results: ScriptureResult[] = [];
+    const scriptures = await fetchQuery(api.scripture.search, { 
+      query: sanitizedQuery,
+      limit: limitValue 
+    });
     
-    for (const item of items) {
-      if (item.h) continue;
-      
-      const text = item.t.toLowerCase();
-      const reference = item.r;
-      
-      if (text.includes(sanitizedQuery) || reference.toLowerCase().includes(sanitizedQuery)) {
-        const parts = reference.split(':');
-        if (parts.length >= 4) {
-          const book = parts[1];
-          const chapter = parseInt(parts[2], 10);
-          const verse = parseInt(parts[3], 10);
-          
-          if (isNaN(chapter) || isNaN(verse)) continue;
-          
-          results.push({
-            reference: `${book} ${chapter}:${verse}`,
-            text: item.t.replace(/\*[pln]/g, ''),
-            book,
-            chapter,
-            verse
-          });
-          
-          if (results.length >= limitValue) break;
-        }
-      }
-    }
-
     return NextResponse.json({
       query: sanitizedQuery,
-      count: results.length,
-      results
+      count: scriptures.length,
+      results: scriptures
     });
   } catch (error) {
     console.error('Scripture API error:', error);

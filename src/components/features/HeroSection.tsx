@@ -11,6 +11,7 @@ interface HeroSectionProps {
   subtitle: string;
   description: string;
   badge?: string;
+  badgeHref?: string;
   backgroundImage?: string;
   primaryAction?: {
     label: string;
@@ -29,7 +30,8 @@ export function HeroSection({
   subtitle,
   description,
   badge,
-  backgroundImage = "",
+  badgeHref,
+  backgroundImage,
   primaryAction,
   secondaryAction,
   quickInfo,
@@ -56,15 +58,24 @@ export function HeroSection({
         ) : (
           <div className="w-full h-full bg-stone-800" aria-hidden="true" />
         )}
-        <div className="absolute inset-0 bg-stone-900/70" />
+        <div className="absolute inset-0 bg-stone-900/40" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
         <div className="max-w-3xl">
           {badge && (
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full text-amber-400 text-sm font-medium mb-6">
-              {badge}
-            </div>
+            badgeHref ? (
+              <Link
+                href={badgeHref}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full text-amber-400 text-sm font-medium mb-6 hover:bg-amber-500/20 transition-colors"
+              >
+                {badge}
+              </Link>
+            ) : (
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full text-amber-400 text-sm font-medium mb-6">
+                {badge}
+              </div>
+            )
           )}
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">

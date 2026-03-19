@@ -51,9 +51,10 @@ export default function Home() {
         icon={Clock}
         label="Sabbath Service"
         value="Saturdays at 11:00 AM"
+        href="/visit"
       />
-      <QuickInfo icon={MapPin} label="Location" value="Lilliput, Montego Bay" />
-      <QuickInfo icon={Play} label="Livestream" value="Watch Online" />
+      <QuickInfo icon={MapPin} label="Location" value="Lilliput, Montego Bay" href="/visit" />
+      <QuickInfo icon={Play} label="Livestream" value="Watch Online" href="/media" />
     </div>
   ), []);
 
@@ -252,8 +253,9 @@ export default function Home() {
         subtitle="Lilliput SDA Church"
         description="A warm, welcoming community in the heart of St. James, Jamaica. Join us as we grow together in faith, love, and service."
         badge="Growing together in faith since 1974"
+        badgeHref="/about"
         backgroundImage={CHURCH_IMAGES.hero.churchBuilding}
-        primaryAction={{ label: "Plan Your Visit", href: "/events" }}
+        primaryAction={{ label: "Plan Your Visit", href: "/visit" }}
         secondaryAction={{ label: "Watch Online", href: "/media" }}
         quickInfo={quickInfoContent}
       />

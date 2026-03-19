@@ -115,4 +115,24 @@ export default defineSchema({
     isRead: v.boolean(),
   })
     .index("by_date", ["date"]),
+
+  // Scripture references for decision card
+  scriptures: defineTable({
+    order: v.number(),
+    reference: v.string(),
+    text: v.string(),
+    heading: v.optional(v.string()),
+    translation: v.string(),
+  })
+    .index("by_order", ["order"]),
+
+  // Books of the Bible
+  books: defineTable({
+    order: v.number(),
+    abbreviation: v.string(),
+    name: v.string(),
+    chapterCount: v.number(),
+  })
+    .index("by_order", ["order"])
+    .index("by_name", ["name"]),
 });

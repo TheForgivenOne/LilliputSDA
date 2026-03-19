@@ -11,9 +11,17 @@ interface VideoCardProps {
 
 export function VideoCard({ video, onClick }: VideoCardProps) {
   return (
-    <button
+    <article
       onClick={() => onClick(video)}
-      className="group block bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all hover:-translate-y-1 text-left w-full"
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick(video);
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      className="group bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer"
     >
       <VideoThumbnail
         thumbnailUrl={video.thumbnailUrl}
@@ -30,6 +38,6 @@ export function VideoCard({ video, onClick }: VideoCardProps) {
           {new Date(video.publishedAt).toLocaleDateString()}
         </p>
       </div>
-    </button>
+    </article>
   );
 }
