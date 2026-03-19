@@ -106,7 +106,7 @@ export function Header() {
                 Decision Card
               </DecisionCardTrigger>
               <Link
-                href="/contact"
+                href="/visit"
                 className="px-5 py-2.5 bg-amber-700 text-white rounded-lg text-sm font-medium hover:bg-amber-800 transition-colors"
               >
                 Join Us
@@ -202,7 +202,7 @@ export function Header() {
               Decision Card
             </DecisionCardTrigger>
             <Link
-              href="/contact"
+              href="/visit"
               onClick={() => setIsMobileMenuOpen(false)}
               className="flex items-center justify-center px-4 py-2.5 bg-amber-700 text-white rounded-lg text-sm font-medium hover:bg-amber-800 transition-colors"
             >

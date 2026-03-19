@@ -56,10 +56,10 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-stone-900 text-stone-300 relative overflow-hidden">
+    <footer className="bg-stone-100 dark:bg-stone-900 text-stone-600 dark:text-stone-300 relative overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-amber-500/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-2xl will-change-opacity" />
-      <div className="absolute bottom-0 right-0 w-48 h-48 bg-orange-500/5 rounded-full translate-x-1/3 translate-y-1/3 blur-2xl will-change-opacity" />
+      <div className="absolute top-0 left-0 w-64 h-64 bg-amber-500/5 dark:bg-amber-500/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-2xl will-change-opacity" />
+      <div className="absolute bottom-0 right-0 w-48 h-48 bg-orange-500/5 dark:bg-orange-500/5 rounded-full translate-x-1/3 translate-y-1/3 blur-2xl will-change-opacity" />
       
       {/* Main Footer */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
@@ -71,15 +71,15 @@ export function Footer() {
                 <Church className="w-7 h-7 text-white" />
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-bold text-white font-[family-name:var(--font-playfair)]">
+                <span className="text-2xl font-bold text-stone-900 dark:text-white font-[family-name:var(--font-playfair)]">
                   Lilliput SDA
                 </span>
-                <span className="text-xs text-stone-500 tracking-wider uppercase">
+                <span className="text-xs text-stone-500 dark:text-stone-500 tracking-wider uppercase">
                   St. James, Jamaica
                 </span>
               </div>
             </Link>
-            <p className="text-stone-400 mb-8 leading-relaxed text-lg">
+            <p className="text-stone-500 dark:text-stone-400 mb-8 leading-relaxed text-lg">
               Growing together in faith since 1974. A warm, welcoming community
               in the heart of St. James, Jamaica.
             </p>
@@ -87,33 +87,33 @@ export function Footer() {
             {/* Contact Info with enhanced styling */}
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <div className="p-2 bg-amber-500/10 rounded-lg mt-0.5">
-                  <MapPin className="w-5 h-5 text-amber-500 flex-shrink-0" />
+                <div className="p-2 bg-amber-500/10 dark:bg-amber-500/10 rounded-lg mt-0.5">
+                  <MapPin className="w-5 h-5 text-amber-600 dark:text-amber-500 flex-shrink-0" />
                 </div>
-                <span className="text-stone-300">
-                  Lot 200-202, Lilliput District
+                <span className="text-stone-600 dark:text-stone-300">
+                  Lot 200-202, Lilliput
                   <br />
                   Montego Bay, St. James, Jamaica
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-amber-500/10 rounded-lg">
-                  <Phone className="w-5 h-5 text-amber-500 flex-shrink-0" />
+                <div className="p-2 bg-amber-500/10 dark:bg-amber-500/10 rounded-lg">
+                  <Phone className="w-5 h-5 text-amber-600 dark:text-amber-500 flex-shrink-0" />
                 </div>
                 <a
                   href="tel:+18761234567"
-                  className="text-stone-300 hover:text-amber-400 transition-colors"
+                  className="text-stone-600 dark:text-stone-300 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                 >
                   (876) 123-4567
                 </a>
               </div>
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-amber-500/10 rounded-lg">
-                  <Mail className="w-5 h-5 text-amber-500 flex-shrink-0" />
+                <div className="p-2 bg-amber-500/10 dark:bg-amber-500/10 rounded-lg">
+                  <Mail className="w-5 h-5 text-amber-600 dark:text-amber-500 flex-shrink-0" />
                 </div>
                 <a
                   href="mailto:lhamilton@westjamaica.org"
-                  className="text-stone-300 hover:text-amber-400 transition-colors"
+                  className="text-stone-600 dark:text-stone-300 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                 >
                   lhamilton@westjamaica.org
                 </a>
@@ -123,13 +123,13 @@ export function Footer() {
 
           {/* About Links */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-6 font-[family-name:var(--font-playfair)]">About</h3>
+            <h3 className="text-stone-900 dark:text-white font-bold text-lg mb-6 font-[family-name:var(--font-playfair)]">About</h3>
             <ul className="space-y-3.5">
               {footerLinks.about.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-stone-400 hover:text-amber-400 transition-colors duration-300 footer-link inline-block"
+                    className="text-stone-500 dark:text-stone-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300 footer-link inline-block"
                   >
                     {link.label}
                   </Link>
@@ -140,13 +140,13 @@ export function Footer() {
 
           {/* Ministries Links */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-6 font-[family-name:var(--font-playfair)]">Ministries</h3>
+            <h3 className="text-stone-900 dark:text-white font-bold text-lg mb-6 font-[family-name:var(--font-playfair)]">Ministries</h3>
             <ul className="space-y-3.5">
               {footerLinks.ministries.map((link) => (
                 <li key={link.key}>
                   <Link
                     href={link.href}
-                    className="text-stone-400 hover:text-amber-400 transition-colors duration-300 footer-link inline-block"
+                    className="text-stone-500 dark:text-stone-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300 footer-link inline-block"
                   >
                     {link.label}
                   </Link>
@@ -157,13 +157,13 @@ export function Footer() {
 
           {/* Resources Links */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-6 font-[family-name:var(--font-playfair)]">Resources</h3>
+            <h3 className="text-stone-900 dark:text-white font-bold text-lg mb-6 font-[family-name:var(--font-playfair)]">Resources</h3>
             <ul className="space-y-3.5">
               {footerLinks.resources.map((link) => (
                 <li key={link.key || link.href}>
                   <Link
                     href={link.href}
-                    className="text-stone-400 hover:text-amber-400 transition-colors duration-300 footer-link inline-block"
+                    className="text-stone-500 dark:text-stone-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300 footer-link inline-block"
                   >
                     {link.label}
                   </Link>
@@ -174,26 +174,26 @@ export function Footer() {
         </div>
 
         {/* Service Times Banner */}
-        <div className="mt-16 pt-10 border-t border-stone-800">
+        <div className="mt-16 pt-10 border-t border-stone-200 dark:border-stone-800">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-xl">
-                <Clock className="w-5 h-5 text-amber-500" />
+              <div className="p-2.5 bg-gradient-to-br from-amber-500/20 to-orange-500/20 dark:from-amber-500/20 dark:to-orange-500/20 rounded-xl">
+                <Clock className="w-5 h-5 text-amber-600 dark:text-amber-500" />
               </div>
-              <span className="text-white font-semibold text-lg">Service Times</span>
+              <span className="text-stone-900 dark:text-white font-semibold text-lg">Service Times</span>
             </div>
             <div className="flex flex-wrap gap-6 text-base">
               <div>
-                <span className="text-stone-500">Sabbath School:</span>{" "}
-                <span className="text-white font-semibold">9:30 AM</span>
+                <span className="text-stone-400 dark:text-stone-500">Sabbath School:</span>{" "}
+                <span className="text-stone-900 dark:text-white font-semibold">9:30 AM</span>
               </div>
               <div>
-                <span className="text-stone-500">Divine Service:</span>{" "}
-                <span className="text-white font-semibold">11:00 AM</span>
+                <span className="text-stone-400 dark:text-stone-500">Divine Service:</span>{" "}
+                <span className="text-stone-900 dark:text-white font-semibold">11:00 AM</span>
               </div>
               <div>
-                <span className="text-stone-500">AY Society:</span>{" "}
-                <span className="text-white font-semibold">Sat 4:30 PM</span>
+                <span className="text-stone-400 dark:text-stone-500">AY Society:</span>{" "}
+                <span className="text-stone-900 dark:text-white font-semibold">Sat 4:30 PM</span>
               </div>
             </div>
           </div>
@@ -201,11 +201,11 @@ export function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-stone-800">
+      <div className="border-t border-stone-200 dark:border-stone-800">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             {/* Copyright */}
-            <p className="text-sm text-stone-500">
+            <p className="text-sm text-stone-400 dark:text-stone-500">
               &copy; {new Date().getFullYear()} Lilliput Seventh-day Adventist
               Church. All rights reserved.
             </p>
@@ -218,11 +218,11 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative p-2.5 rounded-xl text-stone-400 hover:text-amber-400 hover:bg-stone-800 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-900 focus-visible:text-amber-400"
+                  className="group relative p-2.5 rounded-xl text-stone-400 dark:text-stone-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-stone-200 dark:hover:bg-stone-800 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:focus-visible:ring-offset-stone-900 focus-visible:text-amber-600 dark:focus-visible:text-amber-400"
                   aria-label={`${social.label} (opens in new tab)`}
                 >
                   {social.icon}
-                  <ExternalLink className="absolute -top-1 -right-1 w-3 h-3 opacity-0 group-hover:opacity-100 text-amber-400 transition-opacity" />
+                  <ExternalLink className="absolute -top-1 -right-1 w-3 h-3 opacity-0 group-hover:opacity-100 text-amber-600 dark:text-amber-400 transition-opacity" />
                 </a>
               ))}
             </div>

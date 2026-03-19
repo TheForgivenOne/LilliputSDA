@@ -60,8 +60,8 @@ const beliefs = [
 const defaultPastor = {
   name: "Pastor Lataniel Hamilton",
   role: "Junior Pastor",
-  title: "District Pastor, Lilliput District of Churches",
-  bio: "Pastor Hamilton leads the Lilliput District of Churches with a passion for community outreach and spiritual growth. Under his leadership, the district has seen continued growth and expanded ministry programs.",
+  title: "Junior Pastor, Lilliput SDA Church",
+  bio: "Pastor Hamilton leads the Lilliput SDA Church with a passion for community outreach and spiritual growth. Under his leadership, the church has seen continued growth and expanded ministry programs.",
   photoUrl: "",
   email: "lhamilton@westjamaica.org",
   phone: "(876) 123-4567",

@@ -287,7 +287,7 @@ export default function EventsPage() {
                           Lilliput SDA Church
                         </p>
                         <p className="text-sm text-stone-500 dark:text-stone-400">
-                          Lot 200-202, Lilliput District
+                          Lot 200-202, Lilliput
                         </p>
                         <p className="text-sm text-stone-500 dark:text-stone-400">
                           Montego Bay, St. James, Jamaica

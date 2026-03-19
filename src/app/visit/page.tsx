@@ -14,6 +14,7 @@ import {
   Phone,
 } from "lucide-react";
 import Link from "next/link";
+import { MapEmbed } from "@/components/features/MapEmbed";
 
 const scheduleItems = [
   {
@@ -265,7 +266,7 @@ export default function VisitPage() {
                   <div>
                     <h3 className="font-semibold text-stone-900 dark:text-stone-100 mb-1">Address</h3>
                     <p className="text-stone-600 dark:text-stone-400">
-                      Lot 200-202, Lilliput District<br />
+                      Lot 200-202, Lilliput<br />
                       Montego Bay, St. James<br />
                       Jamaica
                     </p>
@@ -302,20 +303,11 @@ export default function VisitPage() {
 
             {/* Map Side */}
             <div className="order-1 lg:order-2">
-              <div className="relative aspect-[4/3] bg-stone-200 dark:bg-stone-700 rounded-2xl overflow-hidden shadow-lg">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3797.1234567890123!2d-77.9194!3d18.4762!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDI4JzM0LjMiTiA3N8KwNTUlMDkuOCJX!5e0!3m2!1sen!2sjm!4v1234567890"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Lilliput SDA Church Location"
-                  className="w-full h-full"
-                />
-                <div className="absolute inset-0 ring-1 ring-black/5 rounded-2xl pointer-events-none" />
-              </div>
+              <MapEmbed
+                aspectRatio="standard"
+                showRing
+                className="shadow-lg"
+              />
             </div>
           </div>
         </div>

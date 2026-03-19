@@ -5,6 +5,7 @@
   --foreground: #1c1917;
   --accent-warm: #c4321f;
   --accent-cool: #78716c;
+  --accent-olive: #6b7c5e;
 }
 
 @theme inline {
@@ -12,6 +13,7 @@
   --color-foreground: var(--foreground);
   --color-accent-warm: var(--accent-warm);
   --color-accent-cool: var(--accent-cool);
+  --color-accent-olive: var(--accent-olive);
   --font-sans: var(--font-dm-sans);
   --font-serif: var(--font-playfair);
   --font-mono: var(--font-geist-mono);
@@ -23,6 +25,7 @@
     --foreground: #fafaf9;
     --accent-warm: #e5452a;
     --accent-cool: #a8a29e;
+    --accent-olive: #94b487;
   }
 }
 

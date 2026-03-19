@@ -59,10 +59,10 @@ export default function Home() {
   ), []);
 
   const ministries = useMemo(() => [
-    { name: "Youth Ministries", imageUrl: CHURCH_IMAGES.ministries.youth.worship, bgColor: "bg-gradient-to-br from-sky-400 to-cyan-500", href: "/ministries" },
-    { name: "Women's Ministry", imageUrl: CHURCH_IMAGES.ministries.womens.main, bgColor: "bg-gradient-to-br from-rose-400 to-pink-500", href: "/ministries" },
-    { name: "Men's Ministry", imageUrl: CHURCH_IMAGES.ministries.mens.main, bgColor: "bg-gradient-to-br from-blue-500 to-indigo-600", href: "/ministries" },
-    { name: "Music Ministry", imageUrl: CHURCH_IMAGES.ministries.music.worship, bgColor: "bg-gradient-to-br from-purple-500 to-violet-600", href: "/ministries" },
+    { name: "Youth Ministries", imageUrl: CHURCH_IMAGES.ministries.youth.worship, bgColor: "bg-gradient-to-br from-emerald-500 to-emerald-700", href: "/ministries" },
+    { name: "Women's Ministry", imageUrl: CHURCH_IMAGES.ministries.womens.main, bgColor: "bg-gradient-to-br from-rose-300 to-rose-500", href: "/ministries" },
+    { name: "Men's Ministry", imageUrl: CHURCH_IMAGES.ministries.mens.main, bgColor: "bg-gradient-to-br from-stone-500 to-stone-700", href: "/ministries" },
+    { name: "Music Ministry", imageUrl: CHURCH_IMAGES.ministries.music.worship, bgColor: "bg-gradient-to-br from-amber-500 to-amber-700", href: "/ministries" },
   ], []);
 
   const eventsLoading = events === undefined;

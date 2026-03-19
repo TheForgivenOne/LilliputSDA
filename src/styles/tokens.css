@@ -39,6 +39,18 @@
   --color-accent-800: #83291c;
   --color-accent-900: #6d291c;
 
+  /* Nature Colors - Olive Stone (warm earthy greens) */
+  --color-olive-50: #f0f5ed;
+  --color-olive-100: #dce6d5;
+  --color-olive-200: #b8cdae;
+  --color-olive-300: #94b487;
+  --color-olive-400: #6b7c5e;
+  --color-olive-500: #5a6b4e;
+  --color-olive-600: #485640;
+  --color-olive-700: #3a4534;
+  --color-olive-800: #2d3528;
+  --color-olive-900: #1f241c;
+
   /* Semantic Colors */
   --color-success-50: #f0fdf4;
   --color-success-100: #dcfce7;

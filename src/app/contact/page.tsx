@@ -2,6 +2,7 @@
 
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { ContactForm, PrayerRequestForm } from "@/components/forms";
+import { MapEmbed } from "@/components/features/MapEmbed";
 
 export default function ContactPage() {
   return (
@@ -36,7 +37,7 @@ export default function ContactPage() {
                 Address
               </h3>
               <p className="text-stone-600 dark:text-stone-400 text-sm">
-                Lot 200-202, Lilliput District
+                Lot 200-202, Lilliput
                 <br />
                 Montego Bay, St. James
                 <br />
@@ -119,47 +120,14 @@ export default function ContactPage() {
               Find Us
             </h2>
             <p className="text-stone-600 dark:text-stone-300 max-w-2xl mx-auto">
-              Located in the beautiful Lilliput District of Montego Bay, we&apos;re 
+              Located in the beautiful Lilliput area of Montego Bay, we&apos;re
               easy to find and would love to welcome you.
             </p>
           </div>
-          <div className="aspect-[21/9] bg-stone-200 dark:bg-stone-700 rounded-2xl overflow-hidden">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3797.1234567890123!2d-77.9194!3d18.4762!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDI4JzM0LjMiTiA3N8KwNTUlMDkuOCJX!5e0!3m2!1sen!2sjm!4v1234567890"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Lilliput SDA Church Location"
-              onError={(e) => {
-                const target = e.currentTarget as HTMLIFrameElement;
-                target.style.display = 'none';
-              }}
-            />
-            <noscript>
-              <div className="w-full h-full flex items-center justify-center bg-stone-100 dark:bg-stone-800 p-8 text-center">
-                <div>
-                  <MapPin className="w-12 h-12 text-amber-600 mx-auto mb-4" />
-                  <p className="text-stone-600 dark:text-stone-300">
-                    Lilliput SDA Church<br />
-                    Lot 200-202, Lilliput District<br />
-                    Montego Bay, St. James<br />
-                    Jamaica
-                  </p>
-                  <a 
-                    href="https://maps.google.com/?q=18.4762,-77.9194" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-block mt-4 text-amber-700 dark:text-amber-400 hover:underline"
-                  >
-                    Open in Google Maps
-                  </a>
-                </div>
-              </div>
-            </noscript>
-          </div>
+          <MapEmbed
+            aspectRatio="wide"
+            title="Lilliput SDA Church Location"
+          />
         </div>
       </section>
     </div>
