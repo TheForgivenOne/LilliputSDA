@@ -126,7 +126,6 @@ export function HistoricalSlideshow({
   };
 
   const currentSlide = slides[currentIndex];
-  const isTouchDevice = "ontouchstart" in window;
 
   return (
     <div
@@ -174,8 +173,7 @@ export function HistoricalSlideshow({
             onClick={prevSlide}
             className={cn(
               "absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full flex items-center justify-center transition-all",
-              "opacity-0 group-hover:opacity-100",
-              (isTouchDevice || isDragging) && "lg:opacity-0"
+              "opacity-0 group-hover:opacity-100 lg:opacity-0"
             )}
             aria-label="Previous slide"
           >
@@ -186,8 +184,7 @@ export function HistoricalSlideshow({
             onClick={nextSlide}
             className={cn(
               "absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full flex items-center justify-center transition-all",
-              "opacity-0 group-hover:opacity-100",
-              (isTouchDevice || isDragging) && "lg:opacity-0"
+              "opacity-0 group-hover:opacity-100 lg:opacity-0"
             )}
             aria-label="Next slide"
           >
@@ -232,21 +229,6 @@ export function HistoricalSlideshow({
               className="absolute bottom-0 left-0 h-0.5 bg-amber-400 transition-none"
               style={{ width: `${progress}%` }}
             />
-          )}
-
-          {isTouchDevice && (
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between items-center px-2 pointer-events-none">
-              <div className="w-8 h-16 flex items-center justify-start">
-                <div className="w-6 h-10 flex items-center justify-center text-white/60">
-                  <ChevronLeft className="w-5 h-5" />
-                </div>
-              </div>
-              <div className="w-8 h-16 flex items-center justify-end">
-                <div className="w-6 h-10 flex items-center justify-center text-white/60">
-                  <ChevronRight className="w-5 h-5" />
-                </div>
-              </div>
-            </div>
           )}
         </>
       )}
