@@ -196,9 +196,11 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
                 <button
                   onClick={onClose}
                   className={cn(
-                    "absolute right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white z-10",
-                    isScrolled ? "top-1/2 -translate-y-1/2" : "top-4"
+                    "absolute right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white",
+                    isScrolled ? "top-1/2 -translate-y-1/2" : "top-4",
+                    "z-20"
                   )}
+                  style={{ zIndex: 40 }}
                   aria-label="Close modal"
                 >
                   <X className="w-5 h-5" />
