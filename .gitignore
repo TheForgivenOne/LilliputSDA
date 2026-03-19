@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+/playwright-report/
+/test-results/
 
 # next.js
 /.next/
@@ -31,7 +33,10 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+.env
+.env.local
+.env.*.local
+!.env.example
 
 # vercel
 .vercel
@@ -42,3 +47,9 @@ next-env.d.ts
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# editor directories
+/.idea/
+*.swp
+*.swo
+*~

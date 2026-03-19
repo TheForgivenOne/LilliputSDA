@@ -384,6 +384,12 @@ Does it require deep project context?
 
 ---
 
+## Auto-Commit Policy
+
+**Enabled**: Changes are automatically committed after passing lint + typecheck.
+
+---
+
 ## Post-Agent Git Workflow
 
 When an agent completes work, follow this staging workflow:
