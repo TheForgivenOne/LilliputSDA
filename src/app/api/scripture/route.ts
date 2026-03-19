@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       limit = parsed;
     }
 
-    const scriptures = await fetchQuery(api.scripture.search, { 
+    const scriptures = await fetchQuery(api.scripture.queries.search, { 
       query: sanitizedQuery,
       limit 
     });
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
       limitValue = parsed;
     }
 
-    const scriptures = await fetchQuery(api.scripture.search, { 
+    const scriptures = await fetchQuery(api.scripture.queries.search, { 
       query: sanitizedQuery,
       limit: limitValue 
     });

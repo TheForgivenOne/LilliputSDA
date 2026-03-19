@@ -19,7 +19,7 @@ function validateEmail(email: string): boolean {
 }
 
 export default function PrayerRequestForm({ onSuccess, className }: PrayerRequestFormProps) {
-  const submitPrayer = useMutation(api.prayerRequests.submit);
+  const submitPrayer = useMutation(api.prayerRequests.mutations.submit);
   const formRef = useRef<HTMLFormElement>(null);
 
   const [form, setForm] = useState({

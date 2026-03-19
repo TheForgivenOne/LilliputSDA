@@ -75,7 +75,7 @@ const ministryCategories = [
 
 export default function MinistriesPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const ministries = useQuery(api.ministries.listAll);
+  const ministries = useQuery(api.ministries.queries.listAll);
   const ministriesLoading = ministries === undefined;
 
   const displayMinistries = ministries && ministries.length > 0 ? ministries : defaultMinistries;

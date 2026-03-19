@@ -19,7 +19,7 @@ function validateEmail(email: string): boolean {
 }
 
 export default function ContactForm({ onSuccess, className }: ContactFormProps) {
-  const submitContact = useMutation(api.contact.submit);
+  const submitContact = useMutation(api.contact.mutations.submit);
   const formRef = useRef<HTMLFormElement>(null);
 
   const [form, setForm] = useState({

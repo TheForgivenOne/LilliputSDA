@@ -28,8 +28,8 @@ export default function EventsPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedAnnouncementCategory, setSelectedAnnouncementCategory] = useState("all");
 
-  const events = useQuery(api.eventsQueries.listUpcoming);
-  const announcements = useQuery(api.announcementsQueries.listLatest);
+  const events = useQuery(api.events.queries.listUpcoming);
+  const announcements = useQuery(api.announcements.queries.listLatest);
 
   const eventsLoading = events === undefined;
   const announcementsLoading = announcements === undefined;

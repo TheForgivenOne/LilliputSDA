@@ -1,50 +1,46 @@
-import { mutation } from "./_generated/server";
+import { mutation } from "../_generated/server";
 import { v } from "convex/values";
 
 export const submit = mutation({
   args: {
     name: v.string(),
     email: v.string(),
-    message: v.string(),
+    request: v.string(),
+    isPublic: v.boolean(),
   },
   handler: async (ctx, args) => {
-    await ctx.db.insert("contactSubmissions", {
+    await ctx.db.insert("prayerRequests", {
       name: args.name,
       email: args.email,
-      message: args.message,
+      request: args.request,
+      isPublic: args.isPublic,
+      isAnswered: false,
       date: new Date().toISOString(),
-      isRead: false,
     });
 
     fetch(`${process.env.NEXT_PUBLIC_CONVEX_SITE_URL || ""}/api/email`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        type: "contact",
+        type: "prayer",
         data: {
           name: args.name,
           email: args.email,
-          message: args.message,
+          request: args.request,
+          isPublic: args.isPublic,
         },
       }),
     }).catch((err) => {
-      console.error("Failed to send contact email notification:", err);
+      console.error("Failed to send prayer email notification:", err);
     });
 
     return { success: true };
   },
 });
 
-export const markAsRead = mutation({
-  args: { id: v.id("contactSubmissions") },
+export const markAnswered = mutation({
+  args: { id: v.id("prayerRequests") },
   handler: async (ctx, args) => {
-    await ctx.db.patch(args.id, { isRead: true });
-  },
-});
-
-export const deleteSubmission = mutation({
-  args: { id: v.id("contactSubmissions") },
-  handler: async (ctx, args) => {
-    await ctx.db.delete(args.id);
+    await ctx.db.patch(args.id, { isAnswered: true });
   },
 });

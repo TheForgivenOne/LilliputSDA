@@ -38,7 +38,7 @@ const defaultPastor = {
 };
 
 export default function AboutPage() {
-  const staff = useQuery(api.staff.listAll);
+  const staff = useQuery(api.staff.queries.listAll);
   const staffLoading = staff === undefined;
 
   const pastoralStaff = staff?.filter((s: StaffMember) => s.department === "Pastoral") || [];

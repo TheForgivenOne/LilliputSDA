@@ -16,8 +16,8 @@ import { SermonList, VideoModal } from "@/components/video";
 import type { YouTubeVideo, ChurchEvent, Announcement } from "@/types";
 
 export default function Home() {
-  const events = useQuery(api.eventsQueries.listUpcoming);
-  const announcements = useQuery(api.announcementsQueries.listLatest);
+  const events = useQuery(api.events.queries.listUpcoming);
+  const announcements = useQuery(api.announcements.queries.listLatest);
   
   const [currentTime] = useState<number>(() => {
     if (typeof window === "undefined") return 1742236800000;
