@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResendClient() {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY is not configured");
+  }
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "successmove000@gmail.com";
 const PRAYER_TEAM_EMAIL = process.env.PRAYER_TEAM_EMAIL || "successmove000@gmail.com";
@@ -145,6 +150,7 @@ export async function POST(request: Request) {
 
     if (type === "contact") {
       const payload = data as ContactPayload;
+      const resend = getResendClient();
       
       const [adminResult, thankYouResult] = await Promise.all([
         resend.emails.send({
@@ -173,6 +179,7 @@ export async function POST(request: Request) {
 
     if (type === "prayer") {
       const payload = data as PrayerPayload;
+      const resend = getResendClient();
       
       const [prayerResult, thankYouResult] = await Promise.all([
         resend.emails.send({
