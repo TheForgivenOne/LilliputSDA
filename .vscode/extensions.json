@@ -6,7 +6,6 @@
     "ms-vscode.vscode-typescript-next",
     "formulahendry.auto-rename-tag",
     "christian-kohler.path-intellisense",
-    "prisma.prisma",
     "ms-playwright.playwright"
   ]
 }

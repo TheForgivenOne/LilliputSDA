@@ -68,7 +68,5 @@
   "tailwindCSS.experimental.classRegex": [
     ["className\\s*=\\s*[\"'`]([^\"'`]*)[\"'`]"]
   ],
-  "[prisma]": {
-    "editor.defaultFormatter": "Prisma.prisma"
   }
 }
