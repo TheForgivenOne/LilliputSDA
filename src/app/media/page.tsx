@@ -1,10 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
-import { Play, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/Input";
-import { decodeHtmlEntities } from "@/lib/utils";
+import {
+  VideoCard,
+  FeaturedVideo,
+  VideoModal,
+  VideoGridSkeleton,
+  FeaturedVideoSkeleton,
+  VideoError,
+} from "@/components/video";
 import type { YouTubeVideo } from "@/types";
 
 // YouTube channel base URL
@@ -15,6 +21,7 @@ export default function MediaPage() {
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null);
 
   useEffect(() => {
     async function loadVideos() {
@@ -89,88 +96,15 @@ export default function MediaPage() {
           </h2>
           
           {loading ? (
-            <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-lg">
-              <div className="grid grid-cols-1 lg:grid-cols-2">
-                <div className="aspect-video lg:aspect-auto bg-stone-200 dark:bg-stone-700 animate-pulse" />
-                <div className="p-8 lg:p-12 space-y-4">
-                  <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-24 animate-pulse" />
-                  <div className="h-8 bg-stone-200 dark:bg-stone-700 rounded w-3/4 animate-pulse" />
-                  <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-full animate-pulse" />
-                  <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-2/3 animate-pulse" />
-                </div>
-              </div>
-            </div>
+            <FeaturedVideoSkeleton />
           ) : error ? (
-            <div className="bg-white dark:bg-stone-800 rounded-2xl p-8 text-center">
-              <p className="text-stone-500 dark:text-stone-400 mb-4">{error}</p>
-              <a
-                href={youtubeChannelUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-amber-700 text-white rounded-lg font-medium hover:bg-amber-800 transition-colors"
-              >
-                <Play className="w-5 h-5" />
-                Visit YouTube Channel
-              </a>
-            </div>
+            <VideoError error={error} channelUrl={youtubeChannelUrl} />
           ) : latestVideo ? (
-            <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-lg">
-              <div className="grid grid-cols-1 lg:grid-cols-2">
-                <div className="aspect-video lg:aspect-auto relative bg-stone-900">
-                  <Image
-                    src={latestVideo.thumbnailUrl}
-                    alt={decodeHtmlEntities(latestVideo.title)}
-                    fill
-                    className="object-cover"
-                    onError={() => {}}
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                      <a
-                        href={`https://www.youtube.com/watch?v=${latestVideo.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group"
-                      >
-                      <div className="w-20 h-20 rounded-full bg-amber-600 flex items-center justify-center group-hover:bg-amber-500 transition-colors shadow-lg">
-                        <Play className="w-8 h-8 text-white ml-1" />
-                      </div>
-                    </a>
-                  </div>
-                  <div className="absolute bottom-4 right-4 bg-black/75 text-white text-sm px-3 py-1 rounded">
-                    {latestVideo.duration}
-                  </div>
-                </div>
-                <div className="p-8 lg:p-12 flex flex-col justify-center">
-                  <span className="text-amber-700 dark:text-amber-400 font-medium mb-2">
-                    {new Date(latestVideo.publishedAt).toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </span>
-                  <h3 className="text-2xl lg:text-3xl font-bold text-stone-900 dark:text-stone-100 mb-4">
-                    {decodeHtmlEntities(latestVideo.title)}
-                  </h3>
-                  <p className="text-stone-600 dark:text-stone-300 mb-4 line-clamp-3">
-                    {decodeHtmlEntities(latestVideo.description)}
-                  </p>
-                  <div className="flex flex-wrap gap-4 text-sm text-stone-500 dark:text-stone-400 mb-6">
-                    <span className="flex items-center gap-1">
-                      {parseInt(latestVideo.viewCount).toLocaleString()} views
-                    </span>
-                  </div>
-                  <a
-                    href={`https://www.youtube.com/watch?v=${latestVideo.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-amber-700 text-white rounded-lg font-medium hover:bg-amber-800 transition-colors w-fit"
-                  >
-                    <Play className="w-5 h-5" />
-                    Watch on YouTube
-                  </a>
-                </div>
-              </div>
-            </div>
+            <FeaturedVideo
+              video={latestVideo}
+              isPlaying={selectedVideo?.id === latestVideo.id}
+              onPlay={() => setSelectedVideo(latestVideo)}
+            />
           ) : null}
         </div>
       </section>
@@ -195,17 +129,7 @@ export default function MediaPage() {
       <section className="py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-md">
-                  <div className="aspect-video bg-stone-200 dark:bg-stone-700 animate-pulse" />
-                  <div className="p-4 space-y-3">
-                    <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded w-3/4 animate-pulse" />
-                    <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-1/2 animate-pulse" />
-                  </div>
-                </div>
-              ))}
-            </div>
+            <VideoGridSkeleton count={6} />
           ) : error ? (
             <div className="text-center py-12">
               <p className="text-stone-500 dark:text-stone-400">{error}</p>
@@ -214,39 +138,11 @@ export default function MediaPage() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredVideos.map((video) => (
-                  <a
+                  <VideoCard
                     key={video.id}
-                    href={`https://www.youtube.com/watch?v=${video.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group block bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all hover:-translate-y-1"
-                  >
-                    <div className="aspect-video relative bg-stone-900">
-                      <Image
-                        src={video.thumbnailUrl}
-                        alt={decodeHtmlEntities(video.title)}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform"
-                        onError={() => {}}
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="w-14 h-14 rounded-full bg-amber-600/90 flex items-center justify-center">
-                          <Play className="w-6 h-6 text-white ml-1" />
-                        </div>
-                      </div>
-                      <div className="absolute bottom-2 right-2 bg-black/75 text-white text-xs px-2 py-0.5 rounded">
-                        {video.duration}
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-semibold text-stone-900 dark:text-stone-100 mb-1 line-clamp-2 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">
-                        {decodeHtmlEntities(video.title)}
-                      </h3>
-                      <p className="text-sm text-stone-500 dark:text-stone-400">
-                        {new Date(video.publishedAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </a>
+                    video={video}
+                    onClick={setSelectedVideo}
+                  />
                 ))}
               </div>
 
@@ -285,6 +181,12 @@ export default function MediaPage() {
           </a>
         </div>
       </section>
+
+      {/* Video Modal */}
+      <VideoModal
+        video={selectedVideo}
+        onClose={() => setSelectedVideo(null)}
+      />
     </div>
   );
 }

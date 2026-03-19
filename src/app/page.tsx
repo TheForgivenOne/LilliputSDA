@@ -1,11 +1,10 @@
 "use client";
 
 import { Clock, MapPin, Play, Calendar } from "lucide-react";
-import Link from "next/link";
 import { useMemo, useState, useEffect } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { EventCard, SermonCard, AnnouncementCard } from "@/components/ui/Card";
+import { EventCard, AnnouncementCard } from "@/components/ui/Card";
 import { CHURCH_IMAGES } from "@/lib/utils";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { QuickInfo } from "@/components/features/QuickInfo";
@@ -13,6 +12,7 @@ import { HeroSection } from "@/components/features/HeroSection";
 import { AboutSplit } from "@/components/features/AboutSplit";
 import { QuickMinistryCard } from "@/components/features/QuickMinistryCard";
 import { CTASection } from "@/components/features/CTASection";
+import { SermonList, VideoModal } from "@/components/video";
 import type { YouTubeVideo, ChurchEvent, Announcement } from "@/types";
 
 export default function Home() {
@@ -26,6 +26,7 @@ export default function Home() {
   
   const [sermonVideos, setSermonVideos] = useState<YouTubeVideo[]>([]);
   const [videosLoading, setVideosLoading] = useState(true);
+  const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null);
 
   useEffect(() => {
     async function fetchVideos() {
@@ -62,52 +63,6 @@ export default function Home() {
     { name: "Men's Ministry", imageUrl: CHURCH_IMAGES.ministries.mens.main, bgColor: "bg-gradient-to-br from-blue-500 to-indigo-600", href: "/ministries" },
     { name: "Music Ministry", imageUrl: CHURCH_IMAGES.ministries.music.worship, bgColor: "bg-gradient-to-br from-purple-500 to-violet-600", href: "/ministries" },
   ], []);
-
-  const featuredSermonFallback = useMemo(() => ({
-    id: "featured",
-    title: "Walking in Faith: Trusting God's Plan",
-    speaker: "Pastor Lataniel Hamilton",
-    date: new Date(currentTime - 86400000).toISOString(),
-    scripture: "Hebrews 11:1-6",
-    thumbnailUrl: CHURCH_IMAGES.placeholder.sermon,
-    duration: "42:15",
-  }), [currentTime]);
-  
-  const sermonCards = useMemo(() => {
-    if (sermonVideos.length > 0) {
-      return sermonVideos.slice(0, 3).map((video) => (
-        <Link 
-          key={video.id} 
-          href={`/media?video=${video.id}`}
-          className="w-[280px] sm:w-[320px] lg:w-[360px] flex-shrink-0 block"
-        >
-          <SermonCard
-            title={video.title}
-            speaker="Pastor Lataniel Hamilton"
-            date={video.publishedAt}
-            thumbnailUrl={video.thumbnailUrl}
-            duration={video.duration}
-          />
-        </Link>
-      ));
-    }
-    return [1, 2, 3].map((i) => (
-      <Link 
-        key={i} 
-        href="/media"
-        className="w-[280px] sm:w-[320px] lg:w-[360px] flex-shrink-0 block"
-      >
-        <SermonCard
-          title={`${featuredSermonFallback.title} ${i > 1 ? `Part ${i}` : ""}`}
-          speaker={featuredSermonFallback.speaker}
-          date={new Date(currentTime - i * 7 * 86400000).toISOString()}
-          scripture={featuredSermonFallback.scripture}
-          thumbnailUrl={i === 1 ? CHURCH_IMAGES.placeholder.sermon : i === 2 ? CHURCH_IMAGES.congregation.worship : CHURCH_IMAGES.congregation.gathering}
-          duration={featuredSermonFallback.duration}
-        />
-      </Link>
-    ));
-  }, [sermonVideos, featuredSermonFallback, currentTime]);
 
   const eventsLoading = events === undefined;
   const announcementsLoading = announcements === undefined;
@@ -322,26 +277,12 @@ export default function Home() {
             href="/media"
             linkText="View All"
           />
-          {videosLoading ? (
-            <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4">
-              {[1, 2].map((i) => (
-                <div key={i} className="w-[280px] sm:w-[320px] lg:w-[360px] flex-shrink-0">
-                  <div className="bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-md">
-                    <div className="aspect-video bg-stone-200 dark:bg-stone-700 shimmer" />
-                    <div className="p-4 space-y-3">
-                      <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded shimmer" />
-                      <div className="h-4 w-3/4 bg-stone-200 dark:bg-stone-700 rounded shimmer" />
-                      <div className="h-3 w-1/2 bg-stone-200 dark:bg-stone-700 rounded shimmer" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex gap-6 overflow-x-auto pb-4 -mx-4 px-4">
-              {sermonCards.slice(0, 2)}
-            </div>
-          )}
+          <SermonList
+            videos={sermonVideos}
+            onVideoClick={setSelectedVideo}
+            loading={videosLoading}
+            maxItems={2}
+          />
         </div>
       </section>
 
@@ -459,6 +400,11 @@ export default function Home() {
           variant: "outline",
         }}
         backgroundColor="amber"
+      />
+
+      <VideoModal
+        video={selectedVideo}
+        onClose={() => setSelectedVideo(null)}
       />
     </div>
   );
