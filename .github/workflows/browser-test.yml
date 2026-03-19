@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
@@ -32,12 +32,13 @@ jobs:
         run: npm run build
 
       - name: Start Next.js server
-        run: npm run start &
+        run: npm run start
         env:
           PORT: 3000
+        background: true
 
       - name: Wait for server
-        run: sleep 10 && curl -f http://localhost:3000 || exit 1
+        run: npx wait-on http://localhost:3000 --timeout 60000
 
       - name: Run Playwright tests
         run: npx playwright test
