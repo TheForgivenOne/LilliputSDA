@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Church, Users, Heart, BookOpen } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { getPlaceholderImage } from "@/lib/utils";
+import { CHURCH_IMAGES } from "@/lib/utils";
 import { StaffCard } from "@/components/ui/Card";
 import { LeaderCard, LeaderCardGroup } from "@/components/features/LeaderCard";
 import type { StaffMember } from "@/types";
@@ -30,7 +30,7 @@ const defaultPastor = {
   role: "Senior Pastor",
   title: "District Pastor, Lilliput District of Churches",
   bio: "Pastor Hamilton leads the Lilliput District of Churches with a passion for community outreach and spiritual growth. Under his leadership, the district has seen continued growth and expanded ministry programs.",
-  photoUrl: getPlaceholderImage(400, 400, "Pastor+L.+Hamilton"),
+  photoUrl: CHURCH_IMAGES.staff.pastor,
   email: "lhamilton@westjamaica.org",
   phone: "(876) 123-4567",
   department: "Pastoral",
@@ -50,7 +50,7 @@ export default function AboutPage() {
       <section className="relative bg-stone-900 text-white py-24 lg:py-32">
         <div className="absolute inset-0 opacity-30">
           <Image
-            src={getPlaceholderImage(1920, 600, "Church+History")}
+            src={CHURCH_IMAGES.history.vintage}
             alt="Church history"
             fill
             className="object-cover"
@@ -101,7 +101,7 @@ export default function AboutPage() {
             <div className="relative">
               <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
                 <Image
-                  src={getPlaceholderImage(800, 600, "Historical+Photos")}
+                  src={CHURCH_IMAGES.congregation.gathering}
                   alt="Church historical photos"
                   fill
                   className="object-cover"

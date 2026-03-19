@@ -6,7 +6,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { EventCard, SermonCard, AnnouncementCard } from "@/components/ui/Card";
-import { getPlaceholderImage } from "@/lib/utils";
+import { CHURCH_IMAGES } from "@/lib/utils";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { QuickInfo } from "@/components/features/QuickInfo";
 import { HeroSection } from "@/components/features/HeroSection";
@@ -57,21 +57,22 @@ export default function Home() {
   ), []);
 
   const ministries = useMemo(() => [
-    { name: "Youth Ministries", imageUrl: getPlaceholderImage(400, 300, "Youth+Ministry"), bgColor: "bg-gradient-to-br from-sky-400 to-cyan-500", href: "/ministries" },
-    { name: "Women's Ministry", imageUrl: getPlaceholderImage(400, 300, "Womens+Ministry"), bgColor: "bg-gradient-to-br from-rose-400 to-pink-500", href: "/ministries" },
-    { name: "Men's Ministry", imageUrl: getPlaceholderImage(400, 300, "Mens+Ministry"), bgColor: "bg-gradient-to-br from-blue-500 to-indigo-600", href: "/ministries" },
-    { name: "Music Ministry", imageUrl: getPlaceholderImage(400, 300, "Music+Ministry"), bgColor: "bg-gradient-to-br from-purple-500 to-violet-600", href: "/ministries" },
+    { name: "Youth Ministries", imageUrl: CHURCH_IMAGES.ministries.youth.worship, bgColor: "bg-gradient-to-br from-sky-400 to-cyan-500", href: "/ministries" },
+    { name: "Women's Ministry", imageUrl: CHURCH_IMAGES.ministries.womens.main, bgColor: "bg-gradient-to-br from-rose-400 to-pink-500", href: "/ministries" },
+    { name: "Men's Ministry", imageUrl: CHURCH_IMAGES.ministries.mens.main, bgColor: "bg-gradient-to-br from-blue-500 to-indigo-600", href: "/ministries" },
+    { name: "Music Ministry", imageUrl: CHURCH_IMAGES.ministries.music.worship, bgColor: "bg-gradient-to-br from-purple-500 to-violet-600", href: "/ministries" },
   ], []);
 
-  const featuredSermon = useMemo(() => ({
+  const featuredSermonFallback = useMemo(() => ({
+    id: "featured",
     title: "Walking in Faith: Trusting God's Plan",
     speaker: "Pastor Lataniel Hamilton",
     date: new Date(currentTime - 86400000).toISOString(),
     scripture: "Hebrews 11:1-6",
-    thumbnailUrl: getPlaceholderImage(640, 360, "Sermon+Thumbnail"),
+    thumbnailUrl: CHURCH_IMAGES.placeholder.sermon,
     duration: "42:15",
   }), [currentTime]);
-
+  
   const sermonCards = useMemo(() => {
     if (sermonVideos.length > 0) {
       return sermonVideos.slice(0, 3).map((video) => (
@@ -97,16 +98,16 @@ export default function Home() {
         className="w-[280px] sm:w-[320px] lg:w-[360px] flex-shrink-0 block"
       >
         <SermonCard
-          title={`${featuredSermon.title} ${i > 1 ? `Part ${i}` : ""}`}
-          speaker={featuredSermon.speaker}
+          title={`${featuredSermonFallback.title} ${i > 1 ? `Part ${i}` : ""}`}
+          speaker={featuredSermonFallback.speaker}
           date={new Date(currentTime - i * 7 * 86400000).toISOString()}
-          scripture={featuredSermon.scripture}
-          thumbnailUrl={getPlaceholderImage(640, 360, `Sermon+${i}`)}
-          duration={featuredSermon.duration}
+          scripture={featuredSermonFallback.scripture}
+          thumbnailUrl={i === 1 ? CHURCH_IMAGES.placeholder.sermon : i === 2 ? CHURCH_IMAGES.congregation.worship : CHURCH_IMAGES.congregation.gathering}
+          duration={featuredSermonFallback.duration}
         />
       </Link>
     ));
-  }, [sermonVideos, featuredSermon, currentTime]);
+  }, [sermonVideos, featuredSermonFallback, currentTime]);
 
   const eventsLoading = events === undefined;
   const announcementsLoading = announcements === undefined;
@@ -296,7 +297,7 @@ export default function Home() {
         subtitle="Lilliput SDA Church"
         description="A warm, welcoming community in the heart of St. James, Jamaica. Join us as we grow together in faith, love, and service."
         badge="Growing together in faith since 1974"
-        backgroundImage={getPlaceholderImage(1920, 1080, "Church+Building")}
+        backgroundImage={CHURCH_IMAGES.hero.churchBuilding}
         primaryAction={{ label: "Plan Your Visit", href: "/events" }}
         secondaryAction={{ label: "Watch Online", href: "/media" }}
         quickInfo={quickInfoContent}
@@ -307,7 +308,7 @@ export default function Home() {
         title="A Place to Belong, Believe, and Become"
         description="Founded in 1974, Lilliput SDA Church has been a beacon of hope and faith in the St. James community for over 50 years. With over 700 members, we are a vibrant, welcoming congregation dedicated to sharing God's love through worship, fellowship, and service."
         additionalText="Whether you're a lifelong Adventist or just beginning your spiritual journey, there's a place for you here. Come experience the warmth of our church family."
-        imageSrc={getPlaceholderImage(800, 600, "Church+Congregation")}
+        imageSrc={CHURCH_IMAGES.congregation.main}
         imageAlt="Church congregation"
         stats={{ value: "700+", label: "Active Members", position: "bottom-left" }}
         action={{ label: "Learn Our Story", href: "/about" }}

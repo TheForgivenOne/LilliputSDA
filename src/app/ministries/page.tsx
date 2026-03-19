@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { MinistryDetailCard } from "@/components/ui/Card";
-import { getPlaceholderImage } from "@/lib/utils";
+import { CHURCH_IMAGES } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Users, Music, Heart, BookOpen, Star } from "lucide-react";
@@ -15,7 +15,7 @@ const defaultMinistries = [
     leader: "Sister Patricia Brown",
     meetingTime: "Saturdays at 4:30 PM",
     meetingLocation: "Fellowship Hall",
-    imageUrl: getPlaceholderImage(600, 400, "Youth+Ministry"),
+    imageUrl: CHURCH_IMAGES.ministries.youth.main,
     category: "youth" as const,
   },
   {
@@ -24,7 +24,7 @@ const defaultMinistries = [
     leader: "Brother David Johnson",
     meetingTime: "Sundays at 2:00 PM",
     meetingLocation: "Church Grounds",
-    imageUrl: getPlaceholderImage(600, 400, "Pathfinders"),
+    imageUrl: CHURCH_IMAGES.ministries.pathfinders.main,
     category: "youth" as const,
   },
   {
@@ -33,7 +33,7 @@ const defaultMinistries = [
     leader: "Sister Angela Reid",
     meetingTime: "Wednesdays at 6:00 PM",
     meetingLocation: "Fellowship Hall",
-    imageUrl: getPlaceholderImage(600, 400, "Womens+Ministry"),
+    imageUrl: CHURCH_IMAGES.ministries.womens.main,
     category: "adult" as const,
   },
   {
@@ -42,7 +42,7 @@ const defaultMinistries = [
     leader: "Brother Michael Thompson",
     meetingTime: "Second Sabbath at 5:00 PM",
     meetingLocation: "Conference Room",
-    imageUrl: getPlaceholderImage(600, 400, "Mens+Ministry"),
+    imageUrl: CHURCH_IMAGES.ministries.mens.main,
     category: "adult" as const,
   },
   {
@@ -51,7 +51,7 @@ const defaultMinistries = [
     leader: "Sister Donna Miller",
     meetingTime: "Thursdays at 6:30 PM",
     meetingLocation: "Sanctuary",
-    imageUrl: getPlaceholderImage(600, 400, "Music+Ministry"),
+    imageUrl: CHURCH_IMAGES.ministries.music.main,
     category: "music" as const,
   },
   {
@@ -60,7 +60,7 @@ const defaultMinistries = [
     leader: "Sister Grace Thompson",
     meetingTime: "Second Sunday at 9:00 AM",
     meetingLocation: "Community Center",
-    imageUrl: getPlaceholderImage(600, 400, "Community+Service"),
+    imageUrl: CHURCH_IMAGES.ministries.community.main,
     category: "adult" as const,
   },
 ];

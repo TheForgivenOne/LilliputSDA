@@ -1,20 +1,14 @@
 'use client'
 
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode } from 'react'
 import { ConvexReactClient } from 'convex/react'
 import { ConvexProviderWithClerk } from 'convex/react-clerk'
 import { useAuth } from '@clerk/nextjs'
 
+const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL
+const convexClient = convexUrl ? new ConvexReactClient(convexUrl) : null
+
 export default function ConvexClientProvider({ children }: { children: ReactNode }) {
-  const [convexClient, setConvexClient] = useState<ConvexReactClient | null>(null)
-  
-  useEffect(() => {
-    const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL
-    if (convexUrl) {
-      setConvexClient(new ConvexReactClient(convexUrl))
-    }
-  }, [])
-  
   if (!convexClient) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-stone-100">

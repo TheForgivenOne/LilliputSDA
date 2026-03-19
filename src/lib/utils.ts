@@ -1,6 +1,9 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type { YouTubeVideo } from "@/types";
+import { CHURCH_IMAGES } from "./images";
+
+export { CHURCH_IMAGES } from "./images";
 
 /**
  * Combines class names with Tailwind CSS merging support
@@ -132,9 +135,88 @@ export function truncateText(text: string, maxLength: number): string {
 }
 
 /**
- * Generate placeholder image URL
+ * Get church image by key - uses real Unsplash images
+ * Falls back to placehold.co if key not found
+ */
+export function getChurchImage(key: keyof typeof CHURCH_IMAGES.hero | 
+  keyof typeof CHURCH_IMAGES.congregation | 
+  keyof typeof CHURCH_IMAGES.ministries.youth |
+  keyof typeof CHURCH_IMAGES.ministries.womens |
+  keyof typeof CHURCH_IMAGES.ministries.mens |
+  keyof typeof CHURCH_IMAGES.ministries.music |
+  keyof typeof CHURCH_IMAGES.ministries.community |
+  keyof typeof CHURCH_IMAGES.ministries.pathfinders |
+  keyof typeof CHURCH_IMAGES.history |
+  keyof typeof CHURCH_IMAGES.staff |
+  keyof typeof CHURCH_IMAGES.placeholder): string {
+  
+  const imageMap: Record<string, string> = {
+    // Hero
+    churchBuilding: CHURCH_IMAGES.hero.churchBuilding,
+    churchExterior: CHURCH_IMAGES.hero.churchExterior,
+    // Congregation
+    main: CHURCH_IMAGES.congregation.main,
+    worship: CHURCH_IMAGES.congregation.worship,
+    handsRaised: CHURCH_IMAGES.congregation.handsRaised,
+    gathering: CHURCH_IMAGES.congregation.gathering,
+    // Ministries - Youth
+    youthMain: CHURCH_IMAGES.ministries.youth.main,
+    youthWorship: CHURCH_IMAGES.ministries.youth.worship,
+    youthCamping: CHURCH_IMAGES.ministries.youth.camping,
+    // Ministries - Women's
+    womensMain: CHURCH_IMAGES.ministries.womens.main,
+    womensFellowship: CHURCH_IMAGES.ministries.womens.fellowship,
+    // Ministries - Men's
+    mensMain: CHURCH_IMAGES.ministries.mens.main,
+    mensFellowship: CHURCH_IMAGES.ministries.mens.fellowship,
+    // Ministries - Music
+    musicMain: CHURCH_IMAGES.ministries.music.main,
+    musicChoir: CHURCH_IMAGES.ministries.music.choir,
+    musicWorship: CHURCH_IMAGES.ministries.music.worship,
+    // Ministries - Community
+    communityMain: CHURCH_IMAGES.ministries.community.main,
+    communityService: CHURCH_IMAGES.ministries.community.service,
+    // Ministries - Pathfinders
+    pathfindersMain: CHURCH_IMAGES.ministries.pathfinders.main,
+    pathfindersOutdoor: CHURCH_IMAGES.ministries.pathfinders.outdoor,
+    // History
+    vintage: CHURCH_IMAGES.history.vintage,
+    oldChurch: CHURCH_IMAGES.history.oldChurch,
+    // Staff
+    pastor: CHURCH_IMAGES.staff.pastor,
+    placeholder: CHURCH_IMAGES.staff.placeholder,
+    // Placeholder
+    sermon: CHURCH_IMAGES.placeholder.sermon,
+  };
+  
+  return imageMap[key] || CHURCH_IMAGES.placeholder.sermon;
+}
+
+/**
+ * Generate placeholder image URL (legacy - now uses real church images)
  */
 export function getPlaceholderImage(width: number, height: number, text?: string): string {
+  // Map common text patterns to church images
+  const textMap: Record<string, string> = {
+    "Church+Building": CHURCH_IMAGES.hero.churchBuilding,
+    "Church+Congregation": CHURCH_IMAGES.congregation.main,
+    "Youth+Ministry": CHURCH_IMAGES.ministries.youth.main,
+    "Pathfinders": CHURCH_IMAGES.ministries.pathfinders.main,
+    "Womens+Ministry": CHURCH_IMAGES.ministries.womens.main,
+    "Mens+Ministry": CHURCH_IMAGES.ministries.mens.main,
+    "Music+Ministry": CHURCH_IMAGES.ministries.music.main,
+    "Community+Service": CHURCH_IMAGES.ministries.community.main,
+    "Church+History": CHURCH_IMAGES.history.vintage,
+    "Historical+Photos": CHURCH_IMAGES.history.oldChurch,
+    "Pastor+L.+Hamilton": CHURCH_IMAGES.staff.pastor,
+    "Sermon+Thumbnail": CHURCH_IMAGES.placeholder.sermon,
+  };
+  
+  if (text && textMap[text]) {
+    return textMap[text];
+  }
+  
+  // Fallback to placehold.co for unknown images
   const encodedText = text ? encodeURIComponent(text) : `${width}x${height}`;
   return `https://placehold.co/${width}x${height}/d97706/white?text=${encodedText}`;
 }
