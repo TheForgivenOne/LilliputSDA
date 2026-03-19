@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Calendar, Play, Pause } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface HistorySlide {
   src: string;
@@ -23,7 +24,14 @@ export function HistoricalSlideshow({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [slideOffset, setSlideOffset] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const minSwipeDistance = 50;
 
   const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % slides.length);
@@ -37,6 +45,11 @@ export function HistoricalSlideshow({
 
   const togglePlay = () => {
     setIsPaused((prev) => !prev);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentIndex(index);
+    setProgress(0);
   };
 
   useEffect(() => {
@@ -74,22 +87,71 @@ export function HistoricalSlideshow({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [nextSlide, prevSlide]);
 
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+    setIsDragging(true);
+    setIsPaused(true);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (!touchStart) return;
+    const currentX = e.targetTouches[0].clientX;
+    setTouchEnd(currentX);
+    const diff = touchStart - currentX;
+    setSlideOffset(diff);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) {
+      setIsDragging(false);
+      setSlideOffset(0);
+      return;
+    }
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextSlide();
+    } else if (isRightSwipe) {
+      prevSlide();
+    }
+
+    setIsDragging(false);
+    setSlideOffset(0);
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
+
   const currentSlide = slides[currentIndex];
+  const isTouchDevice = "ontouchstart" in window;
 
   return (
     <div
-      className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden shadow-2xl group"
+      ref={containerRef}
+      className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden shadow-2xl group select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
     >
       <Image
         src={currentSlide.src}
         alt={currentSlide.alt}
         fill
         sizes="100vw"
-        className="object-cover transition-transform duration-700 ease-out"
-        style={{ transform: `scale(${1 + progress * 0.0003})` }}
+        className={cn(
+          "object-cover transition-transform duration-700 ease-out",
+          isDragging && "transition-none"
+        )}
+        style={{
+          transform: `scale(${1 + progress * 0.0003}) translateX(${slideOffset}px)`,
+        }}
         priority
+        draggable={false}
       />
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -110,7 +172,11 @@ export function HistoricalSlideshow({
         <>
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+            className={cn(
+              "absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full flex items-center justify-center transition-all",
+              "opacity-0 group-hover:opacity-100",
+              (isTouchDevice || isDragging) && "lg:opacity-0"
+            )}
             aria-label="Previous slide"
           >
             <ChevronLeft className="w-6 h-6 text-white" />
@@ -118,7 +184,11 @@ export function HistoricalSlideshow({
 
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+            className={cn(
+              "absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full flex items-center justify-center transition-all",
+              "opacity-0 group-hover:opacity-100",
+              (isTouchDevice || isDragging) && "lg:opacity-0"
+            )}
             aria-label="Next slide"
           >
             <ChevronRight className="w-6 h-6 text-white" />
@@ -141,15 +211,13 @@ export function HistoricalSlideshow({
               {slides.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => {
-                    setCurrentIndex(index);
-                    setProgress(0);
-                  }}
-                  className={`h-1.5 rounded-full transition-all flex-1 ${
+                  onClick={() => goToSlide(index)}
+                  className={cn(
+                    "h-1.5 rounded-full transition-all flex-1 touch-manipulation",
                     index === currentIndex
                       ? "bg-white"
                       : "bg-white/30 hover:bg-white/50"
-                  }`}
+                  )}
                   aria-label={`Go to slide ${index + 1}`}
                 />
               ))}
@@ -164,6 +232,21 @@ export function HistoricalSlideshow({
               className="absolute bottom-0 left-0 h-0.5 bg-amber-400 transition-none"
               style={{ width: `${progress}%` }}
             />
+          )}
+
+          {isTouchDevice && (
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between items-center px-2 pointer-events-none">
+              <div className="w-8 h-16 flex items-center justify-start">
+                <div className="w-6 h-10 flex items-center justify-center text-white/60">
+                  <ChevronLeft className="w-5 h-5" />
+                </div>
+              </div>
+              <div className="w-8 h-16 flex items-center justify-end">
+                <div className="w-6 h-10 flex items-center justify-center text-white/60">
+                  <ChevronRight className="w-5 h-5" />
+                </div>
+              </div>
+            </div>
           )}
         </>
       )}
