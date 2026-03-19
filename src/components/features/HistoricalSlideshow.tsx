@@ -86,6 +86,7 @@ export function HistoricalSlideshow({
         src={currentSlide.src}
         alt={currentSlide.alt}
         fill
+        sizes="100vw"
         className="object-cover transition-transform duration-700 ease-out"
         style={{ transform: `scale(${1 + progress * 0.0003})` }}
         priority

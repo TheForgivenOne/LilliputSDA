@@ -51,9 +51,10 @@ export default function AboutPage() {
       <section className="relative bg-stone-900 text-white py-24 lg:py-32">
         <div className="absolute inset-0 opacity-30">
           <Image
-            src={CHURCH_IMAGES.history.vintage}
-            alt="Church history"
+            src={CHURCH_IMAGES.history.oldSite[0].src}
+            alt="Old photo of church"
             fill
+            sizes="100vw"
             className="object-cover"
           />
         </div>
