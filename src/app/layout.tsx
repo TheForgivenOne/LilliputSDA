@@ -66,7 +66,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className="scroll-smooth">
+      <html lang="en" className="scroll-smooth" data-scroll-behavior="smooth">
         <body
           className={`${dmSans.variable} ${playfair.variable} ${geistMono.variable} antialiased bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-100`}
         >

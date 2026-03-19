@@ -70,7 +70,7 @@ export function AboutSplit({
           {/* Image side with dramatic styling */}
           <div className="order-1 lg:order-2 relative">
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl shadow-stone-900/10">
-              <Image src={imageSrc} alt={imageAlt} fill className="object-cover" />
+              <Image src={imageSrc} alt={imageAlt} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
               {/* Overlay gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-stone-900/20 to-transparent" />
             </div>

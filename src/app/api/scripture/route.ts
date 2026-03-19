@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchQuery } from 'convex/nextjs';
 import { api } from "../../../../convex/_generated/api";
-import type { ScriptureResult } from "@/types";
 
 function sanitizeQuery(query: string): string {
   return query

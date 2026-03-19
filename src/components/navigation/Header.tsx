@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { DecisionCardTrigger } from "@/components/features/DecisionCardModal";
@@ -60,12 +61,13 @@ export function Header() {
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group" aria-label="Lilliput SDA Church Home">
-              <img
+              <Image
                 src="/images/logos/logo-128.png"
                 alt="Lilliput SDA Church"
                 width={56}
                 height={56}
                 className="w-12 h-12 lg:w-14 lg:h-14 flex-shrink-0 object-contain"
+                priority
               />
               <div className="flex flex-col">
                 <span className="text-lg lg:text-xl font-bold text-stone-900 dark:text-stone-100 font-[family-name:var(--font-playfair)] leading-tight">
