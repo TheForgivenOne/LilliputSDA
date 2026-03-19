@@ -5,25 +5,7 @@ import { Calendar as CalendarIcon, Clock, MapPin, Filter, Bell } from "lucide-re
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { EventCard, AnnouncementCard } from "@/components/ui/Card";
-
-interface ChurchEvent {
-  _id: string;
-  category?: string;
-  startDate: string;
-  endDate?: string;
-  title: string;
-  location?: string;
-  description?: string;
-}
-
-interface Announcement {
-  _id: string;
-  category?: string;
-  priority?: string;
-  title: string;
-  content: string;
-  date: string;
-}
+import type { ChurchEvent, Announcement } from "@/types";
 
 const categories = [
   { id: "all", label: "All Events" },

@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
+import type { ScriptureResult } from "@/types";
 
 const SCRIPTURE_CACHE_TIME = 60 * 60; // 1 hour
 
 let scripturesCache: ScriptureItem[] | null = null;
 let cacheTime = 0;
+
+interface ScriptureItem {
+  o: number;
+  r: string;
+  t: string;
+  h?: number;
+}
 
 async function getScriptures() {
   const now = Date.now();
@@ -15,21 +23,6 @@ async function getScriptures() {
   scripturesCache = scripturesModule.default as ScriptureItem[];
   cacheTime = now;
   return scripturesCache;
-}
-
-interface ScriptureItem {
-  o: number;
-  r: string;
-  t: string;
-  h?: number;
-}
-
-interface ScriptureResult {
-  reference: string;
-  text: string;
-  book: string;
-  chapter: number;
-  verse: number;
 }
 
 function sanitizeQuery(query: string): string {

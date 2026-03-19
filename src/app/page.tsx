@@ -13,35 +13,7 @@ import { HeroSection } from "@/components/features/HeroSection";
 import { AboutSplit } from "@/components/features/AboutSplit";
 import { QuickMinistryCard } from "@/components/features/QuickMinistryCard";
 import { CTASection } from "@/components/features/CTASection";
-
-interface YouTubeVideo {
-  id: string;
-  title: string;
-  description: string;
-  publishedAt: string;
-  thumbnailUrl: string;
-  duration: string;
-  viewCount: string;
-}
-
-interface ChurchEvent {
-  _id: string;
-  startDate: string;
-  endDate?: string;
-  title: string;
-  location?: string;
-  category?: string;
-  description?: string;
-}
-
-interface Announcement {
-  _id: string;
-  title: string;
-  content: string;
-  date: string;
-  priority?: string;
-  category?: string;
-}
+import type { YouTubeVideo, ChurchEvent, Announcement } from "@/types";
 
 export default function Home() {
   const events = useQuery(api.eventsQueries.listUpcoming);

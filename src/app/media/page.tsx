@@ -5,19 +5,10 @@ import Image from "next/image";
 import { Play, Search } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { decodeHtmlEntities } from "@/lib/utils";
+import type { YouTubeVideo } from "@/types";
 
 // YouTube channel base URL
 const youtubeChannelUrl = "https://youtube.com/@lilliputsdamedia";
-
-interface YouTubeVideo {
-  id: string;
-  title: string;
-  description: string;
-  publishedAt: string;
-  thumbnailUrl: string;
-  duration: string;
-  viewCount: string;
-}
 
 export default function MediaPage() {
   const [searchQuery, setSearchQuery] = useState("");

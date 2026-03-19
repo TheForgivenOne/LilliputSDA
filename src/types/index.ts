@@ -1,0 +1,99 @@
+export interface YouTubeVideo {
+  id: string;
+  title: string;
+  description: string;
+  publishedAt: string;
+  thumbnailUrl: string;
+  duration: string;
+  viewCount: string;
+}
+
+export interface ChurchEvent {
+  _id: string;
+  title: string;
+  description?: string;
+  startDate: string;
+  endDate?: string;
+  location?: string;
+  category?: string;
+  imageUrl?: string;
+  isRecurring?: boolean;
+  recurrencePattern?: "weekly" | "monthly";
+}
+
+export interface Announcement {
+  _id: string;
+  title: string;
+  content: string;
+  date: string;
+  priority?: string;
+  category?: string;
+  imageUrl?: string;
+  expiresAt?: string;
+  isPinned?: boolean;
+}
+
+export interface Ministry {
+  _id?: string;
+  name: string;
+  description?: string;
+  leaderId?: string;
+  leader?: string;
+  meetingTime?: string;
+  meetingLocation?: string;
+  imageUrl?: string;
+  category?: string;
+  order?: number;
+}
+
+export interface StaffMember {
+  _id: string;
+  department?: string;
+  name: string;
+  role: string;
+  title: string;
+  photoUrl?: string;
+  email?: string;
+  phone?: string;
+  bio?: string;
+  order?: number;
+  isActive?: boolean;
+}
+
+export interface PrayerRequest {
+  _id?: string;
+  name: string;
+  email: string;
+  request: string;
+  isPublic?: boolean;
+  isAnswered?: boolean;
+  date?: string;
+}
+
+export interface ContactSubmission {
+  _id?: string;
+  name: string;
+  email: string;
+  message: string;
+  date?: string;
+  isRead?: boolean;
+}
+
+export interface FormErrors {
+  [key: string]: string | undefined;
+}
+
+export interface NetworkStatus {
+  isOnline: boolean;
+  wasOffline?: boolean;
+  lastChecked?: number;
+}
+
+export interface ScriptureResult {
+  reference: string;
+  text: string;
+  translation?: string;
+  book?: string;
+  chapter?: number;
+  verse?: number;
+}

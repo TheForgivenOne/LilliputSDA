@@ -6,17 +6,7 @@ import { getPlaceholderImage } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Users, Music, Heart, BookOpen, Star } from "lucide-react";
-
-interface Ministry {
-  _id?: string;
-  name: string;
-  category?: string;
-  description?: string;
-  leader?: string;
-  meetingTime?: string;
-  meetingLocation?: string;
-  imageUrl?: string;
-}
+import type { Ministry } from "@/types";
 
 const defaultMinistries = [
   {

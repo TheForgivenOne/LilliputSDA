@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import type { YouTubeVideo } from "@/types";
 
 /**
  * Combines class names with Tailwind CSS merging support
@@ -172,16 +173,6 @@ export function getYouTubeThumbnail(videoId: string, quality: "default" | "mediu
  */
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const CHANNEL_ID = "UC5PpTmwN_ZUyM1xgwQR-_8w"; // Lilliput SDA Media channel ID (@lilliputsdamedia)
-
-export interface YouTubeVideo {
-  id: string;
-  title: string;
-  description: string;
-  publishedAt: string;
-  thumbnailUrl: string;
-  duration: string;
-  viewCount: string;
-}
 
 interface YouTubeSearchItem {
   id: {

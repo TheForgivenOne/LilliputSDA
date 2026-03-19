@@ -6,17 +6,7 @@ import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Input, Textarea, Checkbox } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-
-interface FormErrors {
-  name?: string;
-  email?: string;
-  message?: string;
-}
-
-interface NetworkStatus {
-  isOnline: boolean;
-  wasOffline: boolean;
-}
+import type { FormErrors, NetworkStatus } from "@/types";
 
 function validateEmail(email: string): boolean {
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;

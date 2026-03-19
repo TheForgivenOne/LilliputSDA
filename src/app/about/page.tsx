@@ -7,16 +7,7 @@ import { api } from "../../../convex/_generated/api";
 import { getPlaceholderImage } from "@/lib/utils";
 import { StaffCard } from "@/components/ui/Card";
 import { LeaderCard, LeaderCardGroup } from "@/components/features/LeaderCard";
-
-interface StaffMember {
-  _id: string;
-  department?: string;
-  name: string;
-  role: string;
-  title: string;
-  photoUrl?: string;
-  email?: string;
-}
+import type { StaffMember } from "@/types";
 
 const milestones = [
   { year: "1974", title: "Foundation", description: "Brother George Heavens and Miss Catherine Morrison initiate the work in Lilliput District. First Sunday School held at Mr. Lawrence Lee's home." },
