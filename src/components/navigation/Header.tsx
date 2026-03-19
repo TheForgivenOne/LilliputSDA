@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef, KeyboardEvent, useSyncExternalStore } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Church, Menu, X, Phone, MapPin, Heart } from "lucide-react";
+import { Church, Menu, X } from "lucide-react";
 import { DecisionCardTrigger } from "@/components/features/DecisionCardModal";
 import { cn, throttle } from "@/lib/utils";
 
@@ -16,35 +16,14 @@ const navItems = [
   { href: "/contact", label: "Contact" },
 ];
 
-function getPrefersReducedMotionSnapshot(): boolean {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-function subscribeReducedMotion(callback: () => void): () => void {
-  if (typeof window === "undefined") return () => {};
-  
-  const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const handler = () => callback();
-  mediaQuery.addEventListener("change", handler);
-  return () => mediaQuery.removeEventListener("change", handler);
-}
-
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const prefersReducedMotion = useSyncExternalStore(
-    subscribeReducedMotion,
-    getPrefersReducedMotionSnapshot,
-    getPrefersReducedMotionSnapshot
-  );
   const pathname = usePathname();
-  const menuRef = useRef<HTMLDivElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleScroll = throttle(() => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 10);
     }, 100);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -57,87 +36,72 @@ export function Header() {
   /* eslint-enable react-hooks/set-state-in-effect */
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent | globalThis.KeyboardEvent) => {
-      if (e.key === "Escape" && isMobileMenuOpen) {
-        setIsMobileMenuOpen(false);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isMobileMenuOpen]);
-
-  useEffect(() => {
-    if (isMobileMenuOpen && closeButtonRef.current) {
-      closeButtonRef.current.focus();
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
     }
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isMobileMenuOpen]);
 
   return (
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
           isScrolled
-            ? "bg-white/98 dark:bg-stone-900/98 backdrop-blur-xl shadow-lg shadow-stone-900/5"
-            : "bg-white/90 dark:bg-stone-900/90 backdrop-blur-sm"
+            ? "bg-white/95 dark:bg-stone-900/95 backdrop-blur-md shadow-sm"
+            : "bg-white dark:bg-stone-900"
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo with dramatic styling */}
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="p-2.5 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl shadow-lg shadow-amber-500/25 group-hover:shadow-amber-500/40 group-hover:scale-105 transition-all duration-300">
-                <Church className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between h-16 lg:h-20">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="p-2 bg-amber-600 rounded-lg group-hover:bg-amber-700 transition-colors">
+                <Church className="w-5 h-5 text-white" />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold text-stone-800 dark:text-stone-100 tracking-tight font-[family-name:var(--font-playfair)]">
+                <span className="text-lg lg:text-xl font-bold text-stone-900 dark:text-stone-100 font-[family-name:var(--font-playfair)]">
                   Lilliput SDA
                 </span>
-                <span className="text-xs text-stone-500 dark:text-stone-400 -mt-0.5 tracking-wider uppercase">
+                <span className="text-[10px] lg:text-xs text-stone-500 dark:text-stone-400 -mt-0.5 tracking-wide uppercase">
                   St. James, Jamaica
                 </span>
               </div>
             </Link>
 
-            {/* Desktop Navigation with hover effects */}
-            <nav className="hidden lg:flex items-center gap-1">
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-8">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 relative group",
+                    "text-sm font-medium transition-colors relative py-1",
                     pathname === item.href
-                      ? "text-amber-600 dark:text-amber-400"
-                      : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100"
+                      ? "text-amber-700 dark:text-amber-400"
+                      : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200"
                   )}
                 >
                   {item.label}
-                  {/* Underline effect - respects reduced motion */}
-                  <span className={cn(
-                    "absolute bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transition-transform duration-300 origin-left",
-                    pathname === item.href ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100",
-                    prefersReducedMotion && "transition-none scale-x-100"
-                  )} />
                   {pathname === item.href && (
-                    <span className="absolute inset-0 bg-amber-50 dark:bg-amber-900/20 rounded-lg -z-10" />
+                    <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-amber-600 dark:bg-amber-400 rounded-full" />
                   )}
                 </Link>
               ))}
             </nav>
 
-            {/* Desktop CTA - Bold buttons */}
+            {/* Desktop CTAs */}
             <div className="hidden lg:flex items-center gap-3">
-              <DecisionCardTrigger 
-                variant="terracotta" 
-                size="md"
-              >
+              <DecisionCardTrigger variant="outline" size="sm">
                 Decision Card
               </DecisionCardTrigger>
               <Link
                 href="/contact"
-                className="px-6 py-3 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-xl font-semibold hover:from-amber-700 hover:to-amber-800 transition-all duration-300 shadow-lg shadow-amber-600/25 hover:shadow-amber-600/40 hover:-translate-y-0.5"
+                className="px-5 py-2.5 bg-amber-700 text-white rounded-lg text-sm font-medium hover:bg-amber-800 transition-colors"
               >
                 Join Us
               </Link>
@@ -145,147 +109,99 @@ export function Header() {
 
             {/* Mobile Menu Button */}
             <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-3 rounded-xl text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
-              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="lg:hidden p-2 -mr-2 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 transition-colors"
+              aria-label="Open menu"
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-menu"
             >
-              {isMobileMenuOpen ? (
-                <X className="w-6 h-6" aria-hidden="true" />
-              ) : (
-                <Menu className="w-6 h-6" aria-hidden="true" />
-              )}
+              <Menu className="w-6 h-6" />
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu - Full Screen */}
+      {/* Mobile Menu - Slide-out Drawer */}
       <div
-        ref={menuRef}
         id="mobile-menu"
         className={cn(
-          "fixed inset-0 z-40 lg:hidden transition-all duration-300",
-          isMobileMenuOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
+          "fixed inset-0 z-50 lg:hidden",
+          isMobileMenuOpen ? "pointer-events-auto" : "pointer-events-none"
         )}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Main navigation menu"
+        aria-hidden={!isMobileMenuOpen}
       >
-        {/* Full Screen Background */}
+        {/* Backdrop */}
         <div
-          className="absolute inset-0 bg-white dark:bg-stone-900"
+          className={cn(
+            "absolute inset-0 bg-stone-900/50 transition-opacity duration-300",
+            isMobileMenuOpen ? "opacity-100" : "opacity-0"
+          )}
           onClick={() => setIsMobileMenuOpen(false)}
           aria-hidden="true"
         />
 
-        {/* Full Screen Menu Content */}
+        {/* Drawer */}
         <div
           className={cn(
-            "relative flex flex-col h-full transition-all duration-300 ease-out",
-            isMobileMenuOpen 
-              ? "translate-y-0 opacity-100" 
-              : "-translate-y-8 opacity-0",
-            prefersReducedMotion && "transition-none translate-y-0 opacity-100"
+            "absolute right-0 top-0 h-full w-72 max-w-[85vw] bg-white dark:bg-stone-900 shadow-xl transition-transform duration-300 ease-out flex flex-col",
+            isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
           )}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
         >
-          {/* Header with Close Button */}
-          <div className="flex items-center justify-between p-6 border-b border-stone-200 dark:border-stone-800">
-            <Link href="/" className="flex items-center gap-3" onClick={() => setIsMobileMenuOpen(false)}>
-              <div className="p-2 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl shadow-lg shadow-amber-500/25">
-                <Church className="w-6 h-6 text-white" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-lg font-bold text-stone-800 dark:text-stone-100 tracking-tight font-[family-name:var(--font-playfair)]">
-                  Lilliput SDA
-                </span>
-              </div>
-            </Link>
+          {/* Drawer Header */}
+          <div className="flex items-center justify-between p-4 border-b border-stone-200 dark:border-stone-800">
+            <span className="text-sm font-medium text-stone-500 dark:text-stone-400">
+              Menu
+            </span>
             <button
-              ref={closeButtonRef}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="p-3 rounded-xl text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-stone-900"
+              className="p-2 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 transition-colors"
               aria-label="Close menu"
             >
-              <X className="w-6 h-6" aria-hidden="true" />
+              <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Navigation Links */}
-          <nav 
-            className="flex-1 px-6 py-8" 
-            role="navigation" 
-            aria-label="Mobile navigation"
-          >
-            <div className="space-y-2">
-              {navItems.map((item, index) => (
+          <nav className="flex-1 px-2 py-4" aria-label="Mobile navigation">
+            <div className="space-y-0.5">
+              {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
-                    "flex items-center px-5 py-4 min-h-[56px] text-lg font-semibold rounded-xl transition-all duration-300",
-                    "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-500",
-                    "animate-slide-in-right opacity-0",
-                    prefersReducedMotion && "opacity-100 animate-none",
+                    "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors",
                     pathname === item.href
-                      ? "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20"
-                      : "text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-50 dark:hover:bg-stone-800"
+                      ? "text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20"
+                      : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800"
                   )}
-                  style={{
-                    animationDelay: `${index * 50}ms`,
-                  }}
                   aria-current={pathname === item.href ? "page" : undefined}
                 >
-                  <span className="flex-1">{item.label}</span>
-                  {pathname === item.href && (
-                    <span className="w-2 h-2 bg-amber-500 rounded-full" aria-hidden="true" />
-                  )}
+                  {item.label}
                 </Link>
               ))}
             </div>
           </nav>
 
-          {/* Quick Actions */}
-          <div className="p-6 border-t border-stone-200 dark:border-stone-800 space-y-3">
-            <Link
-              href="/decision-card"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-xl font-semibold text-lg hover:from-orange-700 hover:to-orange-800 transition-all duration-300 shadow-lg shadow-orange-600/25"
+          {/* Drawer Footer */}
+          <div className="p-4 border-t border-stone-200 dark:border-stone-800 space-y-2">
+            <DecisionCardTrigger
+              variant="outline"
+              size="sm"
+              className="w-full justify-center"
             >
-              <Heart className="w-5 h-5" />
-              My Decision Card
-            </Link>
+              Decision Card
+            </DecisionCardTrigger>
             <Link
               href="/contact"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-xl font-semibold text-lg hover:from-amber-700 hover:to-amber-800 transition-all duration-300 shadow-lg shadow-amber-600/25"
+              className="flex items-center justify-center px-4 py-2.5 bg-amber-700 text-white rounded-lg text-sm font-medium hover:bg-amber-800 transition-colors"
             >
               Join Us
             </Link>
-            <div className="grid grid-cols-2 gap-3">
-              <a
-                href="https://maps.google.com/?q=Lilliput+SDA+Church+Montego+Bay+Jamaica"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 px-4 py-4 bg-stone-100 dark:bg-stone-800 rounded-xl text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
-              >
-                <MapPin className="w-5 h-5 text-amber-600 dark:text-amber-400" aria-hidden="true" />
-                <span className="font-semibold text-sm">Directions</span>
-              </a>
-              <a
-                href="tel:+18761234567"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 px-4 py-4 bg-stone-100 dark:bg-stone-800 rounded-xl text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
-              >
-                <Phone className="w-5 h-5 text-amber-600 dark:text-amber-400" aria-hidden="true" />
-                <span className="font-semibold text-sm">Call</span>
-              </a>
-            </div>
           </div>
         </div>
       </div>

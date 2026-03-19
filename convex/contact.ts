@@ -15,6 +15,22 @@ export const submit = mutation({
       date: new Date().toISOString(),
       isRead: false,
     });
+
+    fetch(`${process.env.NEXT_PUBLIC_CONVEX_SITE_URL || ""}/api/email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "contact",
+        data: {
+          name: args.name,
+          email: args.email,
+          message: args.message,
+        },
+      }),
+    }).catch((err) => {
+      console.error("Failed to send contact email notification:", err);
+    });
+
     return { success: true };
   },
 });

@@ -17,6 +17,23 @@ export const submit = mutation({
       isAnswered: false,
       date: new Date().toISOString(),
     });
+
+    fetch(`${process.env.NEXT_PUBLIC_CONVEX_SITE_URL || ""}/api/email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "prayer",
+        data: {
+          name: args.name,
+          email: args.email,
+          request: args.request,
+          isPublic: args.isPublic,
+        },
+      }),
+    }).catch((err) => {
+      console.error("Failed to send prayer email notification:", err);
+    });
+
     return { success: true };
   },
 });

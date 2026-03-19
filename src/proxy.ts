@@ -14,6 +14,7 @@ const isPublicRoute = createRouteMatcher([
   '/contact',    // Contact page (public)
   '/api/scripture', // Scripture API
   '/api/youtube/videos', // YouTube API (public)
+  '/api/email', // Email API (public - called from contact/prayer forms)
 ]);
 
 export default clerkMiddleware(async (auth, req) => {

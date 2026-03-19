@@ -436,7 +436,7 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
 // Trigger Button Component
 interface DecisionCardTriggerProps {
   className?: string;
-  variant?: "primary" | "secondary" | "outline" | "terracotta";
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "terracotta";
   size?: "sm" | "md" | "lg";
   children?: React.ReactNode;
 }
