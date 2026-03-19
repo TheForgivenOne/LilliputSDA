@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Church, MapPin, Phone, Mail, Clock, ExternalLink, Heart } from "lucide-react";
+import { Church, MapPin, Phone, Mail, Clock, ExternalLink } from "lucide-react";
 
 const footerLinks = {
   about: [

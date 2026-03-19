@@ -6,7 +6,6 @@ import {
   Heart,
   Cross,
   BookOpen,
-  Users,
   Phone,
   MessageCircle,
   Sparkles,

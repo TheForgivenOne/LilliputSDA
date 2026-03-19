@@ -392,7 +392,7 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
-                "When I first walked through these doors, I was searching for answers. The warmth and acceptance I found here changed my life forever. Lilliput became my family."
+                {`"When I first walked through these doors, I was searching for answers. The warmth and acceptance I found here changed my life forever. Lilliput became my family."`}
               </p>
             </div>
 
@@ -407,7 +407,7 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
-                "Growing up in this church, I experienced God's love through mentors who invested in my life. Now I have the privilege of pouring into the next generation."
+                {`"Growing up in this church, I experienced God's love through mentors who invested in my life. Now I have the privilege of pouring into the next generation."`}
               </p>
             </div>
 
@@ -418,11 +418,11 @@ export default function Home() {
                 </div>
                 <div>
                   <p className="font-semibold text-stone-900 dark:text-stone-100">Sister Angela R.</p>
-                  <p className="text-sm text-stone-500 dark:text-stone-400">Women's Ministry</p>
+                  <p className="text-sm text-stone-500 dark:text-stone-400">Women&apos;s Ministry</p>
                 </div>
               </div>
               <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
-                "The sisterhood here is powerful. Through prayer and fellowship, I've witnessed lives transformed and bonds formed that will last for eternity."
+                {`"The sisterhood here is powerful. Through prayer and fellowship, I've witnessed lives transformed and bonds formed that will last for eternity."`}
               </p>
             </div>
           </div>
