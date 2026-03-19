@@ -1,7 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { Church, Users, Heart, BookOpen } from "lucide-react";
+import { useState } from "react";
+import {
+  BookOpen, Heart, Church, Sparkles, Shield, Crown,
+  Flame, Cross, Hand, TreePine, Star, UsersRound,
+  Droplets, Wine, Gift, ScrollText, Scale, Sun, Wallet,
+  Leaf, Home, Tent, Cloud, Sunrise, Mountain, Globe,
+  ChevronDown, ChevronUp,
+} from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { CHURCH_IMAGES } from "@/lib/utils";
@@ -20,24 +27,49 @@ const milestones = [
 ];
 
 const beliefs = [
-  { icon: BookOpen, title: "The Bible", description: "We believe the Bible is the inspired Word of God and our only creed." },
-  { icon: Heart, title: "The Trinity", description: "We believe in one God: Father, Son, and Holy Spirit, a unity of three co-eternal Persons." },
-  { icon: Church, title: "The Church", description: "We believe the church is the community of believers who confess Jesus Christ as Lord and Saviour." },
-  { icon: Users, title: "Second Coming", description: "We believe in the second coming of Christ, which will be literal, personal, and visible." },
+  { icon: BookOpen, title: "The Holy Scriptures", description: "The Holy Scriptures, Old and New Testaments, are the written Word of God, given by divine inspiration." },
+  { icon: Heart, title: "The Trinity", description: "There is one God: Father, Son, and Holy Spirit, a unity of three co-eternal Persons." },
+  { icon: Crown, title: "The Father", description: "God the eternal Father is the Creator, Source, Sustainer, and Sovereign of all creation." },
+  { icon: Sparkles, title: "The Son", description: "God the eternal Son became incarnate in Jesus Christ. Through Him all things were created." },
+  { icon: Flame, title: "The Holy Spirit", description: "God the eternal Spirit was active with the Father and the Son in Creation, incarnation, and redemption." },
+  { icon: TreePine, title: "Creation", description: "God has revealed in Scripture the authentic and historical account of His creative activity." },
+  { icon: Shield, title: "The Nature of Humanity", description: "Man and woman were made in the image of God with individuality, the power and freedom to think and to do." },
+  { icon: Cross, title: "The Great Controversy", description: "All humanity is now involved in a great controversy between Christ and Satan." },
+  { icon: Star, title: "Life, Death & Resurrection", description: "In Christ's life of perfect obedience, His suffering, death, and resurrection, God provided the only means of atonement." },
+  { icon: Hand, title: "The Experience of Salvation", description: "In infinite love and mercy God made Christ to be sin for us, so that in Him we might be made the righteousness of God." },
+  { icon: TreePine, title: "Growing in Christ", description: "By His death on the cross Jesus triumphed over the forces of evil, giving us victory over evil forces." },
+  { icon: Church, title: "The Church", description: "The church is the community of believers who confess Jesus Christ as Lord and Saviour." },
+  { icon: UsersRound, title: "The Remnant", description: "In the last days, a remnant has been called out to keep the commandments of God and the faith of Jesus." },
+  { icon: Globe, title: "Unity in the Body", description: "The church is one body with many members, called from every nation, kindred, tongue, and people." },
+  { icon: Droplets, title: "Baptism", description: "By baptism we confess our faith in the death and resurrection of Jesus Christ." },
+  { icon: Wine, title: "The Lord's Supper", description: "The Lord's Supper is a participation in the emblems of the body and blood of Jesus as an expression of faith in Him." },
+  { icon: Gift, title: "Spiritual Gifts", description: "God bestows upon all members of His church in every age spiritual gifts for loving ministry." },
+  { icon: ScrollText, title: "The Gift of Prophecy", description: "The Scriptures testify that one of the gifts of the Holy Spirit is prophecy, manifested in the ministry of Ellen G. White." },
+  { icon: Scale, title: "The Law of God", description: "The great principles of God's law are embodied in the Ten Commandments and exemplified in the life of Christ." },
+  { icon: Sun, title: "The Sabbath", description: "The gracious Creator, after the six days of Creation, rested on the seventh day and instituted the Sabbath." },
+  { icon: Wallet, title: "Stewardship", description: "We are God's stewards, entrusted by Him with time, opportunities, abilities, and possessions." },
+  { icon: Leaf, title: "Christian Behavior", description: "We are called to be a godly people who think, feel, and act in harmony with biblical principles." },
+  { icon: Home, title: "Marriage & the Family", description: "Marriage was divinely established in Eden and affirmed by Jesus to be a lifelong union between a man and a woman." },
+  { icon: Tent, title: "Heavenly Sanctuary", description: "There is a sanctuary in heaven, the true tabernacle, in which Christ ministers on our behalf." },
+  { icon: Cloud, title: "The Second Coming", description: "The second coming of Christ is the blessed hope of the church, the grand climax of the gospel." },
+  { icon: Sunrise, title: "Death & Resurrection", description: "The wages of sin is death. But God will grant eternal life to His redeemed." },
+  { icon: Mountain, title: "The Millennium", description: "The millennium is the thousand-year reign of Christ with His saints in heaven." },
+  { icon: Globe, title: "The New Earth", description: "On the new earth, God will provide an eternal home for the redeemed and a perfect environment for everlasting life." },
 ];
 
 const defaultPastor = {
   name: "Pastor Lataniel Hamilton",
-  role: "Senior Pastor",
+  role: "Junior Pastor",
   title: "District Pastor, Lilliput District of Churches",
   bio: "Pastor Hamilton leads the Lilliput District of Churches with a passion for community outreach and spiritual growth. Under his leadership, the district has seen continued growth and expanded ministry programs.",
-  photoUrl: CHURCH_IMAGES.staff.pastor,
+  photoUrl: "",
   email: "lhamilton@westjamaica.org",
   phone: "(876) 123-4567",
   department: "Pastoral",
 };
 
 export default function AboutPage() {
+  const [visibleCount, setVisibleCount] = useState(8);
   const staff = useQuery(api.staff.queries.listAll);
   const staffLoading = staff === undefined;
 
@@ -203,9 +235,9 @@ export default function AboutPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {beliefs.map((belief) => (
+            {beliefs.slice(0, visibleCount).map((belief, index) => (
               <div
-                key={belief.title}
+                key={`${belief.title}-${index}`}
                 className="p-6 rounded-2xl border border-stone-100 dark:border-stone-700 bg-white dark:bg-stone-800/50"
               >
                 <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center mb-4">
@@ -221,7 +253,23 @@ export default function AboutPage() {
             ))}
           </div>
 
-          <div className="text-center mt-8">
+          <div className="text-center mt-8 space-y-4">
+            <button
+              onClick={() => setVisibleCount(visibleCount >= beliefs.length ? 8 : beliefs.length)}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-amber-700 hover:bg-amber-800 text-white rounded-full font-medium transition-colors"
+            >
+              {visibleCount >= beliefs.length ? (
+                <>
+                  Show Less
+                  <ChevronUp className="w-4 h-4" />
+                </>
+              ) : (
+                <>
+                  Show All 28 Beliefs
+                  <ChevronDown className="w-4 h-4" />
+                </>
+              )}
+            </button>
             <p className="text-stone-500 dark:text-stone-400">
               To learn more about our 28 fundamental beliefs, visit{" "}
               <a
