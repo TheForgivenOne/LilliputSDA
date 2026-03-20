@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { youtubeLimiter } from "@/lib/rate-limit";
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
-const CHANNEL_ID = "UC5PpTmwN_ZUyM1xgwQR-_8w"; // @lilliputsdamedia
+const CHANNEL_ID = "UC5PpTmwN_ZUyM1xgwQR-_8w";
 
-const FETCH_TIMEOUT = 10000; // 10 seconds
+const FETCH_TIMEOUT = 10000;
 
 interface YouTubeVideo {
   id: string;
@@ -55,17 +56,29 @@ interface YouTubeVideoItem {
   };
 }
 
+function getClientIP(request: Request): string {
+  const headers = request.headers.get("x-forwarded-for");
+  if (headers) {
+    return headers.split(",")[0].trim();
+  }
+  const realIp = request.headers.get("x-real-ip");
+  if (realIp) {
+    return realIp;
+  }
+  return "anonymous";
+}
+
 function decodeHtmlEntities(text: string): string {
-  if (!text || typeof text !== 'string') return '';
+  if (!text || typeof text !== "string") return "";
   return text
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
     .replace(/&apos;/g, "'")
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&")
     .replace(/&#x27;/g, "'")
-    .replace(/&nbsp;/g, ' ');
+    .replace(/&nbsp;/g, " ");
 }
 
 function parseYouTubeDuration(duration: string | undefined): string {
@@ -79,9 +92,9 @@ function parseYouTubeDuration(duration: string | undefined): string {
   const seconds = match[3] ? parseInt(match[3], 10) : 0;
   
   if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   }
-  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
 function sanitizeNumber(value: string | number | undefined, defaultValue: string = "0"): string {
@@ -107,7 +120,7 @@ async function fetchWithTimeout(url: string, timeout: number = FETCH_TIMEOUT): P
   try {
     const response = await fetch(url, { 
       signal: controller.signal,
-      next: { revalidate: 300 } // Cache for 5 minutes
+      next: { revalidate: 600 },
     });
     return response;
   } finally {
@@ -116,6 +129,16 @@ async function fetchWithTimeout(url: string, timeout: number = FETCH_TIMEOUT): P
 }
 
 export async function GET(request: NextRequest) {
+  const ip = getClientIP(request);
+  const { success } = await youtubeLimiter.limit(ip);
+  
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests, please try again later" },
+      { status: 429 }
+    );
+  }
+  
   try {
     if (!YOUTUBE_API_KEY) {
       return NextResponse.json(
@@ -132,7 +155,7 @@ export async function GET(request: NextRequest) {
       const parsed = parseInt(maxResultsParam, 10);
       if (isNaN(parsed) || parsed < 1 || parsed > 50) {
         return NextResponse.json(
-          { error: 'maxResults must be between 1 and 50', code: 'INVALID_PARAM' },
+          { error: "maxResults must be between 1 and 50", code: "INVALID_PARAM" },
           { status: 400 }
         );
       }
@@ -145,7 +168,7 @@ export async function GET(request: NextRequest) {
     try {
       searchResponse = await fetchWithTimeout(searchUrl);
     } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') {
+      if (error instanceof Error && error.name === "AbortError") {
         return NextResponse.json(
           { error: "Request timed out", code: "TIMEOUT" },
           { status: 504 }
@@ -155,8 +178,7 @@ export async function GET(request: NextRequest) {
     }
     
     if (!searchResponse.ok) {
-      const errorText = await searchResponse.text().catch(() => 'Unknown error');
-      console.error('YouTube Search API error:', searchResponse.status, errorText);
+      console.error("YouTube Search API error:", searchResponse.status);
       
       if (searchResponse.status === 403) {
         return NextResponse.json(
@@ -205,7 +227,7 @@ export async function GET(request: NextRequest) {
     try {
       detailsResponse = await fetchWithTimeout(detailsUrl);
     } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') {
+      if (error instanceof Error && error.name === "AbortError") {
         return NextResponse.json(
           { error: "Request timed out", code: "TIMEOUT" },
           { status: 504 }
@@ -215,8 +237,7 @@ export async function GET(request: NextRequest) {
     }
     
     if (!detailsResponse.ok) {
-      const errorText = await detailsResponse.text().catch(() => 'Unknown error');
-      console.error('YouTube Videos API error:', detailsResponse.status, errorText);
+      console.error("YouTube Videos API error:", detailsResponse.status);
       return NextResponse.json(
         { error: `YouTube API error: ${detailsResponse.status}`, code: "API_ERROR" },
         { status: detailsResponse.status }
@@ -275,8 +296,6 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error fetching YouTube videos:", error);
     
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    
     const fallbackVideos: YouTubeVideo[] = [
       {
         id: "dQw4w9WgXcQ",
@@ -285,7 +304,7 @@ export async function GET(request: NextRequest) {
         publishedAt: new Date().toISOString(),
         thumbnailUrl: getYouTubeThumbnailFallback("dQw4w9WgXcQ", "high"),
         duration: "3:45",
-        viewCount: "0"
+        viewCount: "0",
       },
       {
         id: "example1",
@@ -294,7 +313,7 @@ export async function GET(request: NextRequest) {
         publishedAt: new Date(Date.now() - 86400000).toISOString(),
         thumbnailUrl: getYouTubeThumbnailFallback("example1", "high"),
         duration: "45:00",
-        viewCount: "0"
+        viewCount: "0",
       },
       {
         id: "example2",
@@ -303,8 +322,8 @@ export async function GET(request: NextRequest) {
         publishedAt: new Date(Date.now() - 172800000).toISOString(),
         thumbnailUrl: getYouTubeThumbnailFallback("example2", "high"),
         duration: "12:30",
-        viewCount: "0"
-      }
+        viewCount: "0",
+      },
     ];
     
     return NextResponse.json(
@@ -313,7 +332,6 @@ export async function GET(request: NextRequest) {
         code: "FALLBACK", 
         videos: fallbackVideos,
         count: fallbackVideos.length,
-        originalError: errorMessage 
       },
       { status: 200 }
     );

@@ -1,5 +1,6 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
+import { requireEditor, requireAdmin } from "../lib/auth";
 
 export const submit = mutation({
   args: {
@@ -38,6 +39,7 @@ export const submit = mutation({
 export const markAsRead = mutation({
   args: { id: v.id("contactSubmissions") },
   handler: async (ctx, args) => {
+    await requireEditor(ctx);
     await ctx.db.patch(args.id, { isRead: true });
   },
 });
@@ -45,6 +47,7 @@ export const markAsRead = mutation({
 export const deleteSubmission = mutation({
   args: { id: v.id("contactSubmissions") },
   handler: async (ctx, args) => {
+    await requireAdmin(ctx);
     await ctx.db.delete(args.id);
   },
 });

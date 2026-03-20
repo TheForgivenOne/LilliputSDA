@@ -1,5 +1,6 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
+import { requireEditor, requireAdmin } from "../lib/auth";
 
 export const create = mutation({
   args: {
@@ -19,6 +20,7 @@ export const create = mutation({
     recurrencePattern: v.optional(v.union(v.literal("weekly"), v.literal("monthly"))),
   },
   handler: async (ctx, args) => {
+    await requireEditor(ctx);
     const id = await ctx.db.insert("events", {
       ...args,
     });
@@ -45,6 +47,7 @@ export const update = mutation({
     recurrencePattern: v.optional(v.union(v.literal("weekly"), v.literal("monthly"))),
   },
   handler: async (ctx, args) => {
+    await requireEditor(ctx);
     const { id, ...updates } = args;
     await ctx.db.patch(id, updates);
   },
@@ -53,6 +56,7 @@ export const update = mutation({
 export const deleteEvent = mutation({
   args: { id: v.id("events") },
   handler: async (ctx, args) => {
+    await requireAdmin(ctx);
     await ctx.db.delete(args.id);
   },
 });

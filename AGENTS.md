@@ -123,10 +123,53 @@ export const create = mutation({ args: { ... }, handler: async (ctx) => { ... } 
 
 ---
 
-## Convex Backend (src/proxy.ts)
-- Clerk middleware protects routes
-- Public routes: /, /about, /ministries, /media, /events, /contact, /api/*
+## Rate Limiting
+
+API routes are protected with rate limiting via `src/lib/rateLimit.ts`:
+
+| Route | Limit | Window |
+|-------|-------|--------|
+| `/api/email` | 5 requests | 1 minute |
+| `/api/youtube/videos` | 30 requests | 1 minute |
+| `/api/scripture` | 20 requests | 1 minute |
+
+Returns `429 Too Many Requests` with `Retry-After` header.
+
+---
+
+## Security
+
+### Clerk Proxy Fallback (`src/proxy.ts`)
+- Protected routes redirect to `/sign-in` if Clerk fails
+- Dev bypass: set `CLERK_DEV_BYPASS=true` in `.env.local`
+
+### Database Auth (`convex/lib/auth.ts`)
+Role-based access control for mutations:
+
+| Access Level | Functions |
+|--------------|-----------|
+| `requireAuth` | User must be logged in |
+| `requireEditor` | admin or editor role |
+| `requireAdmin` | admin role only |
+
+Configure via environment:
+```bash
+ADMIN_EMAILS=admin@example.com
+EDITOR_EMAILS=editor@example.com
+```
+
+### Protected Mutations
+- Events: create/update (editor+), delete (admin)
+- Announcements: create/update/delete (editor+)
+- Contact/Prayer: admin mutations protected
+
+---
+
+## Convex Backend (`src/proxy.ts`)
+- Clerk proxy protects routes (Next.js 16 renamed middleware → proxy)
+- Public routes: /, /about, /ministries, /media, /events, /contact, /api/*, /visit, /decision
 - Admin routes require authentication
+- Auth bypass in dev: `CLERK_DEV_BYPASS=true`
 
 ---
 
@@ -135,6 +178,8 @@ export const create = mutation({ args: { ... }, handler: async (ctx) => { ... } 
 - Page IDs: "home", "about", "contact", "events", "ministries", "media", "decision-card"
 - CMS mutations require editor/admin role (checked via CmsProvider)
 - YouTube API requires YOUTUBE_API_KEY env variable
+- Rate limiting via `src/lib/rateLimit.ts`
+- Database auth via `convex/lib/auth.ts`
 
 ---
 

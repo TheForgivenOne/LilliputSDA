@@ -1,5 +1,6 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
+import { requireEditor } from "../lib/auth";
 
 export const submit = mutation({
   args: {
@@ -41,6 +42,7 @@ export const submit = mutation({
 export const markAnswered = mutation({
   args: { id: v.id("prayerRequests") },
   handler: async (ctx, args) => {
+    await requireEditor(ctx);
     await ctx.db.patch(args.id, { isAnswered: true });
   },
 });

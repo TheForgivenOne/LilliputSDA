@@ -1,23 +1,46 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { fetchQuery } from 'convex/nextjs';
+import { NextRequest, NextResponse } from "next/server";
+import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
+import { scriptureLimiter } from "@/lib/rate-limit";
+
+function getClientIP(request: Request): string {
+  const headers = request.headers.get("x-forwarded-for");
+  if (headers) {
+    return headers.split(",")[0].trim();
+  }
+  const realIp = request.headers.get("x-real-ip");
+  if (realIp) {
+    return realIp;
+  }
+  return "anonymous";
+}
 
 function sanitizeQuery(query: string): string {
   return query
-    .replace(/[<>]/g, '')
+    .replace(/[<>]/g, "")
     .substring(0, 100)
     .trim();
 }
 
 export async function GET(request: NextRequest) {
+  const ip = getClientIP(request);
+  const { success } = await scriptureLimiter.limit(ip);
+  
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests, please try again later" },
+      { status: 429 }
+    );
+  }
+  
   try {
     const { searchParams } = new URL(request.url);
-    const query = searchParams.get('q')?.toLowerCase() || '';
-    const limitParam = searchParams.get('limit');
+    const query = searchParams.get("q")?.toLowerCase() || "";
+    const limitParam = searchParams.get("limit");
     
     if (!query) {
       return NextResponse.json(
-        { error: 'Query parameter "q" is required', code: 'MISSING_QUERY' },
+        { error: 'Query parameter "q" is required', code: "MISSING_QUERY" },
         { status: 400 }
       );
     }
@@ -25,7 +48,7 @@ export async function GET(request: NextRequest) {
     const sanitizedQuery = sanitizeQuery(query);
     if (!sanitizedQuery) {
       return NextResponse.json(
-        { error: 'Invalid query parameter', code: 'INVALID_QUERY' },
+        { error: "Invalid query parameter", code: "INVALID_QUERY" },
         { status: 400 }
       );
     }
@@ -35,7 +58,7 @@ export async function GET(request: NextRequest) {
       const parsed = parseInt(limitParam, 10);
       if (isNaN(parsed) || parsed < 1 || parsed > 50) {
         return NextResponse.json(
-          { error: 'Limit must be between 1 and 50', code: 'INVALID_LIMIT' },
+          { error: "Limit must be between 1 and 50", code: "INVALID_LIMIT" },
           { status: 400 }
         );
       }
@@ -44,41 +67,51 @@ export async function GET(request: NextRequest) {
 
     const scriptures = await fetchQuery(api.scripture.queries.search, { 
       query: sanitizedQuery,
-      limit 
+      limit, 
     });
     
     return NextResponse.json({
       query: sanitizedQuery,
       count: scriptures.length,
-      results: scriptures
+      results: scriptures,
     });
   } catch (error) {
-    console.error('Scripture API error:', error);
+    console.error("Scripture API error:", error);
     return NextResponse.json(
-      { error: 'Internal server error', code: 'SERVER_ERROR' },
+      { error: "Internal server error", code: "SERVER_ERROR" },
       { status: 500 }
     );
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
+  const ip = getClientIP(request);
+  const { success } = await scriptureLimiter.limit(ip);
+  
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests, please try again later" },
+      { status: 429 }
+    );
+  }
+  
   try {
     let body;
     try {
       body = await request.json();
     } catch {
       return NextResponse.json(
-        { error: 'Invalid JSON body', code: 'INVALID_JSON' },
+        { error: "Invalid JSON body", code: "INVALID_JSON" },
         { status: 400 }
       );
     }
     
-    const query = body.q?.toString().toLowerCase().trim() || '';
+    const query = body.q?.toString().toLowerCase().trim() || "";
     const limit = body.limit;
     
     if (!query) {
       return NextResponse.json(
-        { error: 'Query parameter "q" is required', code: 'MISSING_QUERY' },
+        { error: 'Query parameter "q" is required', code: "MISSING_QUERY" },
         { status: 400 }
       );
     }
@@ -86,7 +119,7 @@ export async function POST(request: NextRequest) {
     const sanitizedQuery = sanitizeQuery(query);
     if (!sanitizedQuery) {
       return NextResponse.json(
-        { error: 'Invalid query parameter', code: 'INVALID_QUERY' },
+        { error: "Invalid query parameter", code: "INVALID_QUERY" },
         { status: 400 }
       );
     }
@@ -96,7 +129,7 @@ export async function POST(request: NextRequest) {
       const parsed = parseInt(limit, 10);
       if (isNaN(parsed) || parsed < 1 || parsed > 50) {
         return NextResponse.json(
-          { error: 'Limit must be between 1 and 50', code: 'INVALID_LIMIT' },
+          { error: "Limit must be between 1 and 50", code: "INVALID_LIMIT" },
           { status: 400 }
         );
       }
@@ -105,18 +138,18 @@ export async function POST(request: NextRequest) {
 
     const scriptures = await fetchQuery(api.scripture.queries.search, { 
       query: sanitizedQuery,
-      limit: limitValue 
+      limit: limitValue, 
     });
     
     return NextResponse.json({
       query: sanitizedQuery,
       count: scriptures.length,
-      results: scriptures
+      results: scriptures,
     });
   } catch (error) {
-    console.error('Scripture API error:', error);
+    console.error("Scripture API error:", error);
     return NextResponse.json(
-      { error: 'Internal server error', code: 'SERVER_ERROR' },
+      { error: "Internal server error", code: "SERVER_ERROR" },
       { status: 500 }
     );
   }

@@ -1,16 +1,18 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { emailLimiter } from "@/lib/rate-limit";
 
-function getResendClient() {
-  if (!process.env.RESEND_API_KEY) {
-    throw new Error("RESEND_API_KEY is not configured");
+function getClientIP(request: Request): string {
+  const headers = request.headers.get("x-forwarded-for");
+  if (headers) {
+    return headers.split(",")[0].trim();
   }
-  return new Resend(process.env.RESEND_API_KEY);
+  const realIp = request.headers.get("x-real-ip");
+  if (realIp) {
+    return realIp;
+  }
+  return "anonymous";
 }
-
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "successmove000@gmail.com";
-const PRAYER_TEAM_EMAIL = process.env.PRAYER_TEAM_EMAIL || "successmove000@gmail.com";
-const FROM_EMAIL = "onboarding@resend.dev";
 
 interface ContactPayload {
   name: string;
@@ -23,6 +25,37 @@ interface PrayerPayload {
   email: string;
   request: string;
   isPublic: boolean;
+}
+
+function validateContactPayload(data: unknown): data is ContactPayload {
+  if (typeof data !== "object" || data === null) return false;
+  const obj = data as Record<string, unknown>;
+  return (
+    typeof obj.name === "string" &&
+    obj.name.length > 0 &&
+    obj.name.length <= 200 &&
+    typeof obj.email === "string" &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(obj.email) &&
+    typeof obj.message === "string" &&
+    obj.message.length > 0 &&
+    obj.message.length <= 5000
+  );
+}
+
+function validatePrayerPayload(data: unknown): data is PrayerPayload {
+  if (typeof data !== "object" || data === null) return false;
+  const obj = data as Record<string, unknown>;
+  return (
+    typeof obj.name === "string" &&
+    obj.name.length > 0 &&
+    obj.name.length <= 200 &&
+    typeof obj.email === "string" &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(obj.email) &&
+    typeof obj.request === "string" &&
+    obj.request.length > 0 &&
+    obj.request.length <= 2000 &&
+    typeof obj.isPublic === "boolean"
+  );
 }
 
 function contactNotificationHtml(data: ContactPayload): string {
@@ -130,7 +163,7 @@ function thankYouHtml(type: "contact" | "prayer"): string {
 }
 
 function escapeHtml(text: string): string {
-  const map: { [key: string]: string } = {
+  const map: Record<string, string> = {
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
@@ -141,27 +174,52 @@ function escapeHtml(text: string): string {
 }
 
 export async function POST(request: Request) {
+  const ip = getClientIP(request);
+  const { success } = await emailLimiter.limit(ip);
+  
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests, please try again later" },
+      { status: 429 }
+    );
+  }
+  
   try {
+    if (!process.env.RESEND_API_KEY) {
+      console.error("RESEND_API_KEY not configured");
+      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    }
+
+    if (!process.env.ADMIN_EMAIL || !process.env.PRAYER_TEAM_EMAIL) {
+      console.error("Email configuration missing");
+      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    }
+
     const { type, data } = await request.json();
 
     if (!type || !data) {
       return NextResponse.json({ error: "Missing type or data" }, { status: 400 });
     }
 
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
     if (type === "contact") {
+      if (!validateContactPayload(data)) {
+        return NextResponse.json({ error: "Invalid contact form data" }, { status: 400 });
+      }
+
       const payload = data as ContactPayload;
-      const resend = getResendClient();
       
       const [adminResult, thankYouResult] = await Promise.all([
         resend.emails.send({
-          from: FROM_EMAIL,
-          to: ADMIN_EMAIL,
+          from: "Lilliput SDA <onboarding@resend.dev>",
+          to: process.env.ADMIN_EMAIL,
           subject: `New Contact Form Submission from ${payload.name}`,
           html: contactNotificationHtml(payload),
           replyTo: payload.email,
         }),
         resend.emails.send({
-          from: FROM_EMAIL,
+          from: "Lilliput SDA <onboarding@resend.dev>",
           to: payload.email,
           subject: "We Received Your Message",
           html: thankYouHtml("contact"),
@@ -169,28 +227,30 @@ export async function POST(request: Request) {
       ]);
 
       if (adminResult.error || thankYouResult.error) {
-        console.error("Admin email result:", adminResult);
-        console.error("Thank you email result:", thankYouResult);
-        return NextResponse.json({ error: "Failed to send emails", details: adminResult.error || thankYouResult.error }, { status: 500 });
+        console.error("Email errors:", { admin: adminResult.error, thankYou: thankYouResult.error });
+        return NextResponse.json({ error: "Failed to send emails" }, { status: 500 });
       }
 
       return NextResponse.json({ success: true });
     }
 
     if (type === "prayer") {
+      if (!validatePrayerPayload(data)) {
+        return NextResponse.json({ error: "Invalid prayer request data" }, { status: 400 });
+      }
+
       const payload = data as PrayerPayload;
-      const resend = getResendClient();
       
       const [prayerResult, thankYouResult] = await Promise.all([
         resend.emails.send({
-          from: FROM_EMAIL,
-          to: PRAYER_TEAM_EMAIL,
+          from: "Lilliput SDA <onboarding@resend.dev>",
+          to: process.env.PRAYER_TEAM_EMAIL,
           subject: `Prayer Request from ${payload.name}`,
           html: prayerNotificationHtml(payload),
           replyTo: payload.email,
         }),
         resend.emails.send({
-          from: FROM_EMAIL,
+          from: "Lilliput SDA <onboarding@resend.dev>",
           to: payload.email,
           subject: "Prayer Request Received",
           html: thankYouHtml("prayer"),

@@ -1,5 +1,6 @@
 import { mutation } from "../_generated/server";
 import { v } from "convex/values";
+import { requireEditor, requireAdmin } from "../lib/auth";
 
 export const create = mutation({
   args: {
@@ -17,6 +18,7 @@ export const create = mutation({
     isPinned: v.boolean(),
   },
   handler: async (ctx, args) => {
+    await requireEditor(ctx);
     await ctx.db.insert("announcements", {
       ...args,
       date: new Date().toISOString(),
@@ -42,6 +44,7 @@ export const update = mutation({
     isPinned: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    await requireEditor(ctx);
     const { id, ...updates } = args;
     await ctx.db.patch(id, updates);
   },
@@ -50,6 +53,7 @@ export const update = mutation({
 export const deleteAnnouncement = mutation({
   args: { id: v.id("announcements") },
   handler: async (ctx, args) => {
+    await requireAdmin(ctx);
     await ctx.db.delete(args.id);
   },
 });
@@ -57,6 +61,7 @@ export const deleteAnnouncement = mutation({
 export const togglePin = mutation({
   args: { id: v.id("announcements") },
   handler: async (ctx, args) => {
+    await requireEditor(ctx);
     const announcement = await ctx.db.get(args.id);
     if (announcement) {
       await ctx.db.patch(args.id, { isPinned: !announcement.isPinned });
