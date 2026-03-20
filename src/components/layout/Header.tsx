@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { DecisionCardTrigger } from "@/components/features/DecisionCardModal";
+import { DecisionCardTrigger } from "@/components/modals/DecisionCardModal";
 import { cn, throttle } from "@/lib/utils";
 
 const navItems = [

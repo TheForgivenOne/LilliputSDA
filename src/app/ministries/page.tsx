@@ -7,6 +7,8 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Users, Music, Heart, BookOpen, Star } from "lucide-react";
 import type { Ministry } from "@/types";
+import { PageHero } from "@/components/sections/PageHero";
+import { CategoryFilter } from "@/components/ui/CategoryFilter";
 
 const defaultMinistries = [
   {
@@ -86,43 +88,21 @@ export default function MinistriesPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-amber-700 dark:bg-amber-800 text-white py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <span className="text-amber-200 font-medium mb-4 block">
-              Get Involved
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Our Ministries
-            </h1>
-            <p className="text-xl text-amber-100 leading-relaxed">
-              Discover your place in our church family. We have ministries for 
-              every age and interest, all focused on growing together in Christ.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        badge="Get Involved"
+        title="Our Ministries"
+        description="Discover your place in our church family. We have ministries for every age and interest, all focused on growing together in Christ."
+        theme="amber"
+      />
 
       {/* Ministry Categories */}
       <section className="py-8 bg-stone-100 dark:bg-stone-800/50 border-b border-stone-200 dark:border-stone-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap justify-center gap-3">
-            {ministryCategories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`inline-flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-colors shadow-sm ${
-                  selectedCategory === category.id
-                    ? "bg-amber-700 text-white"
-                    : "bg-white dark:bg-stone-700 text-stone-700 dark:text-stone-300 hover:bg-amber-50 dark:hover:bg-amber-900/20 hover:text-amber-700 dark:hover:text-amber-400"
-                }`}
-              >
-                <category.icon className="w-4 h-4" />
-                {category.label}
-              </button>
-            ))}
-          </div>
+          <CategoryFilter
+            categories={ministryCategories}
+            selected={selectedCategory}
+            onSelect={setSelectedCategory}
+          />
         </div>
       </section>
 

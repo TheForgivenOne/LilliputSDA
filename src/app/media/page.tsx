@@ -10,7 +10,7 @@ import {
   VideoGridSkeleton,
   FeaturedVideoSkeleton,
   VideoError,
-} from "@/components/video";
+} from "@/components/media";
 import type { YouTubeVideo } from "@/types";
 
 // YouTube channel base URL

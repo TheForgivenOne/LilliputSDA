@@ -1,20 +1,23 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import {
   BookOpen, Heart, Church, Sparkles, Shield, Crown,
   Flame, Cross, Hand, TreePine, Star, UsersRound,
   Droplets, Wine, Gift, ScrollText, Scale, Sun, Wallet,
   Leaf, Home, Tent, Cloud, Sunrise, Mountain, Globe,
-  ChevronDown, ChevronUp,
 } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { CHURCH_IMAGES } from "@/lib/utils";
 import { StaffCard } from "@/components/ui/Card";
-import { LeaderCard, LeaderCardGroup } from "@/components/features/LeaderCard";
-import { HistoricalSlideshow } from "@/components/features/HistoricalSlideshow";
+import { LeaderCard, LeaderCardGroup } from "@/components/cards/LeaderCard";
+import { HistoricalSlideshow } from "@/components/cards/HistoricalSlideshow";
+import { PageHero } from "@/components/sections/PageHero";
+import { Timeline } from "@/components/sections/Timeline";
+import { MissionVision } from "@/components/sections/MissionVision";
+import { BeliefGrid } from "@/components/cards/BeliefCard";
+import { PageStats } from "@/components/sections/PageStats";
 import type { StaffMember } from "@/types";
 
 const milestones = [
@@ -80,29 +83,13 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-stone-900 text-white py-24 lg:py-32">
-        <div className="absolute inset-0 opacity-30">
-          <Image
-            src={CHURCH_IMAGES.history.oldSite[0].src}
-            alt="Old photo of church"
-            fill
-            sizes="100vw"
-            className="object-cover"
-          />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <span className="text-amber-400 font-medium mb-4 block">Our Story</span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Growing Together in Faith Since 1974
-            </h1>
-            <p className="text-xl text-stone-300 leading-relaxed">
-              For over 52 years, Lilliput SDA Church has been a beacon of hope and faith 
-              in the St. James community, serving God and our neighbors with love.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        title="Growing Together in Faith Since 1974"
+        description="For over 52 years, Lilliput SDA Church has been a beacon of hope and faith in the St. James community, serving God and our neighbors with love."
+        badge={<span className="text-amber-400 font-medium">Our Story</span>}
+        backgroundImage={CHURCH_IMAGES.history.oldSite[0].src}
+        theme="stone"
+      />
 
       {/* History Section */}
       <section className="py-16 lg:py-24">
@@ -140,83 +127,19 @@ export default function AboutPage() {
       </section>
 
       {/* Timeline Section */}
-      <section className="py-16 lg:py-24 bg-stone-100 dark:bg-stone-800/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-stone-900 dark:text-stone-100 mb-4">
-              Key Milestones
-            </h2>
-            <p className="text-stone-600 dark:text-stone-300 max-w-2xl mx-auto">
-              A journey of faith spanning five decades of ministry and service.
-            </p>
-          </div>
-
-          <div className="relative">
-            {/* Timeline line */}
-            <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-amber-200 dark:bg-amber-900/50" />
-            
-            <div className="space-y-12">
-              {milestones.map((milestone, index) => (
-                <div
-                  key={milestone.year}
-                  className={`relative flex flex-col md:flex-row items-center gap-8 ${
-                    index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                  }`}
-                >
-                  {/* Content */}
-                  <div className={`flex-1 ${index % 2 === 0 ? "md:text-right" : "md:text-left"}`}>
-                    <div className="bg-white dark:bg-stone-800 p-6 rounded-xl shadow-md">
-                      <span className="text-3xl font-bold text-amber-700 dark:text-amber-400">
-                        {milestone.year}
-                      </span>
-                      <h3 className="text-xl font-semibold text-stone-900 dark:text-stone-100 mt-2 mb-2">
-                        {milestone.title}
-                      </h3>
-                      <p className="text-stone-600 dark:text-stone-300">
-                        {milestone.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Center dot */}
-                  <div className="hidden md:flex items-center justify-center w-12 h-12 bg-amber-700 rounded-full border-4 border-stone-100 dark:border-stone-800 z-10 flex-shrink-0">
-                    <span className="text-white font-bold text-sm">
-                      {milestone.year.slice(-2)}
-                    </span>
-                  </div>
-
-                  {/* Spacer for alternating layout */}
-                  <div className="flex-1 hidden md:block" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <Timeline milestones={milestones} visibleCount={visibleCount} />
 
       {/* Mission & Vision */}
-      <section className="py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div className="bg-amber-700 dark:bg-amber-800 text-white p-8 lg:p-12 rounded-2xl">
-              <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
-              <p className="text-amber-100 text-lg leading-relaxed">
-                To proclaim the everlasting gospel of Jesus Christ to all people, 
-                nurturing believers in their faith journey, and preparing them for 
-                His soon return through worship, fellowship, education, and service.
-              </p>
-            </div>
-            <div className="bg-stone-800 dark:bg-stone-900 text-white p-8 lg:p-12 rounded-2xl">
-              <h2 className="text-3xl font-bold mb-6">Our Vision</h2>
-              <p className="text-stone-300 text-lg leading-relaxed">
-                To be a Christ-centered community that transforms lives through the 
-                power of the Holy Spirit, equipping believers to share God&apos;s love 
-                and hope with the world, starting with our local community in St. James.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <MissionVision
+        mission={{
+          title: "Our Mission",
+          content: "To proclaim the everlasting gospel of Jesus Christ to all people, nurturing believers in their faith journey, and preparing them for His soon return through worship, fellowship, education, and service."
+        }}
+        vision={{
+          title: "Our Vision",
+          content: "To be a Christ-centered community that transforms lives through the power of the Holy Spirit, equipping believers to share God's love and hope with the world, starting with our local community in St. James."
+        }}
+      />
 
       {/* What We Believe */}
       <section id="beliefs" className="py-16 lg:py-24 bg-stone-100 dark:bg-stone-800/50">
@@ -234,42 +157,13 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {beliefs.slice(0, visibleCount).map((belief, index) => (
-              <div
-                key={`${belief.title}-${index}`}
-                className="p-6 rounded-2xl border border-stone-100 dark:border-stone-700 bg-white dark:bg-stone-800/50"
-              >
-                <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center mb-4">
-                  <belief.icon className="w-6 h-6 text-amber-700 dark:text-amber-400" />
-                </div>
-                <h3 className="text-lg font-semibold text-stone-900 dark:text-stone-100 mb-2">
-                  {belief.title}
-                </h3>
-                <p className="text-stone-600 dark:text-stone-300 text-sm">
-                  {belief.description}
-                </p>
-              </div>
-            ))}
-          </div>
+          <BeliefGrid
+            beliefs={beliefs}
+            visibleCount={visibleCount}
+            onShowMore={() => setVisibleCount(visibleCount >= beliefs.length ? 8 : beliefs.length)}
+          />
 
           <div className="text-center mt-8 space-y-4">
-            <button
-              onClick={() => setVisibleCount(visibleCount >= beliefs.length ? 8 : beliefs.length)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-amber-700 hover:bg-amber-800 text-white rounded-full font-medium transition-colors"
-            >
-              {visibleCount >= beliefs.length ? (
-                <>
-                  Show Less
-                  <ChevronUp className="w-4 h-4" />
-                </>
-              ) : (
-                <>
-                  Show All 28 Beliefs
-                  <ChevronDown className="w-4 h-4" />
-                </>
-              )}
-            </button>
             <p className="text-stone-500 dark:text-stone-400">
               To learn more about our 28 fundamental beliefs, visit{" "}
               <a
@@ -383,27 +277,14 @@ export default function AboutPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { number: "52+", label: "Years of Ministry" },
-              { number: "700+", label: "Active Members" },
-              { number: "5", label: "Daughter Churches" },
-              { number: "10+", label: "Active Ministries" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-4xl lg:text-5xl font-bold text-amber-700 dark:text-amber-400 mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-stone-600 dark:text-stone-400">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <PageStats
+        stats={[
+          { number: "52+", label: "Years of Ministry" },
+          { number: "700+", label: "Active Members" },
+          { number: "5", label: "Daughter Churches" },
+          { number: "10+", label: "Active Ministries" },
+        ]}
+      />
     </div>
   );
 }

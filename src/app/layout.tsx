@@ -5,9 +5,9 @@ import "@/styles/tokens.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/providers/ConvexClientProvider";
 import { DirectionProvider } from "@/components/providers/DirectionProvider";
-import { Header } from "@/components/navigation/Header";
-import { Footer } from "@/components/navigation/Footer";
-import { MobileBottomBar } from "@/components/navigation/MobileBottomBar";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { MobileBottomBar } from "@/components/layout/MobileBottomBar";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",

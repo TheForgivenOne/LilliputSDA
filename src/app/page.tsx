@@ -7,12 +7,13 @@ import { api } from "../../convex/_generated/api";
 import { EventCard, AnnouncementCard } from "@/components/ui/Card";
 import { CHURCH_IMAGES } from "@/lib/utils";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { QuickInfo } from "@/components/features/QuickInfo";
-import { HeroSection } from "@/components/features/HeroSection";
-import { AboutSplit } from "@/components/features/AboutSplit";
-import { QuickMinistryCard } from "@/components/features/QuickMinistryCard";
-import { CTASection } from "@/components/features/CTASection";
-import { SermonList, VideoModal } from "@/components/video";
+import { QuickInfo } from "@/components/sections/QuickInfo";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { AboutSplit } from "@/components/sections/AboutSplit";
+import { QuickMinistryCard } from "@/components/cards/QuickMinistryCard";
+import { CTASection } from "@/components/sections/CTASection";
+import { SermonList, VideoModal } from "@/components/media";
+import { TestimonialCard } from "@/components/cards/TestimonialCard";
 import type { YouTubeVideo, ChurchEvent, Announcement } from "@/types";
 
 export default function Home() {
@@ -297,50 +298,22 @@ export default function Home() {
             linkText="View All"
           />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border-l-4 border-amber-500">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                  <span className="text-amber-700 dark:text-amber-400 font-bold text-lg">S</span>
-                </div>
-                <div>
-                  <p className="font-semibold text-stone-900 dark:text-stone-100">Sister Marie T.</p>
-                  <p className="text-sm text-stone-500 dark:text-stone-400">Member since 2010</p>
-                </div>
-              </div>
-              <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
-                {`"When I first walked through these doors, I was searching for answers. The warmth and acceptance I found here changed my life forever. Lilliput became my family."`}
-              </p>
-            </div>
-
-            <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border-l-4 border-amber-500">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                  <span className="text-amber-700 dark:text-amber-400 font-bold text-lg">B</span>
-                </div>
-                <div>
-                  <p className="font-semibold text-stone-900 dark:text-stone-100">Brother David J.</p>
-                  <p className="text-sm text-stone-500 dark:text-stone-400">Youth Leader</p>
-                </div>
-              </div>
-              <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
-                {`"Growing up in this church, I experienced God's love through mentors who invested in my life. Now I have the privilege of pouring into the next generation."`}
-              </p>
-            </div>
-
-            <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border-l-4 border-amber-500 md:hidden lg:block">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                  <span className="text-amber-700 dark:text-amber-400 font-bold text-lg">A</span>
-                </div>
-                <div>
-                  <p className="font-semibold text-stone-900 dark:text-stone-100">Sister Angela R.</p>
-                  <p className="text-sm text-stone-500 dark:text-stone-400">Women&apos;s Ministry</p>
-                </div>
-              </div>
-              <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
-                {`"The sisterhood here is powerful. Through prayer and fellowship, I've witnessed lives transformed and bonds formed that will last for eternity."`}
-              </p>
-            </div>
+            <TestimonialCard
+              name="Sister Marie T."
+              role="Member"
+              memberSince="2010"
+              content="When I first walked through these doors, I was searching for answers. The warmth and acceptance I found here changed my life forever. Lilliput became my family."
+            />
+            <TestimonialCard
+              name="Brother David J."
+              role="Youth Leader"
+              content="Growing up in this church, I experienced God's love through mentors who invested in my life. Now I have the privilege of pouring into the next generation."
+            />
+            <TestimonialCard
+              name="Sister Angela R."
+              role="Women's Ministry"
+              content="The sisterhood here is powerful. Through prayer and fellowship, I've witnessed lives transformed and bonds formed that will last for eternity."
+            />
           </div>
         </div>
       </section>

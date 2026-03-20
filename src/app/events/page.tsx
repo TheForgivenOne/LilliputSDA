@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Calendar as CalendarIcon, Clock, MapPin, Filter, Bell } from "lucide-react";
+import { Calendar as CalendarIcon, Bell } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { EventCard, AnnouncementCard } from "@/components/ui/Card";
+import { PageHero } from "@/components/sections/PageHero";
+import { CategoryFilter } from "@/components/ui/CategoryFilter";
+import { EventsSidebar } from "@/components/sections/EventsSidebar";
 import type { ChurchEvent, Announcement } from "@/types";
 
 const categories = [
@@ -111,22 +114,12 @@ export default function EventsPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-amber-700 dark:bg-amber-800 text-white py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <span className="text-amber-200 font-medium mb-4 block">
-              Stay Connected
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Events & News
-            </h1>
-            <p className="text-xl text-amber-100 leading-relaxed">
-              Stay informed about upcoming events, activities, and announcements 
-              from Lilliput SDA Church.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        title="Events & News"
+        description="Stay informed about upcoming events, activities, and announcements from Lilliput SDA Church."
+        badge={<span className="text-amber-200 font-medium">Stay Connected</span>}
+        theme="amber"
+      />
 
       {/* Tab Navigation */}
       <section className="bg-stone-100 dark:bg-stone-800/50 border-b border-stone-200 dark:border-stone-800">
@@ -162,22 +155,11 @@ export default function EventsPage() {
           {/* Category Filter */}
           <section className="py-6 bg-stone-100 dark:bg-stone-800/50 border-b border-stone-200 dark:border-stone-800">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center gap-4 overflow-x-auto pb-2">
-                <Filter className="w-5 h-5 text-stone-500 flex-shrink-0" />
-                {categories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => setSelectedCategory(category.id)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                      selectedCategory === category.id
-                        ? "bg-amber-700 text-white"
-                        : "bg-white dark:bg-stone-700 text-stone-700 dark:text-stone-300 hover:bg-amber-50 dark:hover:bg-amber-900/20"
-                    }`}
-                  >
-                    {category.label}
-                  </button>
-                ))}
-              </div>
+              <CategoryFilter
+                categories={categories}
+                selected={selectedCategory}
+                onSelect={setSelectedCategory}
+              />
             </div>
           </section>
 
@@ -222,91 +204,8 @@ export default function EventsPage() {
 
                 {/* Sidebar */}
                 <div className="space-y-6">
-                  {/* Regular Services */}
-                  <div className="bg-white dark:bg-stone-800 p-6 rounded-xl shadow-md">
-                    <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100 mb-4">
-                      Regular Services
-                    </h3>
-                    <div className="space-y-4">
-                      <div className="flex items-start gap-3">
-                        <Clock className="w-5 h-5 text-amber-700 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-medium text-stone-900 dark:text-stone-100">
-                            Sabbath School
-                          </p>
-                          <p className="text-sm text-stone-500 dark:text-stone-400">
-                            Saturdays at 9:30 AM
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <Clock className="w-5 h-5 text-amber-700 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-medium text-stone-900 dark:text-stone-100">
-                            Divine Service
-                          </p>
-                          <p className="text-sm text-stone-500 dark:text-stone-400">
-                            Saturdays at 11:00 AM
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <Clock className="w-5 h-5 text-amber-700 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-medium text-stone-900 dark:text-stone-100">
-                            AY Society
-                          </p>
-                          <p className="text-sm text-stone-500 dark:text-stone-400">
-                            Saturdays at 4:30 PM
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <Clock className="w-5 h-5 text-amber-700 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-medium text-stone-900 dark:text-stone-100">
-                            Prayer Meeting
-                          </p>
-                          <p className="text-sm text-stone-500 dark:text-stone-400">
-                            Wednesdays at 7:00 PM
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Location */}
-                  <div className="bg-white dark:bg-stone-800 p-6 rounded-xl shadow-md">
-                    <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100 mb-4">
-                      Location
-                    </h3>
-                    <div className="flex items-start gap-3">
-                      <MapPin className="w-5 h-5 text-amber-700 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <p className="font-medium text-stone-900 dark:text-stone-100">
-                          Lilliput SDA Church
-                        </p>
-                        <p className="text-sm text-stone-500 dark:text-stone-400">
-                          Lot 200-202, Lilliput
-                        </p>
-                        <p className="text-sm text-stone-500 dark:text-stone-400">
-                          Montego Bay, St. James, Jamaica
-                        </p>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <a
-                        href="https://maps.google.com/?q=Lilliput+SDA+Church+Montego+Bay+Jamaica"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-amber-700 dark:text-amber-400 font-medium text-sm hover:underline"
-                      >
-                        <MapPin className="w-4 h-4" />
-                        Get Directions
-                      </a>
-                    </div>
-                  </div>
-
+                  <EventsSidebar />
+                  
                   {/* Subscribe CTA */}
                   <div className="bg-amber-700 dark:bg-amber-800 p-6 rounded-xl text-white">
                     <h3 className="text-lg font-bold mb-2">Stay Updated</h3>
@@ -349,22 +248,11 @@ export default function EventsPage() {
           {/* Category Filter */}
           <section className="py-6 bg-stone-100 dark:bg-stone-800/50 border-b border-stone-200 dark:border-stone-800">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center gap-4 overflow-x-auto pb-2">
-                <Filter className="w-5 h-5 text-stone-500 flex-shrink-0" />
-                {announcementCategories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => setSelectedAnnouncementCategory(category.id)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                      selectedAnnouncementCategory === category.id
-                        ? "bg-amber-700 text-white"
-                        : "bg-white dark:bg-stone-700 text-stone-700 dark:text-stone-300 hover:bg-amber-50 dark:hover:bg-amber-900/20"
-                    }`}
-                  >
-                    {category.label}
-                  </button>
-                ))}
-              </div>
+              <CategoryFilter
+                categories={announcementCategories}
+                selected={selectedAnnouncementCategory}
+                onSelect={setSelectedAnnouncementCategory}
+              />
             </div>
           </section>
 
