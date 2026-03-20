@@ -125,7 +125,7 @@ export const create = mutation({ args: { ... }, handler: async (ctx) => { ... } 
 
 ## Rate Limiting
 
-API routes are protected with rate limiting via `src/lib/rateLimit.ts`:
+API routes are protected with rate limiting via **Upstash Redis**:
 
 | Route | Limit | Window |
 |-------|-------|--------|
@@ -135,51 +135,131 @@ API routes are protected with rate limiting via `src/lib/rateLimit.ts`:
 
 Returns `429 Too Many Requests` with `Retry-After` header.
 
+**Configuration:**
+- Module: `src/lib/rate-limit/`
+- Redis client: `src/lib/rate-limit/redis.ts`
+- Limiters: `src/lib/rate-limit/limiters.ts`
+
 ---
 
 ## Security
 
-### Clerk Proxy Fallback (`src/proxy.ts`)
-- Protected routes redirect to `/sign-in` if Clerk fails
-- Dev bypass: set `CLERK_DEV_BYPASS=true` in `.env.local`
+### Clerk Organizations (RBAC)
 
-### Database Auth (`convex/lib/auth.ts`)
-Role-based access control for mutations:
+Role-based access control via **Clerk Organizations**. Users must:
+1. Sign in via Clerk
+2. Join the "Lilliput SDA Church" organization
+3. Have appropriate role (`admin` or `member`)
 
-| Access Level | Functions |
-|--------------|-----------|
-| `requireAuth` | User must be logged in |
-| `requireEditor` | admin or editor role |
-| `requireAdmin` | admin role only |
-
-Configure via environment:
-```bash
-ADMIN_EMAILS=admin@example.com
-EDITOR_EMAILS=editor@example.com
+**JWT Claims Required:**
+```json
+{
+  "org_role": "{{user.role}}",
+  "org_id": "{{org.id}}"
+}
 ```
 
+Add these to Clerk Dashboard → Configure → Sessions → JWT Templates.
+
+### Middleware (`src/proxy.ts`)
+
+- Admin routes protected: `/admin(.*)` requires `org:admin` role
+- Public routes: `/`, `/about`, `/ministries`, `/media`, `/events`, `/contact`, `/api/*`, `/visit`, `/decision`
+- Non-public routes require authentication
+
+### Database Auth (`convex/lib/auth.ts`)
+
+```typescript
+// Roles: "admin" | "member"
+requireAuth()      // User must be logged in
+requireAdmin()     // org:admin only
+requireEditor()     // org:admin (members can also edit)
+```
+
+### Security Headers (`next.config.ts`)
+
+All routes include:
+- `X-Content-Type-Options: nosniff`
+- `X-Frame-Options: DENY`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Strict-Transport-Security: max-age=63072000`
+- `Content-Security-Policy` (configured for YouTube, Clerk, Resend)
+
 ### Protected Mutations
-- Events: create/update (editor+), delete (admin)
-- Announcements: create/update/delete (editor+)
-- Contact/Prayer: admin mutations protected
+
+| Table | Create/Update | Delete |
+|-------|---------------|--------|
+| events | editor+ | admin only |
+| announcements | editor+ | admin only |
+| contactSubmissions | public | admin only |
+| prayerRequests | public | editor+ |
 
 ---
 
-## Convex Backend (`src/proxy.ts`)
-- Clerk proxy protects routes (Next.js 16 renamed middleware → proxy)
-- Public routes: /, /about, /ministries, /media, /events, /contact, /api/*, /visit, /decision
-- Admin routes require authentication
-- Auth bypass in dev: `CLERK_DEV_BYPASS=true`
+## Environment Variables
+
+### Required
+```bash
+# Convex
+CONVEX_DEPLOYMENT=
+NEXT_PUBLIC_CONVEX_URL=
+NEXT_PUBLIC_CONVEX_SITE_URL=
+
+# Clerk
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+CLERK_FRONTEND_API_URL=
+CLERK_JWT_ISSUER_DOMAIN=https://your-clerk-instance.clerk.accounts.dev
+
+# Upstash Redis (rate limiting)
+UPSTASH_REDIS_REST_URL=https://your-db.upstash.io
+UPSTASH_REDIS_REST_TOKEN=
+
+# APIs
+YOUTUBE_API_KEY=
+RESEND_API_KEY=
+
+# Church emails
+ADMIN_EMAIL=
+PRAYER_TEAM_EMAIL=
+```
+
+### Convex Dashboard
+Set these via `npx convex env set`:
+```bash
+npx convex env set CLERK_JWT_ISSUER_DOMAIN "https://your-clerk-instance.clerk.accounts.dev"
+```
+
+---
+
+## Convex Backend
+
+### Setup
+1. Enable Organizations in Clerk Dashboard
+2. Activate Convex integration in Clerk
+3. Customize JWT template with `org_role` and `org_id`
+4. Create "Lilliput SDA Church" organization
+5. Invite members with roles
+
+### Auth Config (`convex/auth.config.ts`)
+```typescript
+export default {
+  providers: [{
+    domain: process.env.CLERK_JWT_ISSUER_DOMAIN!,
+    applicationID: "convex",
+  }],
+};
+```
 
 ---
 
 ## Important Notes
 - Church content editable via inline CMS (EditableText/EditableImage)
 - Page IDs: "home", "about", "contact", "events", "ministries", "media", "decision-card"
-- CMS mutations require editor/admin role (checked via CmsProvider)
+- CMS mutations require editor/admin role via Clerk organization
 - YouTube API requires YOUTUBE_API_KEY env variable
-- Rate limiting via `src/lib/rateLimit.ts`
-- Database auth via `convex/lib/auth.ts`
+- Rate limiting via Upstash Redis (`src/lib/rate-limit/`)
+- Database auth via Clerk org roles (`convex/lib/auth.ts`)
 
 ---
 
