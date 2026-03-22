@@ -8,7 +8,7 @@ import {
   Leaf, Home, Tent, Cloud, Sunrise, Mountain, Globe,
 } from "lucide-react";
 import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 import { CHURCH_IMAGES } from "@/lib/utils";
 import { StaffCard } from "@/components/ui/Card";
 import { LeaderCard, LeaderCardGroup } from "@/components/cards/LeaderCard";

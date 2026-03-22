@@ -3,7 +3,7 @@
 import { Clock, MapPin, Play, Calendar } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 import { EventCard, AnnouncementCard } from "@/components/ui/Card";
 import { CHURCH_IMAGES } from "@/lib/utils";
 import { SectionHeader } from "@/components/ui/SectionHeader";

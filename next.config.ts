@@ -11,11 +11,14 @@ const securityHeaders = [
   {
     key: "Content-Security-Policy",
     value:
-      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://placehold.co https://images.unsplash.com https://img.youtube.com https://i.ytimg.com https://yt3.ggpht.com; font-src 'self'; connect-src 'self' https://*.clerk.accounts.dev https://www.googleapis.com https://api.resend.com;",
+      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://placehold.co https://images.unsplash.com https://img.youtube.com https://i.ytimg.com https://yt3.ggpht.com https://*.convex.cloud; font-src 'self'; connect-src 'self' https://*.clerk.accounts.dev https://*.convex.cloud https://www.googleapis.com https://api.resend.com wss://*.convex.cloud; frame-src 'self' https://*.clerk.accounts.dev;",
   },
 ];
 
 const nextConfig: NextConfig = {
+  experimental: {
+    useWebpackBuilder: true,
+  },
   allowedDevOrigins: ["127.0.0.1"],
   images: {
     remotePatterns: [

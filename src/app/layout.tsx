@@ -5,9 +5,6 @@ import "@/styles/tokens.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/providers/ConvexClientProvider";
 import { DirectionProvider } from "@/components/providers/DirectionProvider";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { MobileBottomBar } from "@/components/layout/MobileBottomBar";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -78,12 +75,7 @@ export default function RootLayout({
               >
                 Skip to main content
               </a>
-              <div className="min-h-screen flex flex-col">
-                <Header />
-                <main id="main-content" className="flex-1 pt-16 pb-20 lg:pb-0">{children}</main>
-                <Footer />
-                <MobileBottomBar />
-              </div>
+              {children}
             </DirectionProvider>
           </ConvexClientProvider>
         </body>

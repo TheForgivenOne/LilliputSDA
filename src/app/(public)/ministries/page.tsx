@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MinistryDetailCard } from "@/components/ui/Card";
 import { CHURCH_IMAGES } from "@/lib/utils";
 import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 import { Users, Music, Heart, BookOpen, Star } from "lucide-react";
 import type { Ministry } from "@/types";
 import { PageHero } from "@/components/sections/PageHero";

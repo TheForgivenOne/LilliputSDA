@@ -46,3 +46,11 @@ export const markAnswered = mutation({
     await ctx.db.patch(args.id, { isAnswered: true });
   },
 });
+
+export const togglePublic = mutation({
+  args: { id: v.id("prayerRequests"), isPublic: v.boolean() },
+  handler: async (ctx, args) => {
+    await requireEditor(ctx);
+    await ctx.db.patch(args.id, { isPublic: args.isPublic });
+  },
+});

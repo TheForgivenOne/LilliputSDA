@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Calendar as CalendarIcon, Bell } from "lucide-react";
 import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 import { EventCard, AnnouncementCard } from "@/components/ui/Card";
 import { PageHero } from "@/components/sections/PageHero";
 import { CategoryFilter } from "@/components/ui/CategoryFilter";
