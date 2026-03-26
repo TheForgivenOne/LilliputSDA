@@ -82,21 +82,22 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <PageHero
         title="Growing Together in Faith Since 1974"
         description="For over 52 years, Lilliput SDA Church has been a beacon of hope and faith in the St. James community, serving God and our neighbors with love."
-        badge={<span className="text-amber-400 font-medium">Our Story</span>}
+        badge={<span className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-stone-300 font-semibold text-sm backdrop-blur-sm"><span className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />Our Story</span>}
         backgroundImage={CHURCH_IMAGES.history.oldSite[0].src}
         theme="stone"
       />
 
-      {/* History Section */}
-      <section className="py-16 lg:py-24">
+      <section className="py-20 lg:py-28 bg-white dark:bg-stone-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div>
-              <h2 className="text-3xl lg:text-4xl font-bold text-stone-900 dark:text-stone-100 mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 text-amber-700 dark:text-amber-300 rounded-full text-sm font-semibold mb-6">
+                Our Journey
+              </div>
+              <h2 className="text-4xl lg:text-5xl font-black text-stone-900 dark:text-stone-100 mb-8 font-[family-name:var(--font-playfair)]">
                 Our History
               </h2>
               <div className="prose prose-stone dark:prose-invert max-w-none">
@@ -120,16 +121,17 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="relative">
-              <HistoricalSlideshow slides={CHURCH_IMAGES.history.oldSite} />
+              <div className="absolute -inset-4 bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-3xl blur-2xl" />
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                <HistoricalSlideshow slides={CHURCH_IMAGES.history.oldSite} />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Timeline Section */}
       <Timeline milestones={milestones} visibleCount={visibleCount} />
 
-      {/* Mission & Vision */}
       <MissionVision
         mission={{
           title: "Our Mission",
@@ -141,17 +143,16 @@ export default function AboutPage() {
         }}
       />
 
-      {/* What We Believe */}
-      <section id="beliefs" className="py-16 lg:py-24 bg-stone-100 dark:bg-stone-800/50">
+      <section id="beliefs" className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <span className="text-amber-700 dark:text-amber-400 font-medium mb-2 block">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 text-amber-700 dark:text-amber-300 rounded-full text-sm font-semibold mb-6">
               Fundamentals of Faith
-            </span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-stone-900 dark:text-stone-100 mb-4">
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-black text-stone-900 dark:text-stone-100 mb-6 font-[family-name:var(--font-playfair)]">
               What We Believe
             </h2>
-            <p className="text-stone-600 dark:text-stone-300 max-w-2xl mx-auto">
+            <p className="text-stone-600 dark:text-stone-300 max-w-2xl mx-auto text-lg">
               As Seventh-day Adventists, we uphold the fundamental beliefs of the 
               worldwide church, rooted in Scripture and focused on Jesus Christ.
             </p>
@@ -163,14 +164,14 @@ export default function AboutPage() {
             onShowMore={() => setVisibleCount(visibleCount >= beliefs.length ? 8 : beliefs.length)}
           />
 
-          <div className="text-center mt-8 space-y-4">
+          <div className="text-center mt-10">
             <p className="text-stone-500 dark:text-stone-400">
               To learn more about our 28 fundamental beliefs, visit{" "}
               <a
                 href="https://www.adventist.org/beliefs/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-amber-700 dark:text-amber-400 hover:underline"
+                className="text-amber-600 dark:text-amber-400 hover:underline font-semibold"
               >
                 adventist.org/beliefs
               </a>
@@ -179,25 +180,23 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Leadership Section */}
-      <section id="leadership" className="py-16 lg:py-24">
+      <section id="leadership" className="py-20 lg:py-28 bg-white dark:bg-stone-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Pastor Section */}
           <div className="text-center mb-12">
-            <span className="text-amber-700 dark:text-amber-400 font-medium mb-2 block">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 text-amber-700 dark:text-amber-300 rounded-full text-sm font-semibold mb-6">
               Pastoral Team
-            </span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-stone-900 dark:text-stone-100 mb-4">
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-black text-stone-900 dark:text-stone-100 mb-6 font-[family-name:var(--font-playfair)]">
               Our Pastor
             </h2>
-            <p className="text-stone-600 dark:text-stone-300 max-w-2xl mx-auto">
+            <p className="text-stone-600 dark:text-stone-300 max-w-2xl mx-auto text-lg">
               Leading with vision, compassion, and a heart for God&apos;s people.
             </p>
           </div>
 
           <div className="max-w-3xl mx-auto mb-16">
             {staffLoading ? (
-              <div className="bg-white dark:bg-stone-800 rounded-xl p-6 animate-pulse">
+              <div className="bg-white dark:bg-stone-800 rounded-2xl p-6 animate-pulse border border-stone-100 dark:border-stone-700">
                 <div className="flex flex-col sm:flex-row gap-6">
                   <div className="w-40 h-40 bg-stone-200 dark:bg-stone-700 rounded-2xl" />
                   <div className="flex-1 space-y-3">
@@ -216,14 +215,13 @@ export default function AboutPage() {
             )}
           </div>
 
-          {/* Church Board Section */}
           <LeaderCardGroup
             title="Church Board"
             description="Our church board provides spiritual oversight and guidance for the congregation."
           >
             {staffLoading ? (
               [1, 2, 3].map((i) => (
-                <div key={i} className="w-32 h-40 bg-stone-200 dark:bg-stone-700 rounded-xl animate-pulse" />
+                <div key={i} className="w-32 h-40 bg-stone-200 dark:bg-stone-700 rounded-2xl animate-pulse" />
               ))
             ) : churchBoard.length > 0 ? (
               churchBoard.map((person: StaffMember) => (
@@ -245,8 +243,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Department Heads Section */}
-      <section className="py-16 lg:py-24 bg-stone-100 dark:bg-stone-800/50">
+      <section className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <LeaderCardGroup
             title="Department Heads"
@@ -254,7 +251,7 @@ export default function AboutPage() {
           >
             {staffLoading ? (
               [1, 2, 3, 4].map((i) => (
-                <div key={i} className="w-32 h-40 bg-stone-200 dark:bg-stone-700 rounded-xl animate-pulse" />
+                <div key={i} className="w-32 h-40 bg-stone-200 dark:bg-stone-700 rounded-2xl animate-pulse" />
               ))
             ) : departmentHeads.length > 0 ? (
               departmentHeads.map((person: StaffMember) => (
@@ -276,7 +273,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Stats Section */}
       <PageStats
         stats={[
           { number: "52+", label: "Years of Ministry" },

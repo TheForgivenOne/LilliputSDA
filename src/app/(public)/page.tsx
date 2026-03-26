@@ -102,7 +102,7 @@ export default function Home() {
     if (eventsLoading) {
       return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-md">
+          <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm">
             <div className="h-48 bg-stone-200 dark:bg-stone-700 animate-pulse" />
             <div className="p-6 space-y-3">
               <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-1/3" />
@@ -112,7 +112,7 @@ export default function Home() {
           </div>
           <div className="space-y-6">
             {[1, 2].map((i) => (
-              <div key={i} className="bg-white dark:bg-stone-800 rounded-xl p-5 shadow-sm">
+              <div key={i} className="bg-white dark:bg-stone-800 rounded-2xl p-5 shadow-sm">
                 <div className="flex gap-4">
                   <div className="w-16 h-16 bg-stone-200 dark:bg-stone-700 rounded animate-pulse" />
                   <div className="flex-1 space-y-2">
@@ -127,7 +127,6 @@ export default function Home() {
       );
     }
 
-    // Static upcoming events
     const staticEvents = [
       {
         _id: "static-1",
@@ -156,7 +155,6 @@ export default function Home() {
       }
     ];
 
-    // Combine static events with database events, prioritizing static events
     const displayEvents = events && events.length > 0 
       ? [...staticEvents, ...events].slice(0, 3)
       : staticEvents;
@@ -248,7 +246,7 @@ export default function Home() {
       return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {[1, 2].map((i) => (
-            <div key={i} className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border-l-4 border-amber-500">
+            <div key={i} className="bg-white dark:bg-stone-800 rounded-2xl p-6 shadow-sm border-l-4 border-amber-500">
               <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-2/3 mb-3" />
               <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse mb-2" />
               <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-4/5" />
@@ -320,7 +318,7 @@ export default function Home() {
         action={{ label: "Learn Our Story", href: "/about" }}
       />
 
-      <section className="py-16 lg:py-24 bg-stone-50 dark:bg-stone-900">
+      <section className="py-20 lg:py-28 bg-white dark:bg-stone-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             label="Latest Message"
@@ -337,7 +335,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 lg:py-24 bg-amber-50 dark:bg-amber-900/10">
+      <section className="py-20 lg:py-28 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-50 dark:from-amber-900/10 dark:via-orange-900/10 dark:to-amber-900/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             label="Voices of Faith"
@@ -366,7 +364,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 lg:py-24">
+      <section className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             label="What's Happening"
@@ -379,7 +377,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 lg:py-24 bg-stone-50 dark:bg-stone-900">
+      <section className="py-20 lg:py-28 bg-white dark:bg-stone-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             label="Church News"
@@ -391,17 +389,18 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 lg:py-24">
+      <section className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="text-center max-w-2xl mx-auto mb-12">
             <SectionHeader
               label="Get Involved"
               title="Our Ministries"
               className="justify-center text-center"
+              align="center"
             />
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
             {ministries.map((ministry) => (
               <QuickMinistryCard key={ministry.name} {...ministry} />
             ))}

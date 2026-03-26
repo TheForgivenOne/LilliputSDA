@@ -29,30 +29,34 @@ export function CTASection({
   backgroundColor = "amber",
   className,
 }: CTASectionProps) {
-  const bgColors = {
-    amber: "bg-gradient-to-br from-amber-700 to-amber-800",
-    terracotta: "bg-gradient-to-br from-orange-600 to-coral-600",
-    stone: "bg-gradient-to-br from-stone-700 to-stone-800",
-    slate: "bg-gradient-to-br from-slate-700 to-slate-800",
+  const bgStyles = {
+    amber: "bg-gradient-to-br from-amber-600 via-amber-700 to-orange-700",
+    terracotta: "bg-gradient-to-br from-orange-600 via-orange-700 to-red-700",
+    stone: "bg-gradient-to-br from-stone-700 via-stone-800 to-stone-900",
+    slate: "bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900",
   };
 
   return (
     <section
       className={cn(
-        "py-20 lg:py-28 relative overflow-hidden",
-        bgColors[backgroundColor],
+        "py-24 lg:py-32 relative overflow-hidden",
+        bgStyles[backgroundColor],
         className
       )}
     >
-      {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-white/5 to-transparent rounded-full" />
+      </div>
+
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.03%22%3E%3Cpath%20d%3D%22M0%200h1v1H0zM20%200h1v1h-1zM0%2020h1v1H0zM20%2020h1v1h-1z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')]" />
       
-      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight font-[family-name:var(--font-playfair)]">
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-8 leading-[1.1] font-[family-name:var(--font-playfair)] tracking-tight">
           {title}
         </h2>
-        <p className="text-white/80 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed font-light">
+        <p className="text-xl text-white/85 mb-12 max-w-2xl mx-auto leading-relaxed font-light">
           {description}
         </p>
         <div className="flex flex-col sm:flex-row gap-5 justify-center">
@@ -62,8 +66,8 @@ export function CTASection({
                 size="lg"
                 variant={primaryAction.variant || "primary"}
                 className={
-                  backgroundColor === "amber" || backgroundColor === "terracotta"
-                    ? "bg-white text-stone-900 hover:bg-stone-100 shadow-xl"
+                  (backgroundColor === "amber" || backgroundColor === "terracotta")
+                    ? "!bg-white !text-amber-700 hover:!bg-stone-100 shadow-xl shadow-black/10"
                     : ""
                 }
               >
@@ -77,8 +81,8 @@ export function CTASection({
                 size="lg"
                 variant={secondaryAction.variant || "outline"}
                 className={
-                  backgroundColor === "amber" || backgroundColor === "terracotta"
-                    ? "border-white text-white hover:bg-white/10"
+                  (backgroundColor === "amber" || backgroundColor === "terracotta")
+                    ? "!border-white/40 !text-white hover:!bg-white/10 hover:!border-white/60"
                     : ""
                 }
               >

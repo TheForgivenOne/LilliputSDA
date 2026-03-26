@@ -89,14 +89,13 @@ export default function MinistriesPage() {
   return (
     <div className="min-h-screen">
       <PageHero
-        badge="Get Involved"
+        badge={<span className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-amber-200 font-semibold text-sm backdrop-blur-sm"><span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />Get Involved</span>}
         title="Our Ministries"
         description="Discover your place in our church family. We have ministries for every age and interest, all focused on growing together in Christ."
         theme="amber"
       />
 
-      {/* Ministry Categories */}
-      <section className="py-8 bg-stone-100 dark:bg-stone-800/50 border-b border-stone-200 dark:border-stone-800">
+      <section className="sticky top-16 lg:top-20 z-30 py-4 bg-white/95 dark:bg-stone-900/95 backdrop-blur-xl border-b border-stone-200 dark:border-stone-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <CategoryFilter
             categories={ministryCategories}
@@ -106,13 +105,12 @@ export default function MinistriesPage() {
         </div>
       </section>
 
-      {/* Ministries Grid */}
       <section className="py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {ministriesLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-white dark:bg-stone-800 rounded-xl overflow-hidden shadow-md">
+                <div key={i} className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm">
                   <div className="aspect-video bg-stone-200 dark:bg-stone-700 animate-pulse" />
                   <div className="p-6 space-y-3">
                     <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-2/3" />
@@ -151,13 +149,12 @@ export default function MinistriesPage() {
         </div>
       </section>
 
-      {/* Get Involved CTA */}
-      <section className="py-16 lg:py-24 bg-stone-100 dark:bg-stone-800/50">
+      <section className="py-20 lg:py-28 bg-gradient-to-br from-stone-100 to-stone-50 dark:from-stone-800 dark:to-stone-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-stone-900 dark:text-stone-100 mb-4">
+          <h2 className="text-4xl lg:text-5xl font-black text-stone-900 dark:text-stone-100 mb-6 font-[family-name:var(--font-playfair)]">
             Ready to Get Involved?
           </h2>
-          <p className="text-stone-600 dark:text-stone-300 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-stone-600 dark:text-stone-300 mb-10 max-w-2xl mx-auto">
             We believe everyone has unique gifts to share. Whether you&apos;re 
             passionate about working with youth, music, community service, or 
             supporting families, there&apos;s a place for you here.
@@ -165,13 +162,16 @@ export default function MinistriesPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="mailto:lhamilton@westjamaica.org"
-              className="inline-flex items-center justify-center px-6 py-3 bg-amber-700 text-white rounded-lg font-medium hover:bg-amber-800 transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:-translate-y-0.5 transition-all"
             >
               Contact a Ministry Leader
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
             </a>
             <a
               href="/contact"
-              className="inline-flex items-center justify-center px-6 py-3 border-2 border-stone-300 text-stone-700 rounded-lg font-medium hover:border-amber-700 hover:text-amber-700 transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-stone-300 dark:border-stone-600 text-stone-700 dark:text-stone-300 rounded-2xl font-semibold hover:border-amber-500 hover:text-amber-600 dark:hover:border-amber-500 dark:hover:text-amber-400 transition-all"
             >
               General Inquiry
             </a>

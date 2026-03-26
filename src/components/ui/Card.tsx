@@ -22,11 +22,12 @@ export function Card({ children, className, hover = true, padding = "md" }: Card
   return (
     <div
       className={cn(
-        "bg-white dark:bg-stone-800 rounded-xl overflow-hidden",
+        "bg-white dark:bg-stone-800 rounded-2xl overflow-hidden",
         "border border-stone-100 dark:border-stone-700",
         hover && [
-          "shadow-sm hover:shadow-md transition-all duration-300",
-          "hover:-translate-y-0.5",
+          "shadow-sm transition-all duration-300",
+          "hover:shadow-xl hover:shadow-amber-500/5",
+          "hover:-translate-y-1 hover:border-amber-200 dark:hover:border-amber-800",
           "focus-within:ring-2 focus-within:ring-amber-500 focus-within:ring-offset-2",
         ],
         paddingMap[padding],
@@ -73,10 +74,10 @@ export function StaffCard({
   };
 
   return (
-    <Card className={className} padding="md">
-      <div className="flex flex-col sm:flex-row gap-6">
+    <Card className={cn("group", className)} padding="none">
+      <div className="flex flex-col sm:flex-row gap-6 p-6">
         <div className="flex-shrink-0">
-          <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-2xl overflow-hidden bg-amber-50 dark:bg-amber-900/20 mx-auto sm:mx-0 shadow-inner">
+          <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-2xl overflow-hidden bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/20 mx-auto sm:mx-0 shadow-inner group-hover:shadow-amber-500/20 transition-shadow duration-300">
             {!imageError && photoUrl ? (
               <>
                 <Image
@@ -84,7 +85,7 @@ export function StaffCard({
                   alt={name}
                   fill
                   className={cn(
-                    "object-cover transition-opacity duration-300",
+                    "object-cover transition-all duration-500 group-hover:scale-105",
                     imageLoading ? "opacity-0" : "opacity-100"
                   )}
                   onLoad={() => setImageLoading(false)}
@@ -99,17 +100,17 @@ export function StaffCard({
                 )}
               </>
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-amber-600 dark:text-amber-400 text-4xl font-bold" aria-label={getInitials(name)}>
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-500 to-amber-600 text-white text-4xl font-bold font-[family-name:var(--font-playfair)]" aria-label={getInitials(name)}>
                 {getInitials(name)}
               </div>
             )}
           </div>
         </div>
         <div className="flex-1 min-w-0 text-center sm:text-left">
-          <h3 className="text-xl font-bold text-stone-900 dark:text-stone-100 truncate" title={name}>
+          <h3 className="text-xl font-bold text-stone-900 dark:text-stone-100 truncate font-[family-name:var(--font-playfair)]" title={name}>
             {name}
           </h3>
-          <p className="text-amber-700 dark:text-amber-500 font-medium mt-1 truncate" title={role}>
+          <p className="text-amber-600 dark:text-amber-400 font-semibold mt-1 truncate" title={role}>
             {role}
           </p>
           {title && (
@@ -118,7 +119,7 @@ export function StaffCard({
             </p>
           )}
           {bio && (
-            <p className="text-stone-600 dark:text-stone-300 mt-3 text-sm leading-relaxed">
+            <p className="text-stone-600 dark:text-stone-300 mt-4 text-sm leading-relaxed line-clamp-3">
               {bio}
             </p>
           )}
@@ -127,7 +128,7 @@ export function StaffCard({
               {email && (
                 <a
                   href={`mailto:${email}`}
-                  className="block text-stone-600 dark:text-stone-400 hover:text-amber-700 dark:hover:text-amber-400 transition-colors"
+                  className="block text-stone-600 dark:text-stone-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors link-underline"
                 >
                   {email}
                 </a>
@@ -168,14 +169,14 @@ export function MinistryDetailCard({
   const [imageLoading, setImageLoading] = useState(true);
 
   const categoryColors: Record<string, string> = {
-    youth: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
-    adult: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
-    family: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
-    music: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
+    youth: "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white",
+    adult: "bg-gradient-to-r from-green-500 to-green-600 text-white",
+    family: "bg-gradient-to-r from-amber-500 to-amber-600 text-white",
+    music: "bg-gradient-to-r from-orange-500 to-orange-600 text-white",
   };
 
   return (
-    <Card className={className} padding="none">
+    <Card className={cn("group", className)} padding="none">
       {imageUrl && !imageError && (
         <div className="relative h-48 w-full overflow-hidden">
           <Image 
@@ -183,7 +184,7 @@ export function MinistryDetailCard({
             alt={name} 
             fill 
             className={cn(
-              "object-cover transition-transform duration-500 hover:scale-105",
+              "object-cover transition-all duration-700 group-hover:scale-110",
               imageLoading ? "opacity-0" : "opacity-100"
             )}
             onLoad={() => setImageLoading(false)}
@@ -196,40 +197,63 @@ export function MinistryDetailCard({
           {imageLoading && (
             <div className="absolute inset-0 bg-stone-200 dark:bg-stone-700 animate-pulse" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          <div className="absolute bottom-4 left-4 right-4">
+            <h3 className="text-lg font-bold text-white font-[family-name:var(--font-playfair)] line-clamp-1">
+              {name}
+            </h3>
+          </div>
         </div>
       )}
       <div className="p-6">
-        {category && (
+        {!imageUrl && (
+          <div className="flex items-start justify-between mb-3">
+            <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100 font-[family-name:var(--font-playfair)]" title={name}>
+              {name}
+            </h3>
+            {category && (
+              <span
+                className={cn(
+                  "inline-block px-3 py-1 rounded-full text-xs font-semibold",
+                  categoryColors[category] ||
+                    "bg-gradient-to-r from-stone-500 to-stone-600 text-white"
+                )}
+              >
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </span>
+            )}
+          </div>
+        )}
+        {imageUrl && category && (
           <span
             className={cn(
-              "inline-block px-3 py-1 rounded-full text-xs font-medium mb-3",
+              "inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3",
               categoryColors[category] ||
-                "bg-stone-100 text-stone-700 dark:bg-stone-700 dark:text-stone-300"
+                "bg-gradient-to-r from-stone-500 to-stone-600 text-white"
             )}
           >
             {category.charAt(0).toUpperCase() + category.slice(1)}
           </span>
         )}
-        <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100 mb-2 truncate" title={name}>
-          {name}
-        </h3>
         <p className="text-stone-600 dark:text-stone-300 text-sm leading-relaxed mb-4 line-clamp-3">
           {description}
         </p>
         <div className="space-y-2 text-sm border-t border-stone-100 dark:border-stone-700 pt-4">
           {leader && (
-            <p className="text-stone-700 dark:text-stone-300">
+            <p className="text-stone-700 dark:text-stone-300 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
               <span className="font-medium text-stone-900 dark:text-stone-200">Leader:</span> {leader}
             </p>
           )}
           {meetingTime && (
-            <p className="text-stone-600 dark:text-stone-400">
+            <p className="text-stone-600 dark:text-stone-400 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
               <span className="font-medium text-stone-900 dark:text-stone-200">When:</span> {meetingTime}
             </p>
           )}
           {meetingLocation && (
-            <p className="text-stone-600 dark:text-stone-400">
+            <p className="text-stone-600 dark:text-stone-400 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
               <span className="font-medium text-stone-900 dark:text-stone-200">Where:</span> {meetingLocation}
             </p>
           )}
@@ -263,11 +287,11 @@ export function EventCard({
   compact = false,
 }: EventCardProps) {
 
-  const categoryColors: Record<string, string> = {
-    service: "bg-amber-600 text-white",
-    special: "bg-amber-700 text-white",
-    youth: "bg-emerald-600 text-white",
-    community: "bg-green-700 text-white",
+  const categoryColors: Record<string, { bg: string; text: string; border: string }> = {
+    service: { bg: "bg-gradient-to-br from-amber-500 to-amber-600", text: "text-white", border: "border-amber-500" },
+    special: { bg: "bg-gradient-to-br from-orange-500 to-orange-600", text: "text-white", border: "border-orange-500" },
+    youth: { bg: "bg-gradient-to-br from-emerald-500 to-emerald-600", text: "text-white", border: "border-emerald-500" },
+    community: { bg: "bg-gradient-to-br from-green-500 to-green-600", text: "text-white", border: "border-green-500" },
   };
 
   const safeFormatDate = (dateStr: string) => {
@@ -288,21 +312,23 @@ export function EventCard({
   };
 
   const { dayName, dayNumber, monthName } = safeFormatDate(date);
+  const catStyle = category ? categoryColors[category] : categoryColors.service;
 
   return (
-    <Card className={className} padding={compact ? "none" : "none"} hover={true}>
+    <Card className={cn("group", className)} padding={compact ? "none" : "none"} hover={true}>
       <div className={cn(
         "flex",
         featured ? "flex-col lg:flex-row" : compact ? "flex-col sm:flex-row" : "flex-col sm:flex-row"
       )}>
         <div className={cn(
-          "flex-shrink-0 flex items-center justify-center gap-2",
-          featured ? "p-6 lg:p-8 lg:w-40 flex-row lg:flex-col" : "p-4 sm:w-28 flex-row sm:flex-col",
-          category ? categoryColors[category] : "bg-gradient-to-br from-amber-600 to-amber-700 dark:from-amber-600 dark:to-amber-700 text-white"
+          "flex-shrink-0 flex items-center justify-center gap-2 relative overflow-hidden",
+          featured ? "p-8 lg:p-10 lg:w-44 flex-row lg:flex-col" : "p-5 sm:w-32 flex-row sm:flex-col",
+          catStyle.bg, catStyle.text
         )}>
-          <span className={cn("uppercase tracking-wider font-medium opacity-90", featured ? "text-sm" : "text-xs")}>{monthName}</span>
-          <span className={cn("font-bold leading-none", featured ? "text-5xl lg:text-6xl" : "text-3xl sm:text-4xl")}>{dayNumber}</span>
-          <span className={cn("uppercase tracking-wider font-medium opacity-90", featured ? "text-sm" : "text-xs")}>{dayName}</span>
+          <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <span className={cn("uppercase tracking-wider font-semibold relative z-10", featured ? "text-sm" : "text-xs")}>{monthName}</span>
+          <span className={cn("font-bold leading-none relative z-10", featured ? "text-6xl lg:text-7xl font-[family-name:var(--font-playfair)]" : "text-4xl sm:text-5xl font-[family-name:var(--font-playfair)]")}>{dayNumber}</span>
+          <span className={cn("uppercase tracking-wider font-semibold relative z-10", featured ? "text-sm" : "text-xs")}>{dayName}</span>
         </div>
 
         <div className={cn("flex-1", featured ? "p-6 lg:p-8" : "p-5")}>
@@ -311,20 +337,24 @@ export function EventCard({
               <span
                 className={cn(
                   "inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold",
-                  categoryColors[category]
+                  catStyle.bg, catStyle.text
                 )}
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </span>
             )}
           </div>
-          <h3 className={cn("font-bold text-stone-900 dark:text-stone-100 mb-1 truncate", featured ? "text-2xl lg:text-3xl" : "text-lg")} title={title}>
+          <h3 className={cn("font-bold text-stone-900 dark:text-stone-100 mb-2 font-[family-name:var(--font-playfair)]", featured ? "text-2xl lg:text-3xl" : "text-lg")} title={title}>
             {title}
           </h3>
-          <p className={cn("text-stone-500 dark:text-stone-400 mb-2 flex items-center gap-1.5", featured ? "text-base" : "text-sm")}>
-            <span className="truncate">{location}</span>
-            {time && <span className="text-stone-300 dark:text-stone-600">•</span>}
-            {time && <span>{time}</span>}
+          <p className={cn("text-stone-500 dark:text-stone-400 mb-3 flex flex-wrap items-center gap-x-2 gap-y-1", featured ? "text-base" : "text-sm")}>
+            <span className="font-medium">{location}</span>
+            {time && (
+              <>
+                <span className="text-stone-300 dark:text-stone-600">•</span>
+                <span>{time}</span>
+              </>
+            )}
           </p>
           {description && (
             <p className={cn("text-stone-600 dark:text-stone-300 line-clamp-2", featured ? "text-lg" : "text-sm")}>
@@ -376,8 +406,8 @@ export function SermonCard({
 
   const formattedDate = safeFormatDate(date);
   return (
-    <Card className={className} padding="none" hover={true}>
-      <div className="relative aspect-video overflow-hidden rounded-t-xl">
+    <Card className={cn("group cursor-pointer", className)} padding="none" hover={true}>
+      <div className="relative aspect-video overflow-hidden">
         {thumbnailUrl && !imageError ? (
           <>
             <Image
@@ -385,7 +415,7 @@ export function SermonCard({
               alt={title}
               fill
               className={cn(
-                "object-cover transition-transform duration-500 hover:scale-105",
+                "object-cover transition-all duration-700 group-hover:scale-110",
                 imageLoading ? "opacity-0" : "opacity-100"
               )}
               onLoad={() => setImageLoading(false)}
@@ -400,7 +430,7 @@ export function SermonCard({
             )}
           </>
         ) : (
-          <div className="w-full h-full bg-stone-200 dark:bg-stone-700 flex items-center justify-center">
+          <div className="w-full h-full bg-gradient-to-br from-stone-200 to-stone-300 dark:from-stone-700 dark:to-stone-800 flex items-center justify-center">
             <svg
               className="w-16 h-16 text-stone-400 dark:text-stone-500"
               fill="none"
@@ -423,14 +453,14 @@ export function SermonCard({
           </div>
         )}
         {duration && (
-          <div className="absolute bottom-3 right-3 bg-black/75 text-white text-xs px-2 py-1 rounded font-medium">
+          <div className="absolute bottom-3 right-3 bg-black/80 text-white text-xs px-2 py-1 rounded font-medium">
             {duration}
           </div>
         )}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-colors">
-          <div className="w-16 h-16 rounded-full bg-white/95 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-90 group-hover:scale-100 shadow-lg">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition-colors duration-300">
+          <div className="w-16 h-16 rounded-full bg-white/95 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-75 group-hover:scale-100 shadow-lg">
             <svg
-              className="w-8 h-8 text-amber-600 ml-1"
+              className="w-7 h-7 text-amber-600 ml-1"
               fill="currentColor"
               viewBox="0 0 24 24"
             >
@@ -440,13 +470,13 @@ export function SermonCard({
         </div>
       </div>
       <div className="p-5">
-        <h3 className="font-bold text-stone-900 dark:text-stone-100 mb-1.5 line-clamp-2 leading-tight" title={title}>
+        <h3 className="font-bold text-stone-900 dark:text-stone-100 mb-2 line-clamp-2 leading-tight font-[family-name:var(--font-playfair)]" title={title}>
           {title}
         </h3>
-        <p className="text-amber-700 dark:text-amber-500 text-sm font-medium truncate" title={speaker}>
+        <p className="text-amber-600 dark:text-amber-400 text-sm font-semibold truncate" title={speaker}>
           {speaker}
         </p>
-        <p className="text-stone-500 dark:text-stone-400 text-xs mt-1.5">
+        <p className="text-stone-500 dark:text-stone-400 text-xs mt-2">
           {formattedDate}
           {scripture && <span className="mx-1.5">•</span>}
           {scripture && <span className="text-stone-600 dark:text-stone-300">{scripture}</span>}
@@ -473,16 +503,16 @@ export function AnnouncementCard({
   category,
   className,
 }: AnnouncementCardProps) {
-  const priorityStyles: Record<string, string> = {
-    low: "border-l-4 border-stone-300 dark:border-stone-600",
-    normal: "border-l-4 border-amber-500",
-    high: "border-l-4 border-rose-500",
+  const priorityStyles: Record<string, { border: string; glow: string }> = {
+    low: { border: "border-l-4 border-stone-300 dark:border-stone-600", glow: "" },
+    normal: { border: "border-l-4 border-amber-500", glow: "" },
+    high: { border: "border-l-4 border-rose-500", glow: "shadow-lg shadow-rose-500/10" },
   };
 
   const priorityBadge: Record<string, string> = {
-    low: "bg-stone-100 text-stone-600 dark:bg-stone-700 dark:text-stone-300",
-    normal: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-    high: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400",
+    low: "bg-gradient-to-r from-stone-100 to-stone-200 text-stone-600 dark:from-stone-700 dark:to-stone-600 dark:text-stone-300",
+    normal: "bg-gradient-to-r from-amber-100 to-amber-200 text-amber-700 dark:from-amber-900/40 dark:to-amber-800/40 dark:text-amber-300",
+    high: "bg-gradient-to-r from-rose-100 to-rose-200 text-rose-700 dark:from-rose-900/40 dark:to-rose-800/40 dark:text-rose-300",
   };
 
   const safeFormatDate = (dateStr: string): string => {
@@ -500,18 +530,19 @@ export function AnnouncementCard({
   };
 
   const formattedDate = safeFormatDate(date);
+  const styles = priorityStyles[priority];
 
   return (
-    <Card className={cn(priorityStyles[priority], className)} padding="md">
+    <Card className={cn(styles.border, styles.glow, "group", className)} padding="lg">
       <div className="flex flex-wrap items-center gap-2 mb-3">
         {priority === "high" && (
-          <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold", priorityBadge[priority])}>
+          <span className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold", priorityBadge[priority])}>
             <span className="w-1.5 h-1.5 bg-current rounded-full animate-pulse" />
             Featured
           </span>
         )}
         {category && (
-          <span className="text-xs uppercase tracking-wider text-stone-500 dark:text-stone-400 font-medium">
+          <span className="text-xs uppercase tracking-wider text-stone-500 dark:text-stone-400 font-semibold">
             {category}
           </span>
         )}
@@ -521,7 +552,7 @@ export function AnnouncementCard({
           </span>
         )}
       </div>
-      <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100 mb-2 truncate" title={title}>
+      <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100 mb-3 font-[family-name:var(--font-playfair)] group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors" title={title}>
         {title}
       </h3>
       <p className="text-stone-600 dark:text-stone-300 text-sm leading-relaxed line-clamp-4">
