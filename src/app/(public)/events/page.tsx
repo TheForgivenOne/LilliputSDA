@@ -49,8 +49,8 @@ export default function EventsPage() {
         const eventsData = await eventsRes.json();
         const announcementsData = await announcementsRes.json();
         
-        if (eventsData.events) setEvents(eventsData.events);
-        if (announcementsData.announcements) setAnnouncements(announcementsData.announcements);
+        if (Array.isArray(eventsData)) setEvents(eventsData);
+        if (Array.isArray(announcementsData)) setAnnouncements(announcementsData);
       } catch {
         setEventsError(true);
         setAnnouncementsError(true);

@@ -40,10 +40,10 @@ export default function Home() {
         const announcementsData = await announcementsRes.json();
         const videosData = await videosRes.json();
         
-        if (eventsData.events) setEvents(eventsData.events);
+        if (Array.isArray(eventsData)) setEvents(eventsData);
         else if (!eventsRes.ok) setEventsError(true);
         
-        if (announcementsData.announcements) setAnnouncements(announcementsData.announcements);
+        if (Array.isArray(announcementsData)) setAnnouncements(announcementsData);
         else if (!announcementsRes.ok) setAnnouncementsError(true);
         
         if (videosData.videos) setSermonVideos(videosData.videos);
