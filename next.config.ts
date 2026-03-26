@@ -16,10 +16,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  experimental: {
-    useWebpackBuilder: true,
-  },
-  allowedDevOrigins: ["127.0.0.1"],
+  allowedDevOrigins: ["127.0.0.1", "150.136.61.22"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "placehold.co" },
