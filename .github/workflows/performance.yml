@@ -26,6 +26,12 @@ jobs:
 
       - name: Build Next.js
         run: npm run build
+        env:
+          NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
+          NEXT_PUBLIC_CONVEX_SITE_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_SITE_URL }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+          CLERK_FRONTEND_API_URL: ${{ secrets.CLERK_FRONTEND_API_URL }}
 
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v12
@@ -60,6 +66,6 @@ jobs:
 
       - name: Analyze bundle
         run: |
-          npx @next/bundle-analyzer
+          npx @next/bundle-analyzer .next
         env:
           NEXT_BUNDLE_ANALYZE: true
