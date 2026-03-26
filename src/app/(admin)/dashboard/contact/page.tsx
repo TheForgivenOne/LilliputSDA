@@ -5,7 +5,8 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
 import { Eye, Check, Mail, Trash2, MessageSquare } from "lucide-react";
-import { AdminTable, ConfirmDialog, Column, Modal } from "@/components/admin";
+import { AdminTable, PageHeader, ConfirmDialog, Modal, Column, ActionMenuItem } from "@/components/admin";
+import { useToast } from "@/components/ui/Toast";
 import type { Id } from "@/convex/_generated/dataModel";
 
 type Submission = {
@@ -19,6 +20,7 @@ type Submission = {
 };
 
 export default function ContactAdminPage() {
+  const { success, error: showError } = useToast();
   const submissions = useQuery(api.contact.queries.listAll);
   const markAsRead = useMutation(api.contact.mutations.markAsRead);
   const deleteSubmission = useMutation(api.contact.mutations.deleteSubmission);
@@ -26,12 +28,15 @@ export default function ContactAdminPage() {
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [deleteId, setDeleteId] = useState<Id<"contactSubmissions"> | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   const handleMarkAsRead = async (id: Id<"contactSubmissions">) => {
     try {
       await markAsRead({ id });
-    } catch (error) {
-      console.error("Failed to mark as read:", error);
+      success("Marked as read");
+    } catch (err) {
+      showError("Failed to mark as read");
+      console.error("Failed to mark as read:", err);
     }
   };
 
@@ -41,8 +46,10 @@ export default function ContactAdminPage() {
     try {
       await deleteSubmission({ id: deleteId });
       setDeleteId(null);
-    } catch (error) {
-      console.error("Failed to delete:", error);
+      success("Submission deleted successfully");
+    } catch (err) {
+      showError("Failed to delete submission");
+      console.error("Failed to delete:", err);
     } finally {
       setIsDeleting(false);
     }
@@ -53,10 +60,11 @@ export default function ContactAdminPage() {
       key: "name",
       header: "Submission",
       sortable: true,
+      searchable: true,
       render: (submission) => (
         <div className="flex items-start gap-3">
           <div
-            className={`p-2 rounded-lg ${
+            className={`mt-1 p-2 rounded-lg ${
               submission.isRead
                 ? "bg-stone-100 dark:bg-stone-700"
                 : "bg-amber-100 dark:bg-amber-900/30"
@@ -124,64 +132,53 @@ export default function ContactAdminPage() {
         </span>
       ),
     },
+  ];
+
+  const actions: ActionMenuItem<Submission>[] = [
     {
-      key: "actions",
-      header: "",
-      className: "w-32",
-      render: (submission) => (
-        <div className="flex items-center justify-end gap-1">
-          <button
-            onClick={() => setSelectedSubmission(submission)}
-            className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
-          >
-            <Eye className="w-4 h-4 text-stone-500" />
-          </button>
-          {!submission.isRead && (
-            <button
-              onClick={() => handleMarkAsRead(submission._id)}
-              className="p-2 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-lg transition-colors"
-              title="Mark as read"
-            >
-              <Check className="w-4 h-4 text-green-600" />
-            </button>
-          )}
-          <button
-            onClick={() => setDeleteId(submission._id)}
-            className="p-2 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
-          >
-            <Trash2 className="w-4 h-4 text-rose-500" />
-          </button>
-        </div>
-      ),
+      label: "View",
+      icon: <Eye className="w-4 h-4" />,
+      onClick: setSelectedSubmission,
+    },
+    {
+      label: (s) => s.isRead ? "" : "Mark as Read",
+      icon: <Check className="w-4 h-4" />,
+      onClick: (s) => {
+        if (!s.isRead) handleMarkAsRead(s._id);
+      },
+    },
+    {
+      label: "Delete",
+      icon: <Trash2 className="w-4 h-4" />,
+      onClick: (s) => setDeleteId(s._id as Id<"contactSubmissions">),
+      variant: "danger",
     },
   ];
 
+  const unreadCount = submissions?.filter((s) => !s.isRead).length ?? 0;
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100">
-          Contact Submissions
-        </h1>
-        <p className="text-stone-600 dark:text-stone-400 mt-1">
-          View and manage contact form submissions
-        </p>
-      </div>
+      <PageHeader
+        title="Contact Submissions"
+        description="View and manage contact form submissions"
+        count={submissions?.length}
+        badge={unreadCount > 0 ? { label: `${unreadCount} unread`, variant: "warning" } : undefined}
+      />
 
-      {submissions === undefined ? (
-        <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
-          <div className="animate-pulse">
-            <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/4 mx-auto mb-4" />
-            <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-1/2 mx-auto" />
-          </div>
-        </div>
-      ) : (
-        <AdminTable
-          data={submissions}
-          columns={columns}
-          keyExtractor={(s) => s._id}
-          emptyMessage="No contact submissions yet."
-        />
-      )}
+      <AdminTable
+        data={submissions}
+        columns={columns}
+        keyExtractor={(s) => s._id}
+        onRowClick={setSelectedSubmission}
+        emptyMessage="No contact submissions yet."
+        emptyIcon="inbox"
+        selectable
+        searchValue={searchValue}
+        onSearchChange={setSearchValue}
+        searchPlaceholder="Search submissions..."
+        actions={actions}
+      />
 
       <Modal
         isOpen={!!selectedSubmission}
@@ -230,7 +227,7 @@ export default function ContactAdminPage() {
               )}
               <button
                 onClick={() => {
-                  setDeleteId(selectedSubmission._id);
+                  setDeleteId(selectedSubmission._id as Id<"contactSubmissions">);
                   setSelectedSubmission(null);
                 }}
                 className="px-4 py-2 rounded-lg text-sm font-medium bg-rose-100 text-rose-700 hover:bg-rose-200"

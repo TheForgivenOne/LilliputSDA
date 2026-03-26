@@ -7,18 +7,21 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
 import { Plus, Pencil, Trash2, Calendar, MapPin, Clock } from "lucide-react";
-import { AdminTable, ConfirmDialog, Column } from "@/components/admin";
+import { AdminTable, PageHeader, ConfirmDialog, Column, ActionMenuItem } from "@/components/admin";
+import { useToast } from "@/components/ui/Toast";
 import Button from "@/components/ui/Button";
 import type { Id } from "@/convex/_generated/dataModel";
 import type { AdminEvent } from "@/types/admin";
 
 export default function EventsAdminPage() {
   const router = useRouter();
+  const { success, error: showError } = useToast();
   const events = useQuery(api.events.queries.listAll);
   const deleteEvent = useMutation(api.events.mutations.deleteEvent);
 
   const [deleteId, setDeleteId] = useState<Id<"events"> | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   const handleDelete = async () => {
     if (!deleteId) return;
@@ -26,8 +29,10 @@ export default function EventsAdminPage() {
     try {
       await deleteEvent({ id: deleteId });
       setDeleteId(null);
-    } catch (error) {
-      console.error("Failed to delete:", error);
+      success("Event deleted successfully");
+    } catch (err) {
+      showError("Failed to delete event");
+      console.error("Failed to delete:", err);
     } finally {
       setIsDeleting(false);
     }
@@ -38,6 +43,7 @@ export default function EventsAdminPage() {
       key: "title",
       header: "Event",
       sortable: true,
+      searchable: true,
       render: (event) => (
         <div className="flex items-center gap-3">
           {event.imageUrl ? (
@@ -104,64 +110,48 @@ export default function EventsAdminPage() {
         </span>
       ),
     },
+  ];
+
+  const actions: ActionMenuItem<AdminEvent>[] = [
     {
-      key: "actions",
-      header: "",
-      className: "w-24",
-      render: (event) => (
-        <div className="flex items-center justify-end gap-2">
-          <Link
-            href={`/dashboard/events/${event._id}`}
-            className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
-          >
-            <Pencil className="w-4 h-4 text-stone-500" />
-          </Link>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setDeleteId(event._id);
-            }}
-            className="p-2 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
-          >
-            <Trash2 className="w-4 h-4 text-rose-500" />
-          </button>
-        </div>
-      ),
+      label: "Edit",
+      icon: <Pencil className="w-4 h-4" />,
+      onClick: (event) => router.push(`/dashboard/events/${event._id}`),
+    },
+    {
+      label: "Delete",
+      icon: <Trash2 className="w-4 h-4" />,
+      onClick: (event) => setDeleteId(event._id as Id<"events">),
+      variant: "danger",
     },
   ];
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100">
-            Events
-          </h1>
-          <p className="text-stone-600 dark:text-stone-400 mt-1">
-            Manage church events and calendar
-          </p>
-        </div>
-        <Link href="/dashboard/events/new">
-          <Button leftIcon={<Plus className="w-4 h-4" />}>Add Event</Button>
-        </Link>
-      </div>
+      <PageHeader
+        title="Events"
+        description="Manage church events and calendar"
+        count={events?.length}
+        actions={
+          <Link href="/dashboard/events/new">
+            <Button leftIcon={<Plus className="w-4 h-4" />}>Add Event</Button>
+          </Link>
+        }
+      />
 
-      {events === undefined ? (
-        <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
-          <div className="animate-pulse">
-            <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/4 mx-auto mb-4" />
-            <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-1/2 mx-auto" />
-          </div>
-        </div>
-      ) : (
-        <AdminTable
-          data={events}
-          columns={columns}
-          keyExtractor={(event) => event._id}
-          onRowClick={(event) => router.push(`/dashboard/events/${event._id}`)}
-          emptyMessage="No events yet. Create your first event to get started."
-        />
-      )}
+      <AdminTable
+        data={events}
+        columns={columns}
+        keyExtractor={(event) => event._id}
+        onRowClick={(event) => router.push(`/dashboard/events/${event._id}`)}
+        emptyMessage="No events yet. Create your first event to get started."
+        emptyIcon="inbox"
+        selectable
+        searchValue={searchValue}
+        onSearchChange={setSearchValue}
+        searchPlaceholder="Search events..."
+        actions={actions}
+      />
 
       <ConfirmDialog
         isOpen={!!deleteId}

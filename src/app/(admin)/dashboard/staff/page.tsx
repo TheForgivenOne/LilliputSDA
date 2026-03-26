@@ -5,21 +5,22 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Plus, Pencil, Trash2, Mail, Phone } from "lucide-react";
-import { AdminTable, ConfirmDialog, Column } from "@/components/admin";
+import { Plus, Pencil, Trash2, Mail as MailIcon } from "lucide-react";
+import { AdminTable, PageHeader, ConfirmDialog, Column, ActionMenuItem } from "@/components/admin";
+import { useToast } from "@/components/ui/Toast";
 import Button from "@/components/ui/Button";
 import type { Id } from "@/convex/_generated/dataModel";
 import type { AdminStaff } from "@/types/admin";
 
-type StaffMember = AdminStaff;
-
 export default function StaffAdminPage() {
   const router = useRouter();
+  const { success, error: showError } = useToast();
   const staff = useQuery(api.staff.queries.listAll);
   const deleteStaff = useMutation(api.staff.mutations.deleteStaff);
 
   const [deleteId, setDeleteId] = useState<Id<"staff"> | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   const handleDelete = async () => {
     if (!deleteId) return;
@@ -27,18 +28,21 @@ export default function StaffAdminPage() {
     try {
       await deleteStaff({ id: deleteId });
       setDeleteId(null);
-    } catch (error) {
-      console.error("Failed to delete:", error);
+      success("Staff member deleted successfully");
+    } catch (err) {
+      showError("Failed to delete staff member");
+      console.error("Failed to delete:", err);
     } finally {
       setIsDeleting(false);
     }
   };
 
-  const columns: Column<StaffMember>[] = [
+  const columns: Column<AdminStaff>[] = [
     {
       key: "name",
       header: "Staff Member",
       sortable: true,
+      searchable: true,
       render: (person) => (
         <div className="flex items-center gap-3">
           {person.photoUrl ? (
@@ -93,15 +97,7 @@ export default function StaffAdminPage() {
               href={`mailto:${person.email}`}
               className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
             >
-              <Mail className="w-4 h-4 text-stone-400" />
-            </a>
-          )}
-          {person.phone && (
-            <a
-              href={`tel:${person.phone}`}
-              className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
-            >
-              <Phone className="w-4 h-4 text-stone-400" />
+              <MailIcon className="w-4 h-4 text-stone-400" />
             </a>
           )}
         </div>
@@ -122,64 +118,48 @@ export default function StaffAdminPage() {
         </span>
       ),
     },
+  ];
+
+  const actions: ActionMenuItem<AdminStaff>[] = [
     {
-      key: "actions",
-      header: "",
-      className: "w-24",
-      render: (person) => (
-        <div className="flex items-center justify-end gap-2">
-          <Link
-            href={`/dashboard/staff/${person._id}`}
-            className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
-          >
-            <Pencil className="w-4 h-4 text-stone-500" />
-          </Link>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setDeleteId(person._id);
-            }}
-            className="p-2 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
-          >
-            <Trash2 className="w-4 h-4 text-rose-500" />
-          </button>
-        </div>
-      ),
+      label: "Edit",
+      icon: <Pencil className="w-4 h-4" />,
+      onClick: (person) => router.push(`/dashboard/staff/${person._id}`),
+    },
+    {
+      label: "Delete",
+      icon: <Trash2 className="w-4 h-4" />,
+      onClick: (person) => setDeleteId(person._id as Id<"staff">),
+      variant: "danger",
     },
   ];
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100">
-            Staff
-          </h1>
-          <p className="text-stone-600 dark:text-stone-400 mt-1">
-            Manage church staff and leadership
-          </p>
-        </div>
-        <Link href="/dashboard/staff/new">
-          <Button leftIcon={<Plus className="w-4 h-4" />}>Add Staff Member</Button>
-        </Link>
-      </div>
+      <PageHeader
+        title="Staff"
+        description="Manage church staff and leadership"
+        count={staff?.length}
+        actions={
+          <Link href="/dashboard/staff/new">
+            <Button leftIcon={<Plus className="w-4 h-4" />}>Add Staff Member</Button>
+          </Link>
+        }
+      />
 
-      {staff === undefined ? (
-        <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
-          <div className="animate-pulse">
-            <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/4 mx-auto mb-4" />
-            <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-1/2 mx-auto" />
-          </div>
-        </div>
-      ) : (
-        <AdminTable
-          data={staff}
-          columns={columns}
-          keyExtractor={(person) => person._id}
-          onRowClick={(person) => router.push(`/dashboard/staff/${person._id}`)}
-          emptyMessage="No staff members yet. Add your first staff member to get started."
-        />
-      )}
+      <AdminTable
+        data={staff}
+        columns={columns}
+        keyExtractor={(s) => s._id}
+        onRowClick={(s) => router.push(`/dashboard/staff/${s._id}`)}
+        emptyMessage="No staff members yet. Add your first staff member to get started."
+        emptyIcon="inbox"
+        selectable
+        searchValue={searchValue}
+        onSearchChange={setSearchValue}
+        searchPlaceholder="Search staff..."
+        actions={actions}
+      />
 
       <ConfirmDialog
         isOpen={!!deleteId}

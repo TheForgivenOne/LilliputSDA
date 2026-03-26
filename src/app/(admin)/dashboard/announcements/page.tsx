@@ -5,8 +5,9 @@ import Link from "next/link";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
-import { Plus, Pencil, Trash2, Pin, PinOff, Bell } from "lucide-react";
-import { AdminTable, ConfirmDialog, Column } from "@/components/admin";
+import { Plus, Pencil, Trash2, Pin, Bell } from "lucide-react";
+import { AdminTable, PageHeader, ConfirmDialog, Column, ActionMenuItem } from "@/components/admin";
+import { useToast } from "@/components/ui/Toast";
 import Button from "@/components/ui/Button";
 import type { Id } from "@/convex/_generated/dataModel";
 
@@ -24,12 +25,14 @@ type Announcement = {
 };
 
 export default function AnnouncementsAdminPage() {
+  const { success, error: showError } = useToast();
   const announcements = useQuery(api.announcements.queries.listLatest);
   const deleteAnnouncement = useMutation(api.announcements.mutations.deleteAnnouncement);
   const togglePin = useMutation(api.announcements.mutations.togglePin);
 
   const [deleteId, setDeleteId] = useState<Id<"announcements"> | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   const handleDelete = async () => {
     if (!deleteId) return;
@@ -37,8 +40,10 @@ export default function AnnouncementsAdminPage() {
     try {
       await deleteAnnouncement({ id: deleteId });
       setDeleteId(null);
-    } catch (error) {
-      console.error("Failed to delete:", error);
+      success("Announcement deleted successfully");
+    } catch (err) {
+      showError("Failed to delete announcement");
+      console.error("Failed to delete:", err);
     } finally {
       setIsDeleting(false);
     }
@@ -47,8 +52,10 @@ export default function AnnouncementsAdminPage() {
   const handleTogglePin = async (id: Id<"announcements">) => {
     try {
       await togglePin({ id });
-    } catch (error) {
-      console.error("Failed to toggle pin:", error);
+      success("Pin status updated");
+    } catch (err) {
+      showError("Failed to update pin status");
+      console.error("Failed to toggle pin:", err);
     }
   };
 
@@ -57,6 +64,7 @@ export default function AnnouncementsAdminPage() {
       key: "title",
       header: "Announcement",
       sortable: true,
+      searchable: true,
       render: (announcement) => (
         <div className="flex items-start gap-3">
           <div
@@ -130,80 +138,54 @@ export default function AnnouncementsAdminPage() {
         </span>
       ),
     },
+  ];
+
+  const actions: ActionMenuItem<Announcement>[] = [
     {
-      key: "actions",
-      header: "",
-      className: "w-32",
-      render: (announcement) => (
-        <div className="flex items-center justify-end gap-1">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleTogglePin(announcement._id);
-            }}
-            className={`p-2 rounded-lg transition-colors ${
-              announcement.isPinned
-                ? "hover:bg-amber-100 dark:hover:bg-amber-900/30"
-                : "hover:bg-stone-100 dark:hover:bg-stone-700"
-            }`}
-          >
-            {announcement.isPinned ? (
-              <PinOff className="w-4 h-4 text-amber-600" />
-            ) : (
-              <Pin className="w-4 h-4 text-stone-400" />
-            )}
-          </button>
-          <a
-            href={`/dashboard/announcements/${announcement._id}`}
-            className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
-          >
-            <Pencil className="w-4 h-4 text-stone-500" />
-          </a>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setDeleteId(announcement._id);
-            }}
-            className="p-2 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
-          >
-            <Trash2 className="w-4 h-4 text-rose-500" />
-          </button>
-        </div>
-      ),
+      label: (a) => a.isPinned ? "Unpin" : "Pin",
+      icon: <Pin className="w-4 h-4" />,
+      onClick: (announcement) => handleTogglePin(announcement._id),
+    },
+    {
+      label: "Edit",
+      icon: <Pencil className="w-4 h-4" />,
+      onClick: (announcement) => {
+        window.location.href = `/dashboard/announcements/${announcement._id}`;
+      },
+    },
+    {
+      label: "Delete",
+      icon: <Trash2 className="w-4 h-4" />,
+      onClick: (announcement) => setDeleteId(announcement._id),
+      variant: "danger",
     },
   ];
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100">
-            Announcements
-          </h1>
-          <p className="text-stone-600 dark:text-stone-400 mt-1">
-            Manage church announcements and news
-          </p>
-        </div>
-        <Link href="/dashboard/announcements/new">
-          <Button leftIcon={<Plus className="w-4 h-4" />}>Add Announcement</Button>
-        </Link>
-      </div>
+      <PageHeader
+        title="Announcements"
+        description="Manage church announcements and news"
+        count={announcements?.length}
+        actions={
+          <Link href="/dashboard/announcements/new">
+            <Button leftIcon={<Plus className="w-4 h-4" />}>Add Announcement</Button>
+          </Link>
+        }
+      />
 
-      {announcements === undefined ? (
-        <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
-          <div className="animate-pulse">
-            <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/4 mx-auto mb-4" />
-            <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-1/2 mx-auto" />
-          </div>
-        </div>
-      ) : (
-        <AdminTable
-          data={announcements}
-          columns={columns}
-          keyExtractor={(a) => a._id}
-          emptyMessage="No announcements yet. Create your first announcement to get started."
-        />
-      )}
+      <AdminTable
+        data={announcements}
+        columns={columns}
+        keyExtractor={(a) => a._id}
+        emptyMessage="No announcements yet. Create your first announcement to get started."
+        emptyIcon="inbox"
+        selectable
+        searchValue={searchValue}
+        onSearchChange={setSearchValue}
+        searchPlaceholder="Search announcements..."
+        actions={actions}
+      />
 
       <ConfirmDialog
         isOpen={!!deleteId}

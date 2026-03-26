@@ -13,6 +13,8 @@ import {
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
+import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminBreadcrumbs } from "@/components/admin/AdminBreadcrumbs";
 
 const statCards = [
   { label: "Upcoming Events", icon: Calendar, href: "/dashboard/events", color: "amber" },
@@ -43,14 +45,13 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100">Dashboard</h1>
-        <p className="text-stone-600 dark:text-stone-400 mt-1">
-          Welcome back! Here&apos;s an overview of your church website.
-        </p>
-      </div>
+      <AdminBreadcrumbs />
 
-      {/* Stats Grid */}
+      <PageHeader
+        title="Dashboard"
+        description="Welcome back! Here's an overview of your church website."
+      />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map((stat) => {
           const style = colorStyles[stat.color];
@@ -82,7 +83,6 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Quick Actions */}
         <div className="lg:col-span-1">
           <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100 mb-4">
             Quick Actions
@@ -112,7 +112,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Upcoming Events */}
         <div className="lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100">
@@ -177,7 +176,6 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Recent Announcements */}
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100">
@@ -226,7 +224,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Ministries */}
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100">

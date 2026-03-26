@@ -4,32 +4,38 @@ import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
-import { Eye, EyeOff, Check, Mail, MessageSquare } from "lucide-react";
-import { AdminTable, Column } from "@/components/admin";
-import { Modal } from "@/components/admin";
+import { Eye, EyeOff, Mail, MessageSquare } from "lucide-react";
+import { AdminTable, PageHeader, Column, Modal } from "@/components/admin";
+import { useToast } from "@/components/ui/Toast";
 import type { Id } from "@/convex/_generated/dataModel";
 import type { AdminPrayerRequest } from "@/types/admin";
 
 export default function PrayersAdminPage() {
+  const { success, error: showError } = useToast();
   const prayers = useQuery(api.prayerRequests.queries.listPublic);
   const togglePublic = useMutation(api.prayerRequests.mutations.togglePublic);
   const markAnswered = useMutation(api.prayerRequests.mutations.markAnswered);
 
   const [selectedPrayer, setSelectedPrayer] = useState<AdminPrayerRequest | null>(null);
+  const [searchValue, setSearchValue] = useState("");
 
   const handleTogglePublic = async (id: Id<"prayerRequests">, isPublic: boolean) => {
     try {
       await togglePublic({ id, isPublic: !isPublic });
-    } catch (error) {
-      console.error("Failed to toggle:", error);
+      success("Visibility updated successfully");
+    } catch (err) {
+      showError("Failed to update visibility");
+      console.error("Failed to toggle:", err);
     }
   };
 
   const handleMarkAnswered = async (id: Id<"prayerRequests">) => {
     try {
       await markAnswered({ id });
-    } catch (error) {
-      console.error("Failed to mark answered:", error);
+      success("Prayer request marked as answered");
+    } catch (err) {
+      showError("Failed to mark as answered");
+      console.error("Failed to mark answered:", err);
     }
   };
 
@@ -38,10 +44,11 @@ export default function PrayersAdminPage() {
       key: "request",
       header: "Prayer Request",
       sortable: true,
+      searchable: true,
       render: (prayer) => (
         <div className="flex items-start gap-3">
           <div
-            className={`p-2 rounded-lg ${
+            className={`mt-1 p-2 rounded-lg ${
               prayer.isAnswered
                 ? "bg-green-100 dark:bg-green-900/30"
                 : "bg-amber-100 dark:bg-amber-900/30"
@@ -115,58 +122,28 @@ export default function PrayersAdminPage() {
         </span>
       ),
     },
-    {
-      key: "actions",
-      header: "",
-      className: "w-32",
-      render: (prayer) => (
-        <div className="flex items-center justify-end gap-2">
-          <button
-            onClick={() => setSelectedPrayer(prayer)}
-            className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
-          >
-            <Eye className="w-4 h-4 text-stone-500" />
-          </button>
-          {!prayer.isAnswered && (
-            <button
-              onClick={() => handleMarkAnswered(prayer._id)}
-              className="p-2 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-lg transition-colors"
-              title="Mark as answered"
-            >
-              <Check className="w-4 h-4 text-green-600" />
-            </button>
-          )}
-        </div>
-      ),
-    },
   ];
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100">
-          Prayer Requests
-        </h1>
-        <p className="text-stone-600 dark:text-stone-400 mt-1">
-          Manage church prayer requests
-        </p>
-      </div>
+      <PageHeader
+        title="Prayer Requests"
+        description="Manage church prayer requests"
+        count={prayers?.length}
+      />
 
-      {prayers === undefined ? (
-        <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
-          <div className="animate-pulse">
-            <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/4 mx-auto mb-4" />
-            <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-1/2 mx-auto" />
-          </div>
-        </div>
-      ) : (
-        <AdminTable
-          data={prayers}
-          columns={columns}
-          keyExtractor={(p) => p._id}
-          emptyMessage="No prayer requests yet."
-        />
-      )}
+      <AdminTable
+        data={prayers}
+        columns={columns}
+        keyExtractor={(p) => p._id}
+        onRowClick={setSelectedPrayer}
+        emptyMessage="No prayer requests yet."
+        emptyIcon="inbox"
+        selectable
+        searchValue={searchValue}
+        onSearchChange={setSearchValue}
+        searchPlaceholder="Search prayers..."
+      />
 
       <Modal
         isOpen={!!selectedPrayer}
