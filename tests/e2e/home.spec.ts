@@ -6,7 +6,7 @@ test.describe('Home Page', () => {
   });
 
   test('hero section renders with title and subtitle', async ({ page }) => {
-    await expect(page.getByText('Welcome to')).toBeVisible();
+    await expect(page.getByText('Welcome to', { exact: true })).toBeVisible();
     await expect(page.getByText('Lilliput SDA Church').first()).toBeVisible();
   });
 
