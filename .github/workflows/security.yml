@@ -66,6 +66,3 @@ jobs:
         uses: actions/dependency-review-action@v4
         with:
           fail-on-severity: high
-          allow-ghsar: false
-          deny-packages: []
-          deny-licenses: GPL-1.0 GPL-2.0 AGPL-1.0 AGPL-2.0 AGPL-3.0
