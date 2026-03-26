@@ -2,8 +2,6 @@
 
 import { useState, FormEvent, useRef } from "react";
 import { Heart, Loader2, AlertCircle, RefreshCw } from "lucide-react";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
 import { Input, Textarea, Checkbox } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import type { FormErrors } from "@/types";
@@ -19,7 +17,6 @@ function validateEmail(email: string): boolean {
 }
 
 export default function PrayerRequestForm({ onSuccess, className }: PrayerRequestFormProps) {
-  const submitPrayer = useMutation(api.prayerRequests.mutations.submit);
   const formRef = useRef<HTMLFormElement>(null);
 
   const [form, setForm] = useState({
@@ -68,12 +65,23 @@ export default function PrayerRequestForm({ onSuccess, className }: PrayerReques
     setSubmitting(true);
 
     try {
-      await submitPrayer({
-        name: form.name,
-        email: form.email,
-        request: form.request,
-        isPublic: form.isPublic,
+      const response = await fetch("/api/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "prayer",
+          data: {
+            name: form.name,
+            email: form.email,
+            request: form.request,
+            isPublic: form.isPublic,
+          },
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit prayer request");
+      }
 
       setSuccess(true);
       setForm({ name: "", email: "", request: "", isPublic: false });

@@ -2,9 +2,6 @@
 
 import { Clock, MapPin, Play, Calendar } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
-import { useQueryWithError } from "@/hooks";
-import { api } from "@/convex/_generated/api";
-import { EventCard, AnnouncementCard } from "@/components/ui/Card";
 import { CHURCH_IMAGES } from "@/lib/utils";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { QuickInfo } from "@/components/sections/QuickInfo";
@@ -14,45 +11,52 @@ import { QuickMinistryCard } from "@/components/cards/QuickMinistryCard";
 import { CTASection } from "@/components/sections/CTASection";
 import { SermonList, VideoModal } from "@/components/media";
 import { TestimonialCard } from "@/components/cards/TestimonialCard";
-import { DataLoadError } from "@/components/ui/DataLoadError";
+import { EventsList } from "@/components/sections/EventsList";
+import { AnnouncementsList } from "@/components/sections/AnnouncementsList";
 import type { YouTubeVideo, ChurchEvent, Announcement } from "@/types";
 
 export default function Home() {
-  const {
-    data: events,
-    isLoading: eventsLoading,
-    isError: eventsError,
-  } = useQueryWithError(api.events.queries.listUpcoming);
-  const {
-    data: announcements,
-    isLoading: announcementsLoading,
-    isError: announcementsError,
-  } = useQueryWithError(api.announcements.queries.listLatest);
-  
-  const [currentTime] = useState<number>(() => {
-    if (typeof window === "undefined") return 1742236800000;
-    return 1742236800000;
-  });
+  const [events, setEvents] = useState<ChurchEvent[]>([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [eventsLoading, setEventsLoading] = useState(true);
+  const [eventsError, setEventsError] = useState(false);
+  const [announcementsLoading, setAnnouncementsLoading] = useState(true);
+  const [announcementsError, setAnnouncementsError] = useState(false);
   
   const [sermonVideos, setSermonVideos] = useState<YouTubeVideo[]>([]);
   const [videosLoading, setVideosLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null);
 
   useEffect(() => {
-    async function fetchVideos() {
+    async function fetchData() {
       try {
-        const response = await fetch("/api/youtube/videos?maxResults=6");
-        const data = await response.json();
-        if (data.videos && data.videos.length > 0) {
-          setSermonVideos(data.videos);
-        }
-      } catch (err) {
-        console.error("Failed to fetch sermons:", err);
+        const [eventsRes, announcementsRes, videosRes] = await Promise.all([
+          fetch("/api/events"),
+          fetch("/api/announcements"),
+          fetch("/api/youtube/videos?maxResults=6"),
+        ]);
+        
+        const eventsData = await eventsRes.json();
+        const announcementsData = await announcementsRes.json();
+        const videosData = await videosRes.json();
+        
+        if (eventsData.events) setEvents(eventsData.events);
+        else if (!eventsRes.ok) setEventsError(true);
+        
+        if (announcementsData.announcements) setAnnouncements(announcementsData.announcements);
+        else if (!announcementsRes.ok) setAnnouncementsError(true);
+        
+        if (videosData.videos) setSermonVideos(videosData.videos);
+      } catch {
+        setEventsError(true);
+        setAnnouncementsError(true);
       } finally {
+        setEventsLoading(false);
+        setAnnouncementsLoading(false);
         setVideosLoading(false);
       }
     }
-    fetchVideos();
+    fetchData();
   }, []);
   
   const quickInfoContent = useMemo(() => (
@@ -74,224 +78,6 @@ export default function Home() {
     { name: "Men's Ministry", imageUrl: CHURCH_IMAGES.ministries.mens.main, bgColor: "bg-gradient-to-br from-stone-500 to-stone-700", href: "/ministries" },
     { name: "Music Ministry", imageUrl: CHURCH_IMAGES.ministries.music.worship, bgColor: "bg-gradient-to-br from-amber-500 to-amber-700", href: "/ministries" },
   ], []);
-
-  const renderEvents = () => {
-    if (eventsError) {
-      return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <DataLoadError
-            title="Unable to Load Events"
-            message="We're having trouble loading upcoming events. Please check your connection."
-            variant="card"
-          />
-          <div className="space-y-6">
-            <EventCard
-              title="Check Back Soon"
-              date={new Date().toISOString()}
-              time=""
-              location="Lilliput SDA Church"
-              category="special"
-              description="We're planning exciting events. Stay tuned for updates!"
-              compact
-            />
-          </div>
-        </div>
-      );
-    }
-
-    if (eventsLoading) {
-      return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm">
-            <div className="h-48 bg-stone-200 dark:bg-stone-700 animate-pulse" />
-            <div className="p-6 space-y-3">
-              <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-1/3" />
-              <div className="h-8 bg-stone-200 dark:bg-stone-700 rounded animate-pulse" />
-              <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-2/3" />
-            </div>
-          </div>
-          <div className="space-y-6">
-            {[1, 2].map((i) => (
-              <div key={i} className="bg-white dark:bg-stone-800 rounded-2xl p-5 shadow-sm">
-                <div className="flex gap-4">
-                  <div className="w-16 h-16 bg-stone-200 dark:bg-stone-700 rounded animate-pulse" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-3/4" />
-                    <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-1/2" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    const staticEvents = [
-      {
-        _id: "static-1",
-        title: "Global Youth Day",
-        startDate: "2026-03-21T09:00:00",
-        location: "Lilliput SDA Church",
-        category: "youth",
-        description: "Join youth around the world in a day of service and fellowship. A special day dedicated to youth ministry and community outreach."
-      },
-      {
-        _id: "static-2",
-        title: "Convention",
-        startDate: "2026-03-28T10:00:00",
-        location: "Lilliput SDA Church",
-        category: "special",
-        description: "Annual church convention featuring inspiring speakers, worship, and fellowship. All are welcome to attend this special gathering."
-      },
-      {
-        _id: "static-3",
-        title: "LILLIDISCA CAMP",
-        startDate: "2026-04-02T08:00:00",
-        endDate: "2026-04-06T18:00:00",
-        location: "Camp Site",
-        category: "youth",
-        description: "Five-day camp experience for spiritual growth, fellowship, and fun activities. An unforgettable time of learning and bonding."
-      }
-    ];
-
-    const displayEvents = events && events.length > 0 
-      ? [...staticEvents, ...events].slice(0, 3)
-      : staticEvents;
-
-    if (displayEvents.length === 0) {
-      return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <EventCard
-            title="Sabbath Worship Service"
-            date={new Date(currentTime + 86400000).toISOString()}
-            time="11:00 AM"
-            location="Lilliput SDA Church Sanctuary"
-            category="service"
-            description="Join us for uplifting worship and inspiring message."
-            featured
-          />
-          <div className="space-y-6">
-            <EventCard
-              title="No upcoming events"
-              date={new Date(currentTime).toISOString()}
-              time=""
-              location="Check back soon for more events"
-              category="special"
-              description="We're planning exciting events. Stay tuned!"
-              compact
-            />
-          </div>
-        </div>
-      );
-    }
-
-    const featured = displayEvents[0];
-    const others = displayEvents.slice(1, 3);
-
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="lg:col-span-1">
-          <div className="h-full">
-            <EventCard
-              title={featured.title}
-              date={featured.startDate}
-              time={featured.endDate ? `${featured.startDate.split('T')[1]?.slice(0, 5)} - ${featured.endDate.split('T')[1]?.slice(0, 5)}` : undefined}
-              location={featured.location}
-              category={featured.category as "service" | "special" | "youth" | "community" | undefined}
-              description={featured.description}
-              featured
-            />
-          </div>
-        </div>
-        <div className="space-y-6">
-          {others.map((event: ChurchEvent) => (
-            <EventCard
-              key={event._id}
-              title={event.title}
-              date={event.startDate}
-              time={event.endDate ? `${event.startDate.split('T')[1]?.slice(0, 5)} - ${event.endDate.split('T')[1]?.slice(0, 5)}` : undefined}
-              location={event.location || "TBD"}
-              category={event.category as "service" | "special" | "youth" | "community" | undefined}
-              description={event.description}
-              compact
-            />
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  const renderAnnouncements = () => {
-    if (announcementsError) {
-      return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <DataLoadError
-            title="Unable to Load Announcements"
-            message="We're having trouble loading announcements. Please check your connection."
-            variant="card"
-          />
-          <AnnouncementCard
-            title="Stay Connected"
-            content="Check back soon for updates from our church community."
-            date={new Date().toISOString()}
-            priority="normal"
-            category="General"
-          />
-        </div>
-      );
-    }
-
-    if (announcementsLoading) {
-      return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {[1, 2].map((i) => (
-            <div key={i} className="bg-white dark:bg-stone-800 rounded-2xl p-6 shadow-sm border-l-4 border-amber-500">
-              <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-2/3 mb-3" />
-              <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse mb-2" />
-              <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-4/5" />
-            </div>
-          ))}
-        </div>
-      );
-    }
-
-    if (!announcements || announcements.length === 0) {
-      return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <AnnouncementCard
-            title="Stay Connected"
-            content="No current announcements. Check back soon for updates from our church community."
-            date={new Date().toISOString()}
-            priority="normal"
-            category="General"
-          />
-          <AnnouncementCard
-            title="Weekly Bulletin"
-            content="Our weekly bulletin is published every Friday with updates on events and ministries."
-            date={new Date().toISOString()}
-            priority="low"
-            category="General"
-          />
-        </div>
-      );
-    }
-
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {announcements.slice(0, 2).map((announcement: Announcement) => (
-          <AnnouncementCard
-            key={announcement._id}
-            title={announcement.title}
-            content={announcement.content}
-            date={announcement.date}
-            priority={announcement.priority as "low" | "normal" | "high" | undefined}
-            category={announcement.category}
-          />
-        ))}
-      </div>
-    );
-  };
 
   return (
     <div className="min-h-screen">
@@ -373,7 +159,11 @@ export default function Home() {
             linkText="View Calendar"
             icon={Calendar}
           />
-          {renderEvents()}
+          <EventsList
+            events={events}
+            isLoading={eventsLoading}
+            isError={eventsError}
+          />
         </div>
       </section>
 
@@ -385,7 +175,11 @@ export default function Home() {
             href="/events"
             linkText="View All"
           />
-          {renderAnnouncements()}
+          <AnnouncementsList
+            announcements={announcements}
+            isLoading={announcementsLoading}
+            isError={announcementsError}
+          />
         </div>
       </section>
 

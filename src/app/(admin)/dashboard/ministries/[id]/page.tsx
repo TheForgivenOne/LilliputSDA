@@ -1,8 +1,6 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { MinistryForm } from "@/components/admin/ministries/MinistryForm";
 
 export default function EditMinistryPage() {

@@ -1,14 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   BookOpen, Heart, Church, Sparkles, Shield, Crown,
   Flame, Cross, Hand, TreePine, Star, UsersRound,
   Droplets, Wine, Gift, ScrollText, Scale, Sun, Wallet,
   Leaf, Home, Tent, Cloud, Sunrise, Mountain, Globe,
 } from "lucide-react";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { CHURCH_IMAGES } from "@/lib/utils";
 import { StaffCard } from "@/components/ui/Card";
 import { LeaderCard, LeaderCardGroup } from "@/components/cards/LeaderCard";
@@ -73,12 +71,27 @@ const defaultPastor = {
 
 export default function AboutPage() {
   const [visibleCount, setVisibleCount] = useState(8);
-  const staff = useQuery(api.staff.queries.listAll);
-  const staffLoading = staff === undefined;
+  const [staff, setStaff] = useState<StaffMember[]>([]);
+  const [staffLoading, setStaffLoading] = useState(true);
 
-  const pastoralStaff = staff?.filter((s: StaffMember) => s.department === "Pastoral") || [];
-  const churchBoard = staff?.filter((s: StaffMember) => s.department === "Leadership") || [];
-  const departmentHeads = staff?.filter((s: StaffMember) => s.department !== "Pastoral" && s.department !== "Leadership") || [];
+  useEffect(() => {
+    async function fetchStaff() {
+      try {
+        const res = await fetch("/api/staff");
+        const data = await res.json();
+        if (data.staff) setStaff(data.staff);
+      } catch (err) {
+        console.error("Failed to fetch staff:", err);
+      } finally {
+        setStaffLoading(false);
+      }
+    }
+    fetchStaff();
+  }, []);
+
+  const pastoralStaff = staff.filter((s) => s.department === "Pastoral");
+  const churchBoard = staff.filter((s) => s.department === "Leadership");
+  const departmentHeads = staff.filter((s) => s.department !== "Pastoral" && s.department !== "Leadership");
 
   return (
     <div className="min-h-screen">

@@ -2,13 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
 import { Plus, Pencil, Trash2, Pin, PinOff, Bell } from "lucide-react";
 import { AdminTable, ConfirmDialog, Column } from "@/components/admin";
 import Button from "@/components/ui/Button";
-import type { Id } from "@/convex/_generated/dataModel";
 
 type Announcement = {
   _id: Id<"announcements">;

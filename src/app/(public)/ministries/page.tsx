@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MinistryDetailCard } from "@/components/ui/Card";
 import { CHURCH_IMAGES } from "@/lib/utils";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { Users, Music, Heart, BookOpen, Star } from "lucide-react";
 import type { Ministry } from "@/types";
 import { PageHero } from "@/components/sections/PageHero";
@@ -77,10 +75,25 @@ const ministryCategories = [
 
 export default function MinistriesPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const ministries = useQuery(api.ministries.queries.listAll);
-  const ministriesLoading = ministries === undefined;
+  const [ministries, setMinistries] = useState<Ministry[]>([]);
+  const [ministriesLoading, setMinistriesLoading] = useState(true);
 
-  const displayMinistries = ministries && ministries.length > 0 ? ministries : defaultMinistries;
+  useEffect(() => {
+    async function fetchMinistries() {
+      try {
+        const res = await fetch("/api/ministries");
+        const data = await res.json();
+        if (data.ministries) setMinistries(data.ministries);
+      } catch (err) {
+        console.error("Failed to fetch ministries:", err);
+      } finally {
+        setMinistriesLoading(false);
+      }
+    }
+    fetchMinistries();
+  }, []);
+
+  const displayMinistries = ministries.length > 0 ? ministries : defaultMinistries;
   
   const filteredMinistries = displayMinistries.filter((ministry: Ministry) =>
     selectedCategory === "all" ? true : ministry.category === selectedCategory

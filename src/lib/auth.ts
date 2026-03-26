@@ -1,31 +1,21 @@
-import { auth } from "@clerk/nextjs/server";
-
 export type UserRole = "admin" | "editor" | "member";
 
-export async function checkRole(role: UserRole): Promise<boolean> {
-  const { sessionClaims } = await auth();
-  const userRole = (sessionClaims?.metadata as { role?: UserRole })?.role;
-  return userRole === role;
+export async function checkRole(_role: UserRole): Promise<boolean> {
+  return false;
 }
 
 export async function checkAdmin(): Promise<boolean> {
-  return checkRole("admin");
+  return false;
 }
 
 export async function checkEditor(): Promise<boolean> {
-  const { sessionClaims } = await auth();
-  const userRole = (sessionClaims?.metadata as { role?: UserRole })?.role;
-  return userRole === "admin" || userRole === "editor";
+  return false;
 }
 
 export async function getUserRole(): Promise<UserRole | null> {
-  const { sessionClaims } = await auth();
-  return (sessionClaims?.metadata as { role?: UserRole })?.role ?? null;
+  return null;
 }
 
-export async function requireRole(role: UserRole): Promise<void> {
-  const hasRole = await checkRole(role);
-  if (!hasRole) {
-    throw new Error(`Forbidden: ${role} role required`);
-  }
+export async function requireRole(_role: UserRole): Promise<void> {
+  throw new Error("Authentication not configured");
 }

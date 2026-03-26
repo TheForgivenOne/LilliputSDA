@@ -1,8 +1,7 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-const isPublicRoute = createRouteMatcher([
-  "/sign-in(.*)",
-  "/sign-up(.*)",
+const publicPaths = [
   "/",
   "/about",
   "/leadership",
@@ -15,22 +14,37 @@ const isPublicRoute = createRouteMatcher([
   "/api/scripture",
   "/api/youtube/videos",
   "/api/email",
-  "/api/webhooks(.*)",
   "/visit",
   "/decision",
-]);
+];
 
-const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
+const adminPaths = ["/dashboard", "/admin"];
 
-export default clerkMiddleware(async (auth, req) => {
-  if (isAdminRoute(req)) {
-    await auth.protect({ role: "org:admin" });
+function isPublicRoute(pathname: string): boolean {
+  return publicPaths.some(
+    (path) => pathname === path || pathname.startsWith(path + "/")
+  );
+}
+
+function isAdminRoute(pathname: string): boolean {
+  return adminPaths.some(
+    (path) => pathname.startsWith(path)
+  );
+}
+
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (isAdminRoute(pathname)) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
-  if (!isPublicRoute(req)) {
-    await auth.protect();
+  if (!isPublicRoute(pathname)) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
-});
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [

@@ -1,13 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
 import { Eye, EyeOff, Check, Mail, MessageSquare } from "lucide-react";
 import { AdminTable, Column } from "@/components/admin";
 import { Modal } from "@/components/admin";
-import type { Id } from "@/convex/_generated/dataModel";
 import type { AdminPrayerRequest } from "@/types/admin";
 
 export default function PrayersAdminPage() {

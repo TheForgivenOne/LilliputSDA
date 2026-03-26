@@ -1,12 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
 import { Eye, Check, Mail, Trash2, MessageSquare } from "lucide-react";
 import { AdminTable, ConfirmDialog, Column, Modal } from "@/components/admin";
-import type { Id } from "@/convex/_generated/dataModel";
 
 type Submission = {
   _id: Id<"contactSubmissions">;
