@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Calendar,
@@ -94,12 +95,14 @@ export default function DashboardPage() {
   const contactSubmissions = useQuery(api.contact.queries.listAll);
   const prayers = useQuery(api.prayerRequests.queries.listPublic);
 
-  const getGreeting = () => {
+  const [greeting, setGreeting] = useState("Welcome");
+
+  useEffect(() => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good morning";
-    if (hour < 18) return "Good afternoon";
-    return "Good evening";
-  };
+    if (hour < 12) setGreeting("Good morning");
+    else if (hour < 18) setGreeting("Good afternoon");
+    else setGreeting("Good evening");
+  }, []);
 
   const userName = user?.firstName || user?.emailAddresses[0]?.emailAddress?.split("@")[0] || "Admin";
 
@@ -111,7 +114,7 @@ export default function DashboardPage() {
       <AdminBreadcrumbs />
 
       <div className="bg-gradient-to-r from-amber-600 to-amber-700 rounded-xl p-6 text-white">
-        <p className="text-amber-100 text-sm font-medium">{getGreeting()}</p>
+        <p className="text-amber-100 text-sm font-medium">{greeting}</p>
         <h1 className="text-2xl font-bold mt-1">Welcome back, {userName}</h1>
         <p className="text-amber-100/80 text-sm mt-2">
           Here&apos;s what&apos;s happening with your church website today.
