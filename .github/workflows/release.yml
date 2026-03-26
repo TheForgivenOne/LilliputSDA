@@ -42,9 +42,8 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
       - name: Release
-        uses: release-drafter/release-drafter@v7
+        uses: release-drafter/release-drafter@v6
         with:
           config-name: release-drafter.yml
-          exclude-labels: []
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
