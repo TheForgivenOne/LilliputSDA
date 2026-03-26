@@ -2,7 +2,7 @@
 
 import { Clock, MapPin, Play, Calendar } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
-import { useQuery } from "convex/react";
+import { useQueryWithError } from "@/hooks";
 import { api } from "@/convex/_generated/api";
 import { EventCard, AnnouncementCard } from "@/components/ui/Card";
 import { CHURCH_IMAGES } from "@/lib/utils";
@@ -14,11 +14,20 @@ import { QuickMinistryCard } from "@/components/cards/QuickMinistryCard";
 import { CTASection } from "@/components/sections/CTASection";
 import { SermonList, VideoModal } from "@/components/media";
 import { TestimonialCard } from "@/components/cards/TestimonialCard";
+import { DataLoadError } from "@/components/ui/DataLoadError";
 import type { YouTubeVideo, ChurchEvent, Announcement } from "@/types";
 
 export default function Home() {
-  const events = useQuery(api.events.queries.listUpcoming);
-  const announcements = useQuery(api.announcements.queries.listLatest);
+  const {
+    data: events,
+    isLoading: eventsLoading,
+    isError: eventsError,
+  } = useQueryWithError(api.events.queries.listUpcoming);
+  const {
+    data: announcements,
+    isLoading: announcementsLoading,
+    isError: announcementsError,
+  } = useQueryWithError(api.announcements.queries.listLatest);
   
   const [currentTime] = useState<number>(() => {
     if (typeof window === "undefined") return 1742236800000;
@@ -66,10 +75,30 @@ export default function Home() {
     { name: "Music Ministry", imageUrl: CHURCH_IMAGES.ministries.music.worship, bgColor: "bg-gradient-to-br from-amber-500 to-amber-700", href: "/ministries" },
   ], []);
 
-  const eventsLoading = events === undefined;
-  const announcementsLoading = announcements === undefined;
-
   const renderEvents = () => {
+    if (eventsError) {
+      return (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <DataLoadError
+            title="Unable to Load Events"
+            message="We're having trouble loading upcoming events. Please check your connection."
+            variant="card"
+          />
+          <div className="space-y-6">
+            <EventCard
+              title="Check Back Soon"
+              date={new Date().toISOString()}
+              time=""
+              location="Lilliput SDA Church"
+              category="special"
+              description="We're planning exciting events. Stay tuned for updates!"
+              compact
+            />
+          </div>
+        </div>
+      );
+    }
+
     if (eventsLoading) {
       return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -196,6 +225,25 @@ export default function Home() {
   };
 
   const renderAnnouncements = () => {
+    if (announcementsError) {
+      return (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <DataLoadError
+            title="Unable to Load Announcements"
+            message="We're having trouble loading announcements. Please check your connection."
+            variant="card"
+          />
+          <AnnouncementCard
+            title="Stay Connected"
+            content="Check back soon for updates from our church community."
+            date={new Date().toISOString()}
+            priority="normal"
+            category="General"
+          />
+        </div>
+      );
+    }
+
     if (announcementsLoading) {
       return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

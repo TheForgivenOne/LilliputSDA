@@ -1,8 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Play } from "lucide-react";
 import Image from "next/image";
 import { decodeHtmlEntities } from "@/lib/utils";
+import { isMobileDevice, openYouTubeVideo } from "@/lib/youtube";
 import type { YouTubeVideo } from "@/types";
 
 interface FeaturedVideoProps {
@@ -12,16 +14,30 @@ interface FeaturedVideoProps {
 }
 
 export function FeaturedVideo({ video, isPlaying, onPlay }: FeaturedVideoProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(isMobileDevice());
+  }, []);
+
+  const handlePlay = () => {
+    if (isMobile) {
+      openYouTubeVideo(video.id);
+    } else {
+      onPlay();
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-lg">
       <div className="grid grid-cols-1 lg:grid-cols-2">
         <div className="aspect-video lg:aspect-auto relative bg-stone-900">
-          {isPlaying ? (
+          {isPlaying && !isMobile ? (
             <iframe
-              src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
+              src={`https://www.youtube.com/embed/${video.id}?autoplay=1&rel=0&modestbranding=1`}
               title={decodeHtmlEntities(video.title)}
               className="absolute inset-0 w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             />
           ) : (
@@ -34,7 +50,7 @@ export function FeaturedVideo({ video, isPlaying, onPlay }: FeaturedVideoProps) 
                 onError={() => {}}
               />
               <div className="absolute inset-0 flex items-center justify-center">
-                <button onClick={onPlay} className="group">
+                <button onClick={handlePlay} className="group">
                   <div className="w-20 h-20 rounded-full bg-amber-600 flex items-center justify-center group-hover:bg-amber-500 transition-colors shadow-lg">
                     <Play className="w-8 h-8 text-white ml-1" />
                   </div>
@@ -66,11 +82,11 @@ export function FeaturedVideo({ video, isPlaying, onPlay }: FeaturedVideoProps) 
             </span>
           </div>
           <button
-            onClick={onPlay}
+            onClick={handlePlay}
             className="inline-flex items-center gap-2 px-6 py-3 bg-amber-700 text-white rounded-lg font-medium hover:bg-amber-800 transition-colors w-fit"
           >
             <Play className="w-5 h-5" />
-            Watch Now
+            {isMobile ? "Watch on YouTube" : "Watch Now"}
           </button>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
-import { scriptureLimiter } from "@/lib/rate-limit";
+import { checkRateLimit, scriptureLimiter } from "@/lib/rate-limit";
 
 function getClientIP(request: Request): string {
   const headers = request.headers.get("x-forwarded-for");
@@ -24,7 +24,7 @@ function sanitizeQuery(query: string): string {
 
 export async function GET(request: NextRequest) {
   const ip = getClientIP(request);
-  const { success } = await scriptureLimiter.limit(ip);
+  const { success } = await checkRateLimit(scriptureLimiter, ip);
   
   if (!success) {
     return NextResponse.json(
@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: Request) {
   const ip = getClientIP(request);
-  const { success } = await scriptureLimiter.limit(ip);
+  const { success } = await checkRateLimit(scriptureLimiter, ip);
   
   if (!success) {
     return NextResponse.json(

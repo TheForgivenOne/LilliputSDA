@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { youtubeLimiter } from "@/lib/rate-limit";
+import { checkRateLimit, youtubeLimiter } from "@/lib/rate-limit";
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const CHANNEL_ID = "UC5PpTmwN_ZUyM1xgwQR-_8w";
@@ -130,7 +130,7 @@ async function fetchWithTimeout(url: string, timeout: number = FETCH_TIMEOUT): P
 
 export async function GET(request: NextRequest) {
   const ip = getClientIP(request);
-  const { success } = await youtubeLimiter.limit(ip);
+  const { success } = await checkRateLimit(youtubeLimiter, ip);
   
   if (!success) {
     return NextResponse.json(

@@ -1,2 +1,2 @@
-export { redis } from "./redis";
-export { emailLimiter, youtubeLimiter, scriptureLimiter } from "./limiters";
+export { redis, isRedisConfigured } from "./redis";
+export { emailLimiter, youtubeLimiter, scriptureLimiter, checkRateLimit } from "./limiters";

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { emailLimiter } from "@/lib/rate-limit";
+import { checkRateLimit, emailLimiter } from "@/lib/rate-limit";
 
 function getClientIP(request: Request): string {
   const headers = request.headers.get("x-forwarded-for");
@@ -175,7 +175,7 @@ function escapeHtml(text: string): string {
 
 export async function POST(request: Request) {
   const ip = getClientIP(request);
-  const { success } = await emailLimiter.limit(ip);
+  const { success } = await checkRateLimit(emailLimiter, ip);
   
   if (!success) {
     return NextResponse.json(

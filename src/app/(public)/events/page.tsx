@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { Calendar as CalendarIcon, Bell } from "lucide-react";
-import { useQuery } from "convex/react";
+import { useQueryWithError } from "@/hooks";
 import { api } from "@/convex/_generated/api";
 import { EventCard, AnnouncementCard } from "@/components/ui/Card";
 import { PageHero } from "@/components/sections/PageHero";
 import { CategoryFilter } from "@/components/ui/CategoryFilter";
 import { EventsSidebar } from "@/components/sections/EventsSidebar";
+import { DataLoadError } from "@/components/ui/DataLoadError";
 import type { ChurchEvent, Announcement } from "@/types";
 
 const categories = [
@@ -31,11 +32,16 @@ export default function EventsPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedAnnouncementCategory, setSelectedAnnouncementCategory] = useState("all");
 
-  const events = useQuery(api.events.queries.listUpcoming);
-  const announcements = useQuery(api.announcements.queries.listLatest);
-
-  const eventsLoading = events === undefined;
-  const announcementsLoading = announcements === undefined;
+  const {
+    data: events,
+    isLoading: eventsLoading,
+    isError: eventsError,
+  } = useQueryWithError(api.events.queries.listUpcoming);
+  const {
+    data: announcements,
+    isLoading: announcementsLoading,
+    isError: announcementsError,
+  } = useQueryWithError(api.announcements.queries.listLatest);
 
   // Static upcoming events
   const staticEvents: ChurchEvent[] = [
@@ -80,6 +86,30 @@ export default function EventsPage() {
       )
     : [];
 
+  const renderEventsError = () => (
+    <div className="space-y-6">
+      <DataLoadError
+        title="Unable to Load Events"
+        message="We're having trouble loading events. Please check your connection."
+        variant="card"
+      />
+      <p className="text-stone-500 dark:text-stone-400 text-center">
+        Showing static events below while we try to reconnect...
+      </p>
+      {staticEvents.map((event: ChurchEvent) => (
+        <EventCard
+          key={event._id}
+          title={event.title}
+          date={event.startDate}
+          time={event.endDate ? `${event.startDate.split('T')[1]?.slice(0, 5)} - ${event.endDate.split('T')[1]?.slice(0, 5)}` : undefined}
+          location={event.location || "TBD"}
+          description={event.description}
+          category={event.category as "service" | "special" | "youth" | "community" | undefined}
+        />
+      ))}
+    </div>
+  );
+
   const renderEventsLoading = () => (
     <div className="space-y-6">
       {[1, 2, 3].map((i) => (
@@ -96,6 +126,22 @@ export default function EventsPage() {
           </div>
         </div>
       ))}
+    </div>
+  );
+
+  const renderAnnouncementsError = () => (
+    <div className="space-y-6">
+      <DataLoadError
+        title="Unable to Load Announcements"
+        message="We're having trouble loading announcements. Please check your connection."
+        variant="card"
+      />
+      <div className="text-center py-8 bg-white dark:bg-stone-800 rounded-xl">
+        <Bell className="w-12 h-12 text-stone-300 mx-auto mb-4" />
+        <p className="text-stone-500 dark:text-stone-400">
+          Check back soon for the latest news.
+        </p>
+      </div>
     </div>
   );
 
@@ -173,7 +219,9 @@ export default function EventsPage() {
                     {selectedCategory === "all" ? "All Events" : categories.find(c => c.id === selectedCategory)?.label}
                   </h2>
                   
-                  {eventsLoading ? (
+                  {eventsError ? (
+                    renderEventsError()
+                  ) : eventsLoading ? (
                     renderEventsLoading()
                   ) : filteredEvents.length > 0 ? (
                     <div className="space-y-6">
@@ -262,7 +310,9 @@ export default function EventsPage() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Main Content */}
                 <div className="lg:col-span-2">
-                  {announcementsLoading ? (
+                  {announcementsError ? (
+                    renderAnnouncementsError()
+                  ) : announcementsLoading ? (
                     renderAnnouncementsLoading()
                   ) : filteredAnnouncements.length > 0 ? (
                     <>

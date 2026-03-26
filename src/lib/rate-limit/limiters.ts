@@ -1,23 +1,29 @@
 import { Ratelimit } from "@upstash/ratelimit";
-import { redis } from "./redis";
+import { redis, isRedisConfigured } from "./redis";
+import type { Duration } from "@upstash/ratelimit";
 
-export const emailLimiter = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(5, "1 m"),
-  prefix: "ratelimit:email",
-  analytics: true,
-});
+function createLimiter(prefix: string, limit: number, window: Duration) {
+  if (!redis) {
+    return null;
+  }
+  return new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(limit, window),
+    prefix: `ratelimit:${prefix}`,
+    analytics: true,
+  });
+}
 
-export const youtubeLimiter = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(30, "1 m"),
-  prefix: "ratelimit:youtube",
-  analytics: true,
-});
+export const emailLimiter = createLimiter("email", 5, "1 m");
+export const youtubeLimiter = createLimiter("youtube", 30, "1 m");
+export const scriptureLimiter = createLimiter("scripture", 20, "1 m");
 
-export const scriptureLimiter = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(20, "1 m"),
-  prefix: "ratelimit:scripture",
-  analytics: true,
-});
+export async function checkRateLimit(
+  limiter: Ratelimit | null,
+  identifier: string
+): Promise<{ success: boolean }> {
+  if (!isRedisConfigured || !limiter) {
+    return { success: true };
+  }
+  return limiter.limit(identifier);
+}

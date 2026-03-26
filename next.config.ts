@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
-  { key: "X-Frame-Options", value: "DENY" },
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   {
     key: "Strict-Transport-Security",
@@ -11,7 +11,7 @@ const securityHeaders = [
   {
     key: "Content-Security-Policy",
     value:
-      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://placehold.co https://images.unsplash.com https://img.youtube.com https://i.ytimg.com https://yt3.ggpht.com https://*.convex.cloud; font-src 'self'; connect-src 'self' https://*.clerk.accounts.dev https://*.convex.cloud https://www.googleapis.com https://api.resend.com wss://*.convex.cloud; frame-src 'self' https://*.clerk.accounts.dev;",
+      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev https://www.youtube.com https://www.google.com https://maps.googleapis.com https://*.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' blob: data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.clerk.accounts.dev https://*.convex.cloud https://www.googleapis.com https://api.resend.com wss://*.convex.cloud https://maps.googleapis.com; frame-src 'self' https://*.clerk.accounts.dev https://www.youtube.com https://youtube.com https://*.youtube.com https://www.google.com https://*.google.com https://player.vimeo.com;",
   },
 ];
 
@@ -24,6 +24,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "img.youtube.com" },
       { protocol: "https", hostname: "i.ytimg.com" },
       { protocol: "https", hostname: "yt3.ggpht.com" },
+      { protocol: "https", hostname: "*.google.com" },
+      { protocol: "https", hostname: "*.gstatic.com" },
     ],
     dangerouslyAllowSVG: true,
   },

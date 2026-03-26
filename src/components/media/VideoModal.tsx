@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { decodeHtmlEntities } from "@/lib/utils";
+import { isMobileDevice, openYouTubeVideo } from "@/lib/youtube";
 import type { YouTubeVideo } from "@/types";
 
 interface VideoModalProps {
@@ -10,6 +12,20 @@ interface VideoModalProps {
 }
 
 export function VideoModal({ video, onClose }: VideoModalProps) {
+  const [showIframe, setShowIframe] = useState(false);
+
+  useEffect(() => {
+    if (!video) return;
+    
+    if (isMobileDevice()) {
+      openYouTubeVideo(video.id);
+      onClose();
+      return;
+    }
+    
+    setShowIframe(true);
+  }, [video, onClose]);
+
   if (!video) return null;
 
   return (
@@ -26,13 +42,15 @@ export function VideoModal({ video, onClose }: VideoModalProps) {
           <X className="w-8 h-8" />
         </button>
         <div className="aspect-video bg-black rounded-lg overflow-hidden">
-          <iframe
-            src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
-            title={decodeHtmlEntities(video.title)}
-            className="w-full h-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+          {showIframe && (
+            <iframe
+              src={`https://www.youtube.com/embed/${video.id}?autoplay=1&rel=0&modestbranding=1`}
+              title={decodeHtmlEntities(video.title)}
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          )}
         </div>
       </div>
     </div>
