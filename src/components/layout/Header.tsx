@@ -232,7 +232,7 @@ export function Header() {
             <Link
               href="/visit"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center justify-center px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold text-sm shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all"
+              className="flex items-center justify-center px-4 py-3 bg-stone-200 dark:bg-stone-700 text-stone-700 dark:text-stone-200 rounded-xl font-semibold text-sm transition-all"
             >
               Join Us
             </Link>

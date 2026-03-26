@@ -1,36 +1,28 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-const isPublicRoute = createRouteMatcher([
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-  "/",
-  "/about",
-  "/leadership",
-  "/ministries",
-  "/services",
-  "/media",
-  "/events",
-  "/news",
-  "/contact",
-  "/api/scripture",
-  "/api/youtube/videos",
-  "/api/email",
-  "/api/webhooks(.*)",
-  "/visit",
-  "/decision",
-]);
+const isPublicRoute = (pathname: string) => {
+  const publicRoutes = [
+    '/',
+    '/about',
+    '/leadership',
+    '/ministries',
+    '/services',
+    '/media',
+    '/events',
+    '/news',
+    '/contact',
+    '/api/',
+    '/visit',
+    '/decision',
+  ]
+  
+  return publicRoutes.some(route => pathname === route || pathname.startsWith(route))
+}
 
-const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
-
-export default clerkMiddleware(async (auth, req) => {
-  if (isAdminRoute(req)) {
-    await auth.protect({ role: "org:admin" });
-  }
-
-  if (!isPublicRoute(req)) {
-    await auth.protect();
-  }
-});
+export default function middleware(request: NextRequest) {
+  return NextResponse.next()
+}
 
 export const config = {
   matcher: [

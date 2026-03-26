@@ -2,13 +2,10 @@
 
 import { useState } from "react";
 import { Calendar as CalendarIcon, Bell } from "lucide-react";
-import { useQueryWithError } from "@/hooks";
-import { api } from "@/convex/_generated/api";
 import { EventCard, AnnouncementCard } from "@/components/ui/Card";
 import { PageHero } from "@/components/sections/PageHero";
 import { CategoryFilter } from "@/components/ui/CategoryFilter";
 import { EventsSidebar } from "@/components/sections/EventsSidebar";
-import { DataLoadError } from "@/components/ui/DataLoadError";
 import type { ChurchEvent, Announcement } from "@/types";
 
 const categories = [
@@ -27,63 +24,75 @@ const announcementCategories = [
   { id: "community", label: "Community" },
 ];
 
+const staticEvents: ChurchEvent[] = [
+  {
+    _id: "static-1",
+    title: "Global Youth Day",
+    startDate: "2026-03-21T09:00:00",
+    location: "Lilliput SDA Church",
+    category: "youth",
+    description: "Join youth around the world in a day of service and fellowship."
+  },
+  {
+    _id: "static-2",
+    title: "Convention",
+    startDate: "2026-03-28T10:00:00",
+    location: "Lilliput SDA Church",
+    category: "special",
+    description: "Annual church convention featuring inspiring speakers and worship."
+  },
+  {
+    _id: "static-3",
+    title: "LILLIDISCA CAMP",
+    startDate: "2026-04-02T08:00:00",
+    endDate: "2026-04-06T18:00:00",
+    location: "Camp Site",
+    category: "youth",
+    description: "Five-day camp experience for spiritual growth and fellowship."
+  },
+  {
+    _id: "static-4",
+    title: "Sabbath Worship Service",
+    startDate: "2026-04-04T11:00:00",
+    location: "Lilliput SDA Church Sanctuary",
+    category: "service",
+    description: "Join us for uplifting worship and inspiring message."
+  }
+];
+
+const staticAnnouncements: Announcement[] = [
+  {
+    _id: "ann-1",
+    title: "Weekly Bulletin",
+    content: "Our weekly bulletin is published every Friday with updates on events and ministries.",
+    date: new Date().toISOString(),
+    priority: "normal",
+    category: "general"
+  },
+  {
+    _id: "ann-2",
+    title: "Sabbath School",
+    content: "Join us for Sabbath School at 9:30 AM before the main service.",
+    date: new Date().toISOString(),
+    priority: "low",
+    category: "general"
+  }
+];
+
 export default function EventsPage() {
   const [activeTab, setActiveTab] = useState<"events" | "news">("events");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedAnnouncementCategory, setSelectedAnnouncementCategory] = useState("all");
 
-  const {
-    data: events,
-    isLoading: eventsLoading,
-    isError: eventsError,
-  } = useQueryWithError(api.events.queries.listUpcoming);
-  const {
-    data: announcements,
-    isLoading: announcementsLoading,
-    isError: announcementsError,
-  } = useQueryWithError(api.announcements.queries.listLatest);
+  const filteredEvents = staticEvents.filter((event: ChurchEvent) =>
+    selectedCategory === "all" ? true : event.category === selectedCategory
+  );
 
-  const staticEvents: ChurchEvent[] = [
-    {
-      _id: "static-1",
-      title: "Global Youth Day",
-      startDate: "2026-03-21T09:00:00",
-      location: "Lilliput SDA Church",
-      category: "youth",
-      description: "Join youth around the world in a day of service and fellowship. A special day dedicated to youth ministry and community outreach."
-    },
-    {
-      _id: "static-2",
-      title: "Convention",
-      startDate: "2026-03-28T10:00:00",
-      location: "Lilliput SDA Church",
-      category: "special",
-      description: "Annual church convention featuring inspiring speakers, worship, and fellowship. All are welcome to attend this special gathering."
-    },
-    {
-      _id: "static-3",
-      title: "LILLIDISCA CAMP",
-      startDate: "2026-04-02T08:00:00",
-      endDate: "2026-04-06T18:00:00",
-      location: "Camp Site",
-      category: "youth",
-      description: "Five-day camp experience for spiritual growth, fellowship, and fun activities. An unforgettable time of learning and bonding."
-    }
-  ];
-
-  const filteredEvents = events 
-    ? [...staticEvents, ...events].filter((event: ChurchEvent) =>
-        selectedCategory === "all" ? true : event.category === selectedCategory
-      )
-    : staticEvents;
-
-  const filteredAnnouncements = announcements
-    ? announcements.filter((announcement: Announcement) =>
-        selectedAnnouncementCategory === "all" 
-          ? true 
-          : announcement.category === selectedAnnouncementCategory
-      )
-    : [];
+  const filteredAnnouncements = staticAnnouncements.filter((announcement: Announcement) =>
+    selectedAnnouncementCategory === "all" 
+      ? true 
+      : announcement.category === selectedAnnouncementCategory
+  );
 
   return (
     <div className="min-h-screen">
@@ -137,43 +146,7 @@ export default function EventsPage() {
                     {selectedCategory === "all" ? "All Events" : categories.find(c => c.id === selectedCategory)?.label}
                   </h2>
                   
-                  {eventsError ? (
-                    <div className="space-y-6">
-                      <DataLoadError
-                        title="Unable to Load Events"
-                        message="We're having trouble loading events. Please check your connection."
-                        variant="card"
-                      />
-                      {staticEvents.map((event: ChurchEvent) => (
-                        <EventCard
-                          key={event._id}
-                          title={event.title}
-                          date={event.startDate}
-                          time={event.endDate ? `${event.startDate.split('T')[1]?.slice(0, 5)} - ${event.endDate.split('T')[1]?.slice(0, 5)}` : undefined}
-                          location={event.location || "TBD"}
-                          description={event.description}
-                          category={event.category as "service" | "special" | "youth" | "community" | undefined}
-                        />
-                      ))}
-                    </div>
-                  ) : eventsLoading ? (
-                    <div className="space-y-6">
-                      {[1, 2, 3].map((i) => (
-                        <div key={i} className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm">
-                          <div className="flex flex-col sm:flex-row">
-                            <div className="p-6 sm:w-28 flex flex-row sm:flex-col items-center justify-center bg-amber-100 dark:bg-amber-900/30">
-                              <div className="h-12 w-12 bg-stone-200 dark:bg-stone-700 rounded animate-pulse" />
-                            </div>
-                            <div className="p-6 flex-1 space-y-3">
-                              <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-2/3" />
-                              <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-1/2" />
-                              <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-3/4" />
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : filteredEvents.length > 0 ? (
+                  {filteredEvents.length > 0 ? (
                     <div className="space-y-6 stagger-children">
                       {filteredEvents.map((event: ChurchEvent) => (
                         <EventCard
@@ -254,31 +227,7 @@ export default function EventsPage() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2">
-                  {announcementsError ? (
-                    <div className="space-y-6">
-                      <DataLoadError
-                        title="Unable to Load Announcements"
-                        message="We're having trouble loading announcements. Please check your connection."
-                        variant="card"
-                      />
-                      <div className="text-center py-8 bg-white dark:bg-stone-800 rounded-2xl">
-                        <Bell className="w-12 h-12 text-stone-300 mx-auto mb-4" />
-                        <p className="text-stone-500 dark:text-stone-400">
-                          Check back soon for the latest news.
-                        </p>
-                      </div>
-                    </div>
-                  ) : announcementsLoading ? (
-                    <div className="space-y-6">
-                      {[1, 2, 3].map((i) => (
-                        <div key={i} className="bg-white dark:bg-stone-800 rounded-2xl p-6 shadow-sm border-l-4 border-amber-500">
-                          <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-2/3 mb-3" />
-                          <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse mb-2" />
-                          <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-4/5" />
-                        </div>
-                      ))}
-                    </div>
-                  ) : filteredAnnouncements.length > 0 ? (
+                  {filteredAnnouncements.length > 0 ? (
                     <>
                       {filteredAnnouncements.find((a: Announcement) => a.priority === "high") && (
                         <div className="mb-8">

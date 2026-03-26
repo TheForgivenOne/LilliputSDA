@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { MinistryDetailCard } from "@/components/ui/Card";
 import { CHURCH_IMAGES } from "@/lib/utils";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { Users, Music, Heart, BookOpen, Star } from "lucide-react";
 import type { Ministry } from "@/types";
 import { PageHero } from "@/components/sections/PageHero";
@@ -12,6 +10,7 @@ import { CategoryFilter } from "@/components/ui/CategoryFilter";
 
 const defaultMinistries = [
   {
+    _id: "min-1",
     name: "Adventist Youth (AY)",
     description: "Our youth ministry provides a dynamic environment for young people to grow spiritually, develop leadership skills, and build lasting friendships through Bible study, social activities, and community service.",
     leader: "Sister Patricia Brown",
@@ -21,6 +20,7 @@ const defaultMinistries = [
     category: "youth" as const,
   },
   {
+    _id: "min-2",
     name: "Pathfinders",
     description: "A worldwide organization for young people sponsored by the Seventh-day Adventist Church, focused on building character through outdoor activities, community service, and spiritual development.",
     leader: "Brother David Johnson",
@@ -30,6 +30,7 @@ const defaultMinistries = [
     category: "youth" as const,
   },
   {
+    _id: "min-3",
     name: "Women's Ministry",
     description: "Empowering women to discover their potential in Christ through Bible study, prayer, fellowship, and outreach. We provide support for women at every stage of life.",
     leader: "Sister Angela Reid",
@@ -39,6 +40,7 @@ const defaultMinistries = [
     category: "adult" as const,
   },
   {
+    _id: "min-4",
     name: "Men's Ministry",
     description: "Building godly men through discipleship, accountability, and service. Our ministry focuses on spiritual growth, family leadership, and community impact.",
     leader: "Brother Michael Thompson",
@@ -48,6 +50,7 @@ const defaultMinistries = [
     category: "adult" as const,
   },
   {
+    _id: "min-5",
     name: "Music Ministry",
     description: "Our music ministry leads the congregation in worship through choir, instrumental music, and special musical presentations. We welcome musicians of all skill levels.",
     leader: "Sister Donna Miller",
@@ -57,6 +60,7 @@ const defaultMinistries = [
     category: "music" as const,
   },
   {
+    _id: "min-6",
     name: "Community Services",
     description: "Serving our local community through food distribution, clothing drives, health screenings, and various outreach programs. Join us in making a difference.",
     leader: "Sister Grace Thompson",
@@ -77,12 +81,8 @@ const ministryCategories = [
 
 export default function MinistriesPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const ministries = useQuery(api.ministries.queries.listAll);
-  const ministriesLoading = ministries === undefined;
 
-  const displayMinistries = ministries && ministries.length > 0 ? ministries : defaultMinistries;
-  
-  const filteredMinistries = displayMinistries.filter((ministry: Ministry) =>
+  const filteredMinistries = defaultMinistries.filter((ministry: Ministry) =>
     selectedCategory === "all" ? true : ministry.category === selectedCategory
   );
 
@@ -107,20 +107,7 @@ export default function MinistriesPage() {
 
       <section className="py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {ministriesLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm">
-                  <div className="aspect-video bg-stone-200 dark:bg-stone-700 animate-pulse" />
-                  <div className="p-6 space-y-3">
-                    <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-2/3" />
-                    <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse" />
-                    <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-1/2" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : filteredMinistries.length > 0 ? (
+          {filteredMinistries.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredMinistries.map((ministry: Ministry) => (
                 <MinistryDetailCard

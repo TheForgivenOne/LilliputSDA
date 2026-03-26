@@ -7,8 +7,6 @@ import {
   Droplets, Wine, Gift, ScrollText, Scale, Sun, Wallet,
   Leaf, Home, Tent, Cloud, Sunrise, Mountain, Globe,
 } from "lucide-react";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { CHURCH_IMAGES } from "@/lib/utils";
 import { StaffCard } from "@/components/ui/Card";
 import { LeaderCard, LeaderCardGroup } from "@/components/cards/LeaderCard";
@@ -18,7 +16,6 @@ import { Timeline } from "@/components/sections/Timeline";
 import { MissionVision } from "@/components/sections/MissionVision";
 import { BeliefGrid } from "@/components/cards/BeliefCard";
 import { PageStats } from "@/components/sections/PageStats";
-import type { StaffMember } from "@/types";
 
 const milestones = [
   { year: "1974", title: "Foundation", description: "Brother George Heavens and Miss Catherine Morrison initiate the work in Lilliput District. First Sunday School held at Mr. Lawrence Lee's home." },
@@ -60,25 +57,35 @@ const beliefs = [
   { icon: Globe, title: "The New Earth", description: "On the new earth, God will provide an eternal home for the redeemed and a perfect environment for everlasting life." },
 ];
 
-const defaultPastor = {
-  name: "Pastor Lataniel Hamilton",
-  role: "Junior Pastor",
-  title: "Junior Pastor, Lilliput SDA Church",
-  bio: "Pastor Hamilton leads the Lilliput SDA Church with a passion for community outreach and spiritual growth. Under his leadership, the church has seen continued growth and expanded ministry programs.",
-  photoUrl: "",
-  email: "lhamilton@westjamaica.org",
-  phone: "(876) 123-4567",
-  department: "Pastoral",
-};
+const pastoralStaff = [
+  {
+    _id: "staff-1",
+    name: "Pastor Lataniel Hamilton",
+    role: "Junior Pastor",
+    title: "Junior Pastor, Lilliput SDA Church",
+    bio: "Pastor Hamilton leads the Lilliput SDA Church with a passion for community outreach and spiritual growth. Under his leadership, the church has seen continued growth and expanded ministry programs.",
+    photoUrl: "",
+    email: "lhamilton@westjamaica.org",
+    phone: "(876) 123-4567",
+    department: "Pastoral",
+  }
+];
+
+const churchBoard = [
+  { name: "Brother John Smith", role: "Head Elder", title: "Church Board Chair" },
+  { name: "Sister Mary Johnson", role: "Treasurer", title: "Finance Committee" },
+  { name: "Brother James Brown", role: "Secretary", title: "Church Clerk" },
+];
+
+const departmentHeads = [
+  { name: "Sister Sarah Wilson", role: "Sabbath School Superintendent", title: "Education Department" },
+  { name: "Brother Michael Davis", role: "Youth Leader", title: "Youth Ministries" },
+  { name: "Sister Ruth Miller", role: "Women's Ministry Leader", title: "Women's Ministry" },
+  { name: "Brother Peter White", role: "Music Director", title: "Music Ministry" },
+];
 
 export default function AboutPage() {
   const [visibleCount, setVisibleCount] = useState(8);
-  const staff = useQuery(api.staff.queries.listAll);
-  const staffLoading = staff === undefined;
-
-  const pastoralStaff = staff?.filter((s: StaffMember) => s.department === "Pastoral") || [];
-  const churchBoard = staff?.filter((s: StaffMember) => s.department === "Leadership") || [];
-  const departmentHeads = staff?.filter((s: StaffMember) => s.department !== "Pastoral" && s.department !== "Leadership") || [];
 
   return (
     <div className="min-h-screen">
@@ -195,50 +202,21 @@ export default function AboutPage() {
           </div>
 
           <div className="max-w-3xl mx-auto mb-16">
-            {staffLoading ? (
-              <div className="bg-white dark:bg-stone-800 rounded-2xl p-6 animate-pulse border border-stone-100 dark:border-stone-700">
-                <div className="flex flex-col sm:flex-row gap-6">
-                  <div className="w-40 h-40 bg-stone-200 dark:bg-stone-700 rounded-2xl" />
-                  <div className="flex-1 space-y-3">
-                    <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/2" />
-                    <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-1/3" />
-                    <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-3/4" />
-                  </div>
-                </div>
-              </div>
-            ) : pastoralStaff.length > 0 ? (
-              pastoralStaff.map((person: StaffMember) => (
-                <StaffCard key={person._id} {...person} />
-              ))
-            ) : (
-              <StaffCard {...defaultPastor} />
-            )}
+            <StaffCard {...pastoralStaff[0]} />
           </div>
 
           <LeaderCardGroup
             title="Church Board"
             description="Our church board provides spiritual oversight and guidance for the congregation."
           >
-            {staffLoading ? (
-              [1, 2, 3].map((i) => (
-                <div key={i} className="w-32 h-40 bg-stone-200 dark:bg-stone-700 rounded-2xl animate-pulse" />
-              ))
-            ) : churchBoard.length > 0 ? (
-              churchBoard.map((person: StaffMember) => (
-                <LeaderCard
-                  key={person._id}
-                  name={person.name}
-                  role={person.role}
-                  title={person.title}
-                  photoUrl={person.photoUrl}
-                  email={person.email}
-                />
-              ))
-            ) : (
-              <p className="text-stone-500 dark:text-stone-400 col-span-full text-center py-4">
-                Church board information coming soon.
-              </p>
-            )}
+            {churchBoard.map((person) => (
+              <LeaderCard
+                key={person.name}
+                name={person.name}
+                role={person.role}
+                title={person.title}
+              />
+            ))}
           </LeaderCardGroup>
         </div>
       </section>
@@ -249,26 +227,14 @@ export default function AboutPage() {
             title="Department Heads"
             description="Dedicated leaders who coordinate our various ministries and programs."
           >
-            {staffLoading ? (
-              [1, 2, 3, 4].map((i) => (
-                <div key={i} className="w-32 h-40 bg-stone-200 dark:bg-stone-700 rounded-2xl animate-pulse" />
-              ))
-            ) : departmentHeads.length > 0 ? (
-              departmentHeads.map((person: StaffMember) => (
-                <LeaderCard
-                  key={person._id}
-                  name={person.name}
-                  role={person.role}
-                  title={person.title}
-                  photoUrl={person.photoUrl}
-                  email={person.email}
-                />
-              ))
-            ) : (
-              <p className="text-stone-500 dark:text-stone-400 col-span-full text-center py-4">
-                Department head information coming soon.
-              </p>
-            )}
+            {departmentHeads.map((person) => (
+              <LeaderCard
+                key={person.name}
+                name={person.name}
+                role={person.role}
+                title={person.title}
+              />
+            ))}
           </LeaderCardGroup>
         </div>
       </section>
