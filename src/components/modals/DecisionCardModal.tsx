@@ -81,7 +81,6 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

@@ -30,11 +30,9 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   useEffect(() => {
     if (isMobileMenuOpen) {
