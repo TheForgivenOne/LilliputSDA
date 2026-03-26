@@ -3,30 +3,26 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { Plus, Pencil, Trash2, Mail, Phone } from "lucide-react";
 import { AdminTable, ConfirmDialog, Column } from "@/components/admin";
 import Button from "@/components/ui/Button";
-import type { Id } from "@/convex/_generated/dataModel";
+import { useFetch, deleteItem } from "@/hooks/useData";
 import type { AdminStaff } from "@/types/admin";
-
-type StaffMember = AdminStaff;
 
 export default function StaffAdminPage() {
   const router = useRouter();
-  const staff = useQuery(api.staff.queries.listAll);
-  const deleteStaff = useMutation(api.staff.mutations.deleteStaff);
+  const { data: staff, isLoading, refetch } = useFetch<AdminStaff[]>("/api/staff");
 
-  const [deleteId, setDeleteId] = useState<Id<"staff"> | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     if (!deleteId) return;
     setIsDeleting(true);
     try {
-      await deleteStaff({ id: deleteId });
+      await deleteItem(`/api/staff/${deleteId}`);
       setDeleteId(null);
+      refetch();
     } catch (error) {
       console.error("Failed to delete:", error);
     } finally {
@@ -34,7 +30,7 @@ export default function StaffAdminPage() {
     }
   };
 
-  const columns: Column<StaffMember>[] = [
+  const columns: Column<AdminStaff>[] = [
     {
       key: "name",
       header: "Staff Member",
@@ -164,7 +160,7 @@ export default function StaffAdminPage() {
         </Link>
       </div>
 
-      {staff === undefined ? (
+      {isLoading ? (
         <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
           <div className="animate-pulse">
             <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/4 mx-auto mb-4" />

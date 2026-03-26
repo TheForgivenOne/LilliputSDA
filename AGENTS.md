@@ -123,6 +123,9 @@ git rebase main
 - Delete merged feature branches
 - Sync branches with `main` regularly to avoid big merges
 
+### Branch Selection
+When given a task, identify the appropriate branch type from the conventions above. If unclear, ask the user which branch to use before making changes.
+
 ---
 
 ## Best Practices

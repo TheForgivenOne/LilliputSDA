@@ -31,5 +31,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "src/app/(admin)", "src/components/admin", "src/components/forms"]
+  "exclude": ["node_modules", ".next"]
 }

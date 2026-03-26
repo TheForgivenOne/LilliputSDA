@@ -3,6 +3,7 @@ import { DM_Sans, Playfair_Display, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "@/styles/tokens.css";
 import { DirectionProvider } from "@/components/providers/DirectionProvider";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -64,15 +65,17 @@ export default function RootLayout({
       <body
         className={`${dmSans.variable} ${playfair.variable} ${geistMono.variable} antialiased bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-100`}
       >
-        <DirectionProvider>
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-amber-600 focus:text-white focus:rounded-lg focus:font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400"
-          >
-            Skip to main content
-          </a>
-          {children}
-        </DirectionProvider>
+        <AuthProvider>
+          <DirectionProvider>
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-amber-600 focus:text-white focus:rounded-lg focus:font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400"
+            >
+              Skip to main content
+            </a>
+            {children}
+          </DirectionProvider>
+        </AuthProvider>
       </body>
     </html>
   );

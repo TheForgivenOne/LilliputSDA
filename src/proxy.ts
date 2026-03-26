@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { auth } from "@/auth";
 
 const publicPaths = [
   "/",
@@ -11,14 +12,30 @@ const publicPaths = [
   "/events",
   "/news",
   "/contact",
+  "/sign-in",
+  "/sign-up",
   "/api/scripture",
   "/api/youtube/videos",
   "/api/email",
+  "/api/announcements",
+  "/api/events",
+  "/api/ministries",
+  "/api/staff",
+  "/api/contact",
+  "/api/prayers",
+  "/api/auth",
+  "/api/auth/login",
+  "/api/auth/register",
+  "/api/auth/session",
+  "/api/auth/callback",
   "/visit",
   "/decision",
 ];
 
-const adminPaths = ["/dashboard", "/admin"];
+const protectedPaths = [
+  "/dashboard",
+  "/admin",
+];
 
 function isPublicRoute(pathname: string): boolean {
   return publicPaths.some(
@@ -26,17 +43,19 @@ function isPublicRoute(pathname: string): boolean {
   );
 }
 
-function isAdminRoute(pathname: string): boolean {
-  return adminPaths.some(
-    (path) => pathname.startsWith(path)
-  );
+function isProtectedRoute(pathname: string): boolean {
+  return protectedPaths.some((path) => pathname.startsWith(path));
 }
 
-export function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (isAdminRoute(pathname)) {
-    return NextResponse.redirect(new URL("/", request.url));
+  if (isProtectedRoute(pathname)) {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.redirect(new URL("/sign-in", request.url));
+    }
+    return NextResponse.next();
   }
 
   if (!isPublicRoute(pathname)) {

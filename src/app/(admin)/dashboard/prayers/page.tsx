@@ -3,34 +3,42 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { Eye, EyeOff, Check, Mail, MessageSquare } from "lucide-react";
-import { AdminTable, Column } from "@/components/admin";
-import { Modal } from "@/components/admin";
-import type { AdminPrayerRequest } from "@/types/admin";
+import { AdminTable, Modal, Column } from "@/components/admin";
+import { useFetch, updateItem } from "@/hooks/useData";
+
+type PrayerRequest = {
+  id: string;
+  name: string;
+  email?: string;
+  request: string;
+  isPublic: boolean;
+  isAnswered: boolean;
+  date: string;
+};
 
 export default function PrayersAdminPage() {
-  const prayers = useQuery(api.prayerRequests.queries.listPublic);
-  const togglePublic = useMutation(api.prayerRequests.mutations.togglePublic);
-  const markAnswered = useMutation(api.prayerRequests.mutations.markAnswered);
+  const { data: prayers, isLoading, refetch } = useFetch<PrayerRequest[]>("/api/prayers");
+  const [selectedPrayer, setSelectedPrayer] = useState<PrayerRequest | null>(null);
 
-  const [selectedPrayer, setSelectedPrayer] = useState<AdminPrayerRequest | null>(null);
-
-  const handleTogglePublic = async (id: Id<"prayerRequests">, isPublic: boolean) => {
+  const handleTogglePublic = async (id: string, isPublic: boolean) => {
     try {
-      await togglePublic({ id, isPublic: !isPublic });
+      await updateItem(`/api/prayers/${id}`, { isPublic: !isPublic });
+      refetch();
     } catch (error) {
       console.error("Failed to toggle:", error);
     }
   };
 
-  const handleMarkAnswered = async (id: Id<"prayerRequests">) => {
+  const handleMarkAnswered = async (id: string) => {
     try {
-      await markAnswered({ id });
+      await updateItem(`/api/prayers/${id}`, { isAnswered: true });
+      refetch();
     } catch (error) {
       console.error("Failed to mark answered:", error);
     }
   };
 
-  const columns: Column<AdminPrayerRequest>[] = [
+  const columns: Column<PrayerRequest>[] = [
     {
       key: "request",
       header: "Prayer Request",
@@ -66,7 +74,7 @@ export default function PrayersAdminPage() {
       header: "Visibility",
       render: (prayer) => (
         <button
-          onClick={() => handleTogglePublic(prayer._id, !!prayer.isPublic)}
+          onClick={() => handleTogglePublic(prayer.id, !!prayer.isPublic)}
           className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
             prayer.isPublic
               ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
@@ -126,7 +134,7 @@ export default function PrayersAdminPage() {
           </button>
           {!prayer.isAnswered && (
             <button
-              onClick={() => handleMarkAnswered(prayer._id)}
+              onClick={() => handleMarkAnswered(prayer.id)}
               className="p-2 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-lg transition-colors"
               title="Mark as answered"
             >
@@ -149,7 +157,7 @@ export default function PrayersAdminPage() {
         </p>
       </div>
 
-      {prayers === undefined ? (
+      {isLoading ? (
         <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
           <div className="animate-pulse">
             <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/4 mx-auto mb-4" />
@@ -158,9 +166,9 @@ export default function PrayersAdminPage() {
         </div>
       ) : (
         <AdminTable
-          data={prayers}
+          data={prayers || []}
           columns={columns}
-          keyExtractor={(p) => p._id}
+          keyExtractor={(p) => p.id}
           emptyMessage="No prayer requests yet."
         />
       )}
@@ -196,7 +204,7 @@ export default function PrayersAdminPage() {
             <div className="flex items-center gap-4 pt-4 border-t border-stone-200 dark:border-stone-700">
               <button
                 onClick={() => {
-                  if (selectedPrayer) handleTogglePublic(selectedPrayer._id, !!selectedPrayer.isPublic);
+                  if (selectedPrayer) handleTogglePublic(selectedPrayer.id, !!selectedPrayer.isPublic);
                   setSelectedPrayer(null);
                 }}
                 className={`px-4 py-2 rounded-lg text-sm font-medium ${
@@ -210,7 +218,7 @@ export default function PrayersAdminPage() {
               {!selectedPrayer.isAnswered && (
                 <button
                   onClick={() => {
-                    if (selectedPrayer) handleMarkAnswered(selectedPrayer._id);
+                    if (selectedPrayer) handleMarkAnswered(selectedPrayer.id);
                     setSelectedPrayer(null);
                   }}
                   className="px-4 py-2 rounded-lg text-sm font-medium bg-green-100 text-green-700 hover:bg-green-200"

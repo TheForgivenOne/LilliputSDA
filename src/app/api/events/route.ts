@@ -1,33 +1,58 @@
-import { NextResponse } from "next/server";
-import type { ChurchEvent } from "@/types";
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
+import { auth } from "@/auth";
 
-const events: ChurchEvent[] = [
-  {
-    _id: "1",
-    title: "Sabbath School",
-    startDate: "2026-03-28T09:00:00",
-    location: "Main Sanctuary",
-    category: "service",
-    description: "Bible study for all ages"
-  },
-  {
-    _id: "2",
-    title: "Divine Service",
-    startDate: "2026-03-28T11:00:00",
-    location: "Main Sanctuary",
-    category: "service",
-    description: "Worship service with preaching"
-  },
-  {
-    _id: "3",
-    title: "Youth Meeting",
-    startDate: "2026-03-28T15:00:00",
-    location: "Youth Hall",
-    category: "youth",
-    description: "Youth fellowship and Bible study"
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const upcoming = searchParams.get("upcoming");
+    const limit = searchParams.get("limit");
+
+    const where: Record<string, unknown> = {};
+
+    if (upcoming === "true") {
+      where.startDate = { gte: new Date() };
+    }
+
+    const events = await prisma.event.findMany({
+      where,
+      orderBy: { startDate: "asc" },
+      take: limit ? parseInt(limit) : undefined,
+    });
+
+    return NextResponse.json(events);
+  } catch (error) {
+    console.error("Failed to fetch events:", error);
+    return NextResponse.json({ error: "Failed to fetch events" }, { status: 500 });
   }
-];
+}
 
-export async function GET() {
-  return NextResponse.json({ events });
+export async function POST(request: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await request.json();
+
+    const event = await prisma.event.create({
+      data: {
+        title: body.title,
+        description: body.description,
+        startDate: new Date(body.startDate),
+        endDate: body.endDate ? new Date(body.endDate) : null,
+        location: body.location,
+        category: body.category || "service",
+        imageUrl: body.imageUrl,
+        isRecurring: body.isRecurring || false,
+        recurrencePattern: body.recurrencePattern,
+      },
+    });
+
+    return NextResponse.json(event, { status: 201 });
+  } catch (error) {
+    console.error("Failed to create event:", error);
+    return NextResponse.json({ error: "Failed to create event" }, { status: 500 });
+  }
 }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input, Textarea, Select, Checkbox } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
+import { createItem } from "@/hooks/useData";
 import type { AnnouncementPriority, AnnouncementCategory } from "@/types/admin";
 
 const priorities: { value: AnnouncementPriority; label: string }[] = [
@@ -21,23 +22,15 @@ const categories: { value: AnnouncementCategory; label: string }[] = [
 
 export default function NewAnnouncementPage() {
   const router = useRouter();
-  const createAnnouncement = useMutation(api.announcements.mutations.create);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState<{
-    title: string;
-    content: string;
-    priority: AnnouncementPriority;
-    category: AnnouncementCategory;
-    expiresAt: string;
-    isPinned: boolean;
-  }>({
+  const [formData, setFormData] = useState({
     title: "",
     content: "",
-    priority: "normal",
-    category: "general",
+    priority: "normal" as AnnouncementPriority,
+    category: "general" as AnnouncementCategory,
     expiresAt: "",
     isPinned: false,
   });
@@ -48,11 +41,12 @@ export default function NewAnnouncementPage() {
     setIsLoading(true);
 
     try {
-      await createAnnouncement({
+      await createItem("/api/announcements", {
         title: formData.title,
         content: formData.content,
         priority: formData.priority,
         category: formData.category,
+        date: new Date().toISOString(),
         expiresAt: formData.expiresAt || undefined,
         isPinned: formData.isPinned,
       });

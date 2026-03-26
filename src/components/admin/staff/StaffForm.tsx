@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { Input, Textarea, Select, Checkbox } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import { createItem, updateItem } from "@/hooks/useData";
 
 const departments = [
   { value: "pastoral", label: "Pastoral" },
@@ -22,7 +21,7 @@ interface StaffFormProps {
   staff?: {
     _id: string;
     name: string;
-    role: string;
+    role?: string;
     title: string;
     bio?: string;
     photoUrl?: string;
@@ -36,8 +35,6 @@ interface StaffFormProps {
 
 export function StaffForm({ staff }: StaffFormProps) {
   const router = useRouter();
-  const createStaff = useMutation(api.staff.mutations.create);
-  const updateStaff = useMutation(api.staff.mutations.update);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,8 +58,7 @@ export function StaffForm({ staff }: StaffFormProps) {
     setIsLoading(true);
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const data: any = {
+      const data = {
         name: formData.name,
         role: formData.role,
         title: formData.title,
@@ -76,10 +72,9 @@ export function StaffForm({ staff }: StaffFormProps) {
       };
 
       if (staff?._id) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await updateStaff({ id: staff._id as any, ...data });
+        await updateItem(`/api/staff/${staff._id}`, data);
       } else {
-        await createStaff(data);
+        await createItem("/api/staff", data);
       }
 
       router.push("/dashboard/staff");
