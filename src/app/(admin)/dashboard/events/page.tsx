@@ -3,29 +3,39 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
 import { Plus, Pencil, Trash2, Calendar, MapPin, Clock } from "lucide-react";
 import { AdminTable, ConfirmDialog, Column } from "@/components/admin";
 import Button from "@/components/ui/Button";
-import type { Id } from "@/convex/_generated/dataModel";
-import type { AdminEvent } from "@/types/admin";
+import { useFetch, deleteItem } from "@/hooks/useData";
+
+type AdminEvent = {
+  id: string;
+  createdAt: string;
+  title: string;
+  description: string;
+  startDate: string;
+  endDate?: string;
+  location: string;
+  category: "service" | "special" | "youth" | "community";
+  imageUrl?: string;
+  isRecurring: boolean;
+  recurrencePattern?: "weekly" | "monthly";
+};
 
 export default function EventsAdminPage() {
   const router = useRouter();
-  const events = useQuery(api.events.queries.listAll);
-  const deleteEvent = useMutation(api.events.mutations.deleteEvent);
-
-  const [deleteId, setDeleteId] = useState<Id<"events"> | null>(null);
+  const { data: events, isLoading, refetch } = useFetch<AdminEvent[]>("/api/events");
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     if (!deleteId) return;
     setIsDeleting(true);
     try {
-      await deleteEvent({ id: deleteId });
+      await deleteItem(`/api/events/${deleteId}`);
       setDeleteId(null);
+      refetch();
     } catch (error) {
       console.error("Failed to delete:", error);
     } finally {
@@ -111,7 +121,7 @@ export default function EventsAdminPage() {
       render: (event) => (
         <div className="flex items-center justify-end gap-2">
           <Link
-            href={`/dashboard/events/${event._id}`}
+            href={`/dashboard/events/${event.id}`}
             className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
           >
             <Pencil className="w-4 h-4 text-stone-500" />
@@ -119,7 +129,7 @@ export default function EventsAdminPage() {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              setDeleteId(event._id);
+              setDeleteId(event.id);
             }}
             className="p-2 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
           >
@@ -146,7 +156,7 @@ export default function EventsAdminPage() {
         </Link>
       </div>
 
-      {events === undefined ? (
+      {isLoading ? (
         <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
           <div className="animate-pulse">
             <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/4 mx-auto mb-4" />
@@ -155,10 +165,10 @@ export default function EventsAdminPage() {
         </div>
       ) : (
         <AdminTable
-          data={events}
+          data={events || []}
           columns={columns}
-          keyExtractor={(event) => event._id}
-          onRowClick={(event) => router.push(`/dashboard/events/${event._id}`)}
+          keyExtractor={(event) => event.id}
+          onRowClick={(event) => router.push(`/dashboard/events/${event.id}`)}
           emptyMessage="No events yet. Create your first event to get started."
         />
       )}

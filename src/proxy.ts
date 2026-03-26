@@ -1,8 +1,8 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { auth } from "@/auth";
 
-const isPublicRoute = createRouteMatcher([
-  "/sign-in(.*)",
-  "/sign-up(.*)",
+const publicPaths = [
   "/",
   "/about",
   "/leadership",
@@ -12,25 +12,58 @@ const isPublicRoute = createRouteMatcher([
   "/events",
   "/news",
   "/contact",
+  "/sign-in",
+  "/sign-up",
   "/api/scripture",
   "/api/youtube/videos",
   "/api/email",
-  "/api/webhooks(.*)",
+  "/api/announcements",
+  "/api/events",
+  "/api/ministries",
+  "/api/staff",
+  "/api/contact",
+  "/api/prayers",
+  "/api/auth",
+  "/api/auth/login",
+  "/api/auth/register",
+  "/api/auth/session",
+  "/api/auth/callback",
   "/visit",
   "/decision",
-]);
+];
 
-const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
+const protectedPaths = [
+  "/dashboard",
+  "/admin",
+];
 
-export default clerkMiddleware(async (auth, req) => {
-  if (isAdminRoute(req)) {
-    await auth.protect({ role: "org:admin" });
+function isPublicRoute(pathname: string): boolean {
+  return publicPaths.some(
+    (path) => pathname === path || pathname.startsWith(path + "/")
+  );
+}
+
+function isProtectedRoute(pathname: string): boolean {
+  return protectedPaths.some((path) => pathname.startsWith(path));
+}
+
+export default async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (isProtectedRoute(pathname)) {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.redirect(new URL("/sign-in", request.url));
+    }
+    return NextResponse.next();
   }
 
-  if (!isPublicRoute(req)) {
-    await auth.protect();
+  if (!isPublicRoute(pathname)) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
-});
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [

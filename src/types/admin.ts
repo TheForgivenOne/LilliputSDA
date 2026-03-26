@@ -1,5 +1,3 @@
-import type { Id } from "@/convex/_generated/dataModel";
-
 export type {
   ChurchEvent,
   Announcement,
@@ -16,7 +14,7 @@ export type MinistryCategory = "youth" | "adult" | "family" | "music";
 export type Department = "pastoral" | "elder" | "deacon" | "music" | "youth" | "children" | "hospital" | "media";
 
 export interface AdminEvent {
-  _id: Id<"events">;
+  _id: string;
   _creationTime: number;
   title: string;
   description: string;
@@ -30,7 +28,7 @@ export interface AdminEvent {
 }
 
 export interface AdminAnnouncement {
-  _id: Id<"announcements">;
+  _id: string;
   _creationTime: number;
   title: string;
   content: string;
@@ -43,20 +41,20 @@ export interface AdminAnnouncement {
 }
 
 export interface AdminMinistry {
-  _id: Id<"ministries">;
+  _id: string;
   _creationTime: number;
   name: string;
   description: string;
   category: MinistryCategory;
   imageUrl?: string;
-  leaderId?: Id<"staff">;
+  leaderId?: string;
   meetingTime?: string;
   meetingLocation?: string;
   order: number;
 }
 
 export interface AdminStaff {
-  _id: Id<"staff">;
+  _id: string;
   _creationTime: number;
   name: string;
   title: string;
@@ -71,7 +69,7 @@ export interface AdminStaff {
 }
 
 export interface AdminContactSubmission {
-  _id: Id<"contactSubmissions">;
+  _id: string;
   _creationTime: number;
   name: string;
   email: string;
@@ -81,7 +79,7 @@ export interface AdminContactSubmission {
 }
 
 export interface AdminPrayerRequest {
-  _id: Id<"prayerRequests">;
+  _id: string;
   _creationTime: number;
   name: string;
   email: string;

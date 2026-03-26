@@ -51,8 +51,6 @@ interface ToastProviderProps {
   defaultDuration?: number;
 }
 
-export { ToastProvider, useToast };
-
 function ToastProvider({ children, defaultDuration = 5000 }: ToastProviderProps) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [mounted, setMounted] = useState(false);
@@ -249,9 +247,10 @@ function ToastItem({ toast, onRemove, defaultDuration }: ToastItemProps) {
             style={{ width: `${progress}%` }}
           />
         </div>
-      )}
+        )}
     </div>
   );
 }
 
 export { ToastProvider, useToast };
+

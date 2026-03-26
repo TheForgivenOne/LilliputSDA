@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Use SQLite for local development (no Docker needed)
+// For production PostgreSQL, switch the datasource below and update DATABASE_URL
+datasource db {
+  provider = "sqlite"
+}
+
+// For PostgreSQL use:
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          String    @default("admin")
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  date      DateTime
+  category  String   @default("general")
+  priority  String   @default("normal")
+  imageUrl  String?
+  expiresAt DateTime?
+  isPinned  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id              String   @id @default(cuid())
+  title           String
+  description     String?
+  startDate       DateTime
+  endDate         DateTime?
+  location        String?
+  category        String   @default("service")
+  imageUrl        String?
+  isRecurring     Boolean  @default(false)
+  recurrencePattern String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Ministry {
+  id              String   @id @default(cuid())
+  name            String
+  description     String
+  category        String   @default("adult")
+  imageUrl        String?
+  leaderId        String?
+  meetingTime     String?
+  meetingLocation String?
+  order           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Staff {
+  id         String   @id @default(cuid())
+  name       String
+  title      String
+  role       String?
+  department String?
+  email      String?
+  phone      String?
+  photoUrl   String?
+  bio        String?
+  isActive   Boolean  @default(true)
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ContactSubmission {
+  id      String   @id @default(cuid())
+  name    String
+  email   String
+  message String
+  date    DateTime @default(now())
+  isRead  Boolean  @default(false)
+}
+
+model PrayerRequest {
+  id         String   @id @default(cuid())
+  name       String
+  email      String?
+  request    String
+  isPublic   Boolean  @default(false)
+  isAnswered Boolean  @default(false)
+  date       DateTime @default(now())
+}

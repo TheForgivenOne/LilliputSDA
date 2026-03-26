@@ -10,9 +10,8 @@ import {
   Clock,
   ArrowRight,
 } from "lucide-react";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
+import { useFetch } from "@/hooks/useData";
 
 const statCards = [
   { label: "Upcoming Events", icon: Calendar, href: "/dashboard/events", color: "amber" },
@@ -28,11 +27,33 @@ const quickActions = [
   { label: "Upload Media", href: "/dashboard/media", icon: Heart },
 ];
 
+type DashboardEvent = {
+  id: string;
+  title: string;
+  startDate: string;
+  location?: string;
+  category: string;
+};
+
+type DashboardAnnouncement = {
+  id: string;
+  title: string;
+  content: string;
+  isPinned: boolean;
+};
+
+type DashboardMinistry = {
+  id: string;
+  name: string;
+  meetingTime?: string;
+  category: string;
+};
+
 export default function DashboardPage() {
-  const events = useQuery(api.events.queries.listUpcoming);
-  const announcements = useQuery(api.announcements.queries.listLatest);
-  const staff = useQuery(api.staff.queries.listAll);
-  const ministries = useQuery(api.ministries.queries.listAll);
+  const { data: events } = useFetch<DashboardEvent[]>("/api/events?upcoming=true&limit=5");
+  const { data: announcements } = useFetch<DashboardAnnouncement[]>("/api/announcements?limit=5");
+  const { data: staff } = useFetch<{ id: string }[]>("/api/staff?active=true");
+  const { data: ministries } = useFetch<DashboardMinistry[]>("/api/ministries");
 
   const colorStyles: Record<string, { bg: string; text: string; icon: string }> = {
     amber: { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-600", icon: "bg-amber-500" },
@@ -50,7 +71,6 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map((stat) => {
           const style = colorStyles[stat.color];
@@ -82,7 +102,6 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Quick Actions */}
         <div className="lg:col-span-1">
           <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100 mb-4">
             Quick Actions
@@ -112,7 +131,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Upcoming Events */}
         <div className="lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100">
@@ -129,7 +147,7 @@ export default function DashboardPage() {
             {events && events.length > 0 ? (
               <div className="divide-y divide-stone-200 dark:divide-stone-700">
                 {events.slice(0, 5).map((event) => (
-                  <div key={event._id} className="p-4 flex items-center gap-4">
+                  <div key={event.id} className="p-4 flex items-center gap-4">
                     <div className="flex-shrink-0 text-center bg-amber-100 dark:bg-amber-900/30 rounded-lg p-3">
                       <p className="text-xs font-medium text-amber-600 uppercase">
                         {format(new Date(event.startDate), "MMM")}
@@ -177,7 +195,6 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Recent Announcements */}
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100">
@@ -194,7 +211,7 @@ export default function DashboardPage() {
             {announcements && announcements.length > 0 ? (
               <div className="divide-y divide-stone-200 dark:divide-stone-700">
                 {announcements.slice(0, 5).map((announcement) => (
-                  <div key={announcement._id} className="p-4">
+                  <div key={announcement.id} className="p-4">
                     <div className="flex items-start gap-3">
                       <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30">
                         <Megaphone className="w-4 h-4 text-blue-600" />
@@ -226,7 +243,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Ministries */}
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100">
@@ -243,7 +259,7 @@ export default function DashboardPage() {
             {ministries && ministries.length > 0 ? (
               <div className="divide-y divide-stone-200 dark:divide-stone-700">
                 {ministries.slice(0, 5).map((ministry) => (
-                  <div key={ministry._id} className="p-4 flex items-center gap-4">
+                  <div key={ministry.id} className="p-4 flex items-center gap-4">
                     <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/30">
                       <Heart className="w-4 h-4 text-green-600" />
                     </div>

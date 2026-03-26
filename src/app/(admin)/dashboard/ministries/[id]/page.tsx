@@ -1,22 +1,16 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { useParams } from "next/navigation";
+import { useFetch } from "@/hooks/useData";
 import { MinistryForm } from "@/components/admin/ministries/MinistryForm";
+import type { AdminMinistry } from "@/types/admin";
 
 export default function EditMinistryPage() {
   const params = useParams();
-  const router = useRouter();
   const ministryId = params.id as string;
-  const ministries = useQuery(api.ministries.queries.listAll);
+  const { data: ministries, isLoading } = useFetch<AdminMinistry[]>("/api/ministries");
 
   const ministry = ministries?.find((m) => m._id === ministryId);
-
-  if (!ministry && ministries !== undefined) {
-    router.push("/dashboard/ministries");
-    return null;
-  }
 
   return (
     <div className="max-w-2xl">
@@ -27,13 +21,17 @@ export default function EditMinistryPage() {
         Update ministry details
       </p>
       <div className="bg-white dark:bg-stone-800 rounded-xl p-6 border border-stone-200 dark:border-stone-700">
-        {ministry ? (
-          <MinistryForm ministry={ministry} />
-        ) : (
+        {isLoading ? (
           <div className="animate-pulse space-y-4">
             <div className="h-10 bg-stone-200 dark:bg-stone-700 rounded w-3/4" />
             <div className="h-24 bg-stone-200 dark:bg-stone-700 rounded" />
             <div className="h-10 bg-stone-200 dark:bg-stone-700 rounded w-1/2" />
+          </div>
+        ) : ministry ? (
+          <MinistryForm ministry={ministry} />
+        ) : (
+          <div className="text-center py-12 text-stone-500">
+            Ministry not found
           </div>
         )}
       </div>

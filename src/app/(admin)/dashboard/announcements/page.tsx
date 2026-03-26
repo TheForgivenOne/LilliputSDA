@@ -2,17 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
 import { Plus, Pencil, Trash2, Pin, PinOff, Bell } from "lucide-react";
 import { AdminTable, ConfirmDialog, Column } from "@/components/admin";
 import Button from "@/components/ui/Button";
-import type { Id } from "@/convex/_generated/dataModel";
+import { useFetch, deleteItem } from "@/hooks/useData";
 
 type Announcement = {
-  _id: Id<"announcements">;
-  _creationTime: number;
+  id: string;
+  createdAt: string;
   title: string;
   content: string;
   date: string;
@@ -24,19 +22,20 @@ type Announcement = {
 };
 
 export default function AnnouncementsAdminPage() {
-  const announcements = useQuery(api.announcements.queries.listLatest);
-  const deleteAnnouncement = useMutation(api.announcements.mutations.deleteAnnouncement);
-  const togglePin = useMutation(api.announcements.mutations.togglePin);
+  const { data: announcements, isLoading, refetch } = useFetch<Announcement[]>(
+    "/api/announcements"
+  );
 
-  const [deleteId, setDeleteId] = useState<Id<"announcements"> | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     if (!deleteId) return;
     setIsDeleting(true);
     try {
-      await deleteAnnouncement({ id: deleteId });
+      await deleteItem(`/api/announcements/${deleteId}`);
       setDeleteId(null);
+      refetch();
     } catch (error) {
       console.error("Failed to delete:", error);
     } finally {
@@ -44,9 +43,14 @@ export default function AnnouncementsAdminPage() {
     }
   };
 
-  const handleTogglePin = async (id: Id<"announcements">) => {
+  const handleTogglePin = async (id: string, currentPinned: boolean) => {
     try {
-      await togglePin({ id });
+      await fetch(`/api/announcements/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isPinned: !currentPinned }),
+      });
+      refetch();
     } catch (error) {
       console.error("Failed to toggle pin:", error);
     }
@@ -139,7 +143,7 @@ export default function AnnouncementsAdminPage() {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              handleTogglePin(announcement._id);
+              handleTogglePin(announcement.id, announcement.isPinned);
             }}
             className={`p-2 rounded-lg transition-colors ${
               announcement.isPinned
@@ -154,7 +158,7 @@ export default function AnnouncementsAdminPage() {
             )}
           </button>
           <a
-            href={`/dashboard/announcements/${announcement._id}`}
+            href={`/dashboard/announcements/${announcement.id}`}
             className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
           >
             <Pencil className="w-4 h-4 text-stone-500" />
@@ -162,7 +166,7 @@ export default function AnnouncementsAdminPage() {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              setDeleteId(announcement._id);
+              setDeleteId(announcement.id);
             }}
             className="p-2 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
           >
@@ -189,7 +193,7 @@ export default function AnnouncementsAdminPage() {
         </Link>
       </div>
 
-      {announcements === undefined ? (
+      {isLoading ? (
         <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
           <div className="animate-pulse">
             <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/4 mx-auto mb-4" />
@@ -198,9 +202,9 @@ export default function AnnouncementsAdminPage() {
         </div>
       ) : (
         <AdminTable
-          data={announcements}
+          data={announcements || []}
           columns={columns}
-          keyExtractor={(a) => a._id}
+          keyExtractor={(a) => a.id}
           emptyMessage="No announcements yet. Create your first announcement to get started."
         />
       )}

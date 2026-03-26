@@ -1,16 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
 import { Eye, Check, Mail, Trash2, MessageSquare } from "lucide-react";
 import { AdminTable, ConfirmDialog, Column, Modal } from "@/components/admin";
-import type { Id } from "@/convex/_generated/dataModel";
+import { useFetch, updateItem, deleteItem } from "@/hooks/useData";
 
 type Submission = {
-  _id: Id<"contactSubmissions">;
-  _creationTime: number;
+  id: string;
   name: string;
   email: string;
   message: string;
@@ -19,17 +16,16 @@ type Submission = {
 };
 
 export default function ContactAdminPage() {
-  const submissions = useQuery(api.contact.queries.listAll);
-  const markAsRead = useMutation(api.contact.mutations.markAsRead);
-  const deleteSubmission = useMutation(api.contact.mutations.deleteSubmission);
+  const { data: submissions, isLoading, refetch } = useFetch<Submission[]>("/api/contact");
 
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
-  const [deleteId, setDeleteId] = useState<Id<"contactSubmissions"> | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleMarkAsRead = async (id: Id<"contactSubmissions">) => {
+  const handleMarkAsRead = async (id: string) => {
     try {
-      await markAsRead({ id });
+      await updateItem(`/api/contact/${id}`, { isRead: true });
+      refetch();
     } catch (error) {
       console.error("Failed to mark as read:", error);
     }
@@ -39,8 +35,9 @@ export default function ContactAdminPage() {
     if (!deleteId) return;
     setIsDeleting(true);
     try {
-      await deleteSubmission({ id: deleteId });
+      await deleteItem(`/api/contact/${deleteId}`);
       setDeleteId(null);
+      refetch();
     } catch (error) {
       console.error("Failed to delete:", error);
     } finally {
@@ -136,9 +133,9 @@ export default function ContactAdminPage() {
           >
             <Eye className="w-4 h-4 text-stone-500" />
           </button>
-          {!submission.isRead && (
+            {!submission.isRead && (
             <button
-              onClick={() => handleMarkAsRead(submission._id)}
+              onClick={() => handleMarkAsRead(submission.id)}
               className="p-2 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-lg transition-colors"
               title="Mark as read"
             >
@@ -146,7 +143,7 @@ export default function ContactAdminPage() {
             </button>
           )}
           <button
-            onClick={() => setDeleteId(submission._id)}
+            onClick={() => setDeleteId(submission.id)}
             className="p-2 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
           >
             <Trash2 className="w-4 h-4 text-rose-500" />
@@ -167,7 +164,7 @@ export default function ContactAdminPage() {
         </p>
       </div>
 
-      {submissions === undefined ? (
+      {isLoading ? (
         <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
           <div className="animate-pulse">
             <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/4 mx-auto mb-4" />
@@ -178,7 +175,7 @@ export default function ContactAdminPage() {
         <AdminTable
           data={submissions}
           columns={columns}
-          keyExtractor={(s) => s._id}
+          keyExtractor={(s) => s.id}
           emptyMessage="No contact submissions yet."
         />
       )}
@@ -220,7 +217,7 @@ export default function ContactAdminPage() {
               {!selectedSubmission.isRead && (
                 <button
                   onClick={() => {
-                    if (selectedSubmission) handleMarkAsRead(selectedSubmission._id);
+                    if (selectedSubmission) handleMarkAsRead(selectedSubmission.id);
                     setSelectedSubmission(null);
                   }}
                   className="px-4 py-2 rounded-lg text-sm font-medium bg-green-100 text-green-700 hover:bg-green-200"
@@ -230,7 +227,7 @@ export default function ContactAdminPage() {
               )}
               <button
                 onClick={() => {
-                  setDeleteId(selectedSubmission._id);
+                  setDeleteId(selectedSubmission.id);
                   setSelectedSubmission(null);
                 }}
                 className="px-4 py-2 rounded-lg text-sm font-medium bg-rose-100 text-rose-700 hover:bg-rose-200"

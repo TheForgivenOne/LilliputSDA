@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { Input, Textarea, Select, Checkbox } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-import type { Id } from "@/convex/_generated/dataModel";
+import { useFetch, updateItem } from "@/hooks/useData";
 import type { AnnouncementPriority, AnnouncementCategory } from "@/types/admin";
 
 const priorities: { value: AnnouncementPriority; label: string }[] = [
@@ -22,45 +20,59 @@ const categories: { value: AnnouncementCategory; label: string }[] = [
   { value: "community", label: "Community" },
 ];
 
+type Announcement = {
+  id: string;
+  title: string;
+  content: string;
+  priority: AnnouncementPriority;
+  category: AnnouncementCategory;
+  expiresAt?: string;
+  isPinned: boolean;
+};
+
 export default function EditAnnouncementPage() {
   const params = useParams();
   const router = useRouter();
   const announcementId = params.id as string;
-  const announcements = useQuery(api.announcements.queries.listLatest);
-  const updateAnnouncement = useMutation(api.announcements.mutations.update);
+  
+  const { data: announcements, isLoading } = useFetch<Announcement[]>("/api/announcements");
+  const announcement = announcements?.find((a) => a.id === announcementId);
 
-  const announcement = announcements?.find((a) => a._id === announcementId);
-
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState<{
-    title: string;
-    content: string;
-    priority: AnnouncementPriority;
-    category: AnnouncementCategory;
-    expiresAt: string;
-    isPinned: boolean;
-  }>({
-    title: announcement?.title || "",
-    content: announcement?.content || "",
-    priority: (announcement?.priority as AnnouncementPriority) || "normal",
-    category: (announcement?.category as AnnouncementCategory) || "general",
-    expiresAt: announcement?.expiresAt?.slice(0, 16) || "",
-    isPinned: announcement?.isPinned || false,
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
+    priority: "normal" as AnnouncementPriority,
+    category: "general" as AnnouncementCategory,
+    expiresAt: "",
+    isPinned: false,
   });
+
+  useEffect(() => {
+    if (announcement) {
+      setFormData({
+        title: announcement.title || "",
+        content: announcement.content || "",
+        priority: announcement.priority || "normal",
+        category: announcement.category || "general",
+        expiresAt: announcement.expiresAt?.slice(0, 16) || "",
+        isPinned: announcement.isPinned || false,
+      });
+    }
+  }, [announcement]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setIsLoading(true);
+    setIsLoadingSubmit(true);
 
     try {
-      await updateAnnouncement({
-        id: announcementId as Id<"announcements">,
+      await updateItem(`/api/announcements/${announcementId}`, {
         title: formData.title,
         content: formData.content,
-        priority: formData.priority as "low" | "normal" | "high",
+        priority: formData.priority,
         category: formData.category,
         expiresAt: formData.expiresAt ? new Date(formData.expiresAt).toISOString() : undefined,
         isPinned: formData.isPinned,
@@ -71,11 +83,11 @@ export default function EditAnnouncementPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to update announcement");
     } finally {
-      setIsLoading(false);
+      setIsLoadingSubmit(false);
     }
   };
 
-  if (!announcement && announcements !== undefined) {
+  if (!announcement && !isLoading) {
     router.push("/dashboard/announcements");
     return null;
   }
@@ -145,7 +157,7 @@ export default function EditAnnouncementPage() {
               <Button type="button" variant="outline" onClick={() => router.back()}>
                 Cancel
               </Button>
-              <Button type="submit" isLoading={isLoading}>
+              <Button type="submit" isLoading={isLoadingSubmit}>
                 Update Announcement
               </Button>
             </div>

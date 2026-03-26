@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { useFetch, createItem, updateItem } from "@/hooks/useData";
 import { Input, Textarea, Select } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import type { AdminStaff } from "@/types/admin";
 
 const categories = [
   { value: "youth", label: "Youth" },
@@ -30,9 +30,7 @@ interface MinistryFormProps {
 
 export function MinistryForm({ ministry }: MinistryFormProps) {
   const router = useRouter();
-  const createMinistry = useMutation(api.ministries.mutations.create);
-  const updateMinistry = useMutation(api.ministries.mutations.update);
-  const staffMembers = useQuery(api.staff.queries.listAll);
+  const { data: staffMembers } = useFetch<AdminStaff[]>("/api/staff?active=true");
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,8 +57,7 @@ export function MinistryForm({ ministry }: MinistryFormProps) {
     setIsLoading(true);
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const data: any = {
+      const data = {
         name: formData.name,
         description: formData.description,
         leaderId: formData.leaderId || undefined,
@@ -72,10 +69,9 @@ export function MinistryForm({ ministry }: MinistryFormProps) {
       };
 
       if (ministry?._id) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await updateMinistry({ id: ministry._id as any, ...data });
+        await updateItem(`/api/ministries/${ministry._id}`, data);
       } else {
-        await createMinistry(data);
+        await createItem("/api/ministries", data);
       }
 
       router.push("/dashboard/ministries");

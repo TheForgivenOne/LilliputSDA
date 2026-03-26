@@ -1,2 +1,2 @@
 export { useMediaQuery } from "./useMediaQuery";
-export { useQueryWithError } from "./useQueryWithError";
+export { useFetch, fetchApi, createItem, updateItem, deleteItem } from "./useData";

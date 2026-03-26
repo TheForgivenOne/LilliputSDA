@@ -16,7 +16,6 @@ import {
   LogOut,
 } from "lucide-react";
 import { useState } from "react";
-import { UserButton, useUser } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -33,7 +32,6 @@ const navItems = [
 export function AdminSidebar() {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const { user } = useUser();
 
   return (
     <>
@@ -48,7 +46,6 @@ export function AdminSidebar() {
           </button>
           <span className="font-bold text-lg">Admin</span>
         </div>
-        <UserButton />
       </div>
 
       {/* Mobile Overlay */}
@@ -119,15 +116,6 @@ export function AdminSidebar() {
         {/* Footer */}
         <div className="p-4 border-t border-stone-800">
           <div className="flex items-center justify-between">
-            <div className="hidden lg:flex items-center gap-3">
-              <UserButton />
-              <div className="text-sm">
-                <p className="font-medium truncate max-w-[120px]">
-                  {user?.fullName || user?.emailAddresses[0]?.emailAddress}
-                </p>
-                <p className="text-stone-400 text-xs">Admin</p>
-              </div>
-            </div>
             <Link
               href="/"
               className="flex items-center gap-2 text-stone-400 hover:text-white transition-colors text-sm"

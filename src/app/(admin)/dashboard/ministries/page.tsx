@@ -3,43 +3,23 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { Plus, Pencil, Trash2, Clock, MapPin, User } from "lucide-react";
 import { AdminTable, ConfirmDialog, Column } from "@/components/admin";
 import Button from "@/components/ui/Button";
-import type { Id } from "@/convex/_generated/dataModel";
-
-type Ministry = {
-  _id: Id<"ministries">;
-  _creationTime: number;
-  name: string;
-  description: string;
-  category: "youth" | "adult" | "family" | "music";
-  imageUrl?: string;
-  leaderId?: Id<"staff">;
-  meetingTime?: string;
-  meetingLocation?: string;
-  order: number;
-};
-
-type StaffMember = {
-  _id: Id<"staff">;
-  name: string;
-};
+import { useFetch, deleteItem } from "@/hooks/useData";
+import type { AdminMinistry, AdminStaff } from "@/types/admin";
 
 export default function MinistriesAdminPage() {
   const router = useRouter();
-  const ministries = useQuery(api.ministries.queries.listAll);
-  const staff = useQuery(api.staff.queries.listActive);
-  const deleteMinistry = useMutation(api.ministries.mutations.deleteMinistry);
+  const { data: ministries, isLoading, refetch } = useFetch<AdminMinistry[]>("/api/ministries");
+  const { data: staff } = useFetch<AdminStaff[]>("/api/staff?active=true");
 
-  const [deleteId, setDeleteId] = useState<Id<"ministries"> | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const getLeaderName = (leaderId?: Id<"staff">) => {
+  const getLeaderName = (leaderId?: string) => {
     if (!leaderId) return "Unassigned";
-    const leader = staff?.find((s: StaffMember) => s._id === leaderId);
+    const leader = staff?.find((s) => s._id === leaderId);
     return leader?.name || "Unknown";
   };
 
@@ -47,8 +27,9 @@ export default function MinistriesAdminPage() {
     if (!deleteId) return;
     setIsDeleting(true);
     try {
-      await deleteMinistry({ id: deleteId });
+      await deleteItem(`/api/ministries/${deleteId}`);
       setDeleteId(null);
+      refetch();
     } catch (error) {
       console.error("Failed to delete:", error);
     } finally {
@@ -56,7 +37,7 @@ export default function MinistriesAdminPage() {
     }
   };
 
-  const columns: Column<Ministry>[] = [
+  const columns: Column<AdminMinistry>[] = [
     {
       key: "name",
       header: "Ministry",
@@ -168,7 +149,7 @@ export default function MinistriesAdminPage() {
         </Link>
       </div>
 
-      {ministries === undefined ? (
+      {isLoading ? (
         <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
           <div className="animate-pulse">
             <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/4 mx-auto mb-4" />

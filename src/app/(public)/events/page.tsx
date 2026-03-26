@@ -1,15 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar as CalendarIcon, Bell } from "lucide-react";
-import { useQueryWithError } from "@/hooks";
-import { api } from "@/convex/_generated/api";
 import { EventCard, AnnouncementCard } from "@/components/ui/Card";
 import { PageHero } from "@/components/sections/PageHero";
 import { CategoryFilter } from "@/components/ui/CategoryFilter";
 import { EventsSidebar } from "@/components/sections/EventsSidebar";
 import { DataLoadError } from "@/components/ui/DataLoadError";
 import type { ChurchEvent, Announcement } from "@/types";
+import { STATIC_EVENTS } from "@/config/staticData";
 
 const categories = [
   { id: "all", label: "All Events" },
@@ -31,45 +30,39 @@ export default function EventsPage() {
   const [activeTab, setActiveTab] = useState<"events" | "news">("events");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedAnnouncementCategory, setSelectedAnnouncementCategory] = useState("all");
+  
+  const [events, setEvents] = useState<ChurchEvent[]>([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [eventsLoading, setEventsLoading] = useState(true);
+  const [eventsError, setEventsError] = useState(false);
+  const [announcementsLoading, setAnnouncementsLoading] = useState(true);
+  const [announcementsError, setAnnouncementsError] = useState(false);
 
-  const {
-    data: events,
-    isLoading: eventsLoading,
-    isError: eventsError,
-  } = useQueryWithError(api.events.queries.listUpcoming);
-  const {
-    data: announcements,
-    isLoading: announcementsLoading,
-    isError: announcementsError,
-  } = useQueryWithError(api.announcements.queries.listLatest);
-
-  const staticEvents: ChurchEvent[] = [
-    {
-      _id: "static-1",
-      title: "Global Youth Day",
-      startDate: "2026-03-21T09:00:00",
-      location: "Lilliput SDA Church",
-      category: "youth",
-      description: "Join youth around the world in a day of service and fellowship. A special day dedicated to youth ministry and community outreach."
-    },
-    {
-      _id: "static-2",
-      title: "Convention",
-      startDate: "2026-03-28T10:00:00",
-      location: "Lilliput SDA Church",
-      category: "special",
-      description: "Annual church convention featuring inspiring speakers, worship, and fellowship. All are welcome to attend this special gathering."
-    },
-    {
-      _id: "static-3",
-      title: "LILLIDISCA CAMP",
-      startDate: "2026-04-02T08:00:00",
-      endDate: "2026-04-06T18:00:00",
-      location: "Camp Site",
-      category: "youth",
-      description: "Five-day camp experience for spiritual growth, fellowship, and fun activities. An unforgettable time of learning and bonding."
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [eventsRes, announcementsRes] = await Promise.all([
+          fetch("/api/events"),
+          fetch("/api/announcements"),
+        ]);
+        
+        const eventsData = await eventsRes.json();
+        const announcementsData = await announcementsRes.json();
+        
+        if (Array.isArray(eventsData)) setEvents(eventsData);
+        if (Array.isArray(announcementsData)) setAnnouncements(announcementsData);
+      } catch {
+        setEventsError(true);
+        setAnnouncementsError(true);
+      } finally {
+        setEventsLoading(false);
+        setAnnouncementsLoading(false);
+      }
     }
-  ];
+    fetchData();
+  }, []);
+
+  const staticEvents: ChurchEvent[] = STATIC_EVENTS;
 
   const filteredEvents = events 
     ? [...staticEvents, ...events].filter((event: ChurchEvent) =>

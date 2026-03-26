@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { Input, Textarea, Select, Checkbox } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-import { ChurchEvent } from "@/types";
+import { createItem, updateItem } from "@/hooks/useData";
 
 const categories = [
   { value: "service", label: "Service" },
@@ -21,14 +19,23 @@ const recurrencePatterns = [
 ];
 
 interface EventFormProps {
-  event?: ChurchEvent;
+  event?: {
+    _id: string;
+    title: string;
+    description: string;
+    startDate: string;
+    endDate?: string;
+    location: string;
+    category: "service" | "special" | "youth" | "community";
+    imageUrl?: string;
+    isRecurring: boolean;
+    recurrencePattern?: "weekly" | "monthly";
+  };
   onSuccess?: () => void;
 }
 
 export function EventForm({ event, onSuccess }: EventFormProps) {
   const router = useRouter();
-  const createEvent = useMutation(api.events.mutations.create);
-  const updateEvent = useMutation(api.events.mutations.update);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,8 +58,7 @@ export function EventForm({ event, onSuccess }: EventFormProps) {
     setIsLoading(true);
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const data: any = {
+      const data = {
         title: formData.title,
         description: formData.description,
         startDate: new Date(formData.startDate).toISOString(),
@@ -67,10 +73,9 @@ export function EventForm({ event, onSuccess }: EventFormProps) {
       };
 
       if (event?._id) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await updateEvent({ id: event._id as any, ...data });
+        await updateItem(`/api/events/${event._id}`, data);
       } else {
-        await createEvent(data);
+        await createItem("/api/events", data);
       }
 
       if (onSuccess) {
@@ -143,7 +148,7 @@ export function EventForm({ event, onSuccess }: EventFormProps) {
           required
           options={categories}
           value={formData.category}
-          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+          onChange={(e) => setFormData({ ...formData, category: e.target.value as "service" | "special" | "youth" | "community" })}
         />
       </div>
 

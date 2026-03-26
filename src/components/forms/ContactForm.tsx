@@ -2,8 +2,6 @@
 
 import { useState, FormEvent, useRef } from "react";
 import { Send, Loader2, CheckCircle, AlertCircle, RefreshCw } from "lucide-react";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
 import { Input, Textarea } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import type { FormErrors } from "@/types";
@@ -19,7 +17,6 @@ function validateEmail(email: string): boolean {
 }
 
 export default function ContactForm({ onSuccess, className }: ContactFormProps) {
-  const submitContact = useMutation(api.contact.mutations.submit);
   const formRef = useRef<HTMLFormElement>(null);
 
   const [form, setForm] = useState({
@@ -67,11 +64,19 @@ export default function ContactForm({ onSuccess, className }: ContactFormProps) 
     setSubmitting(true);
 
     try {
-      await submitContact({
-        name: form.name,
-        email: form.email,
-        message: form.message,
+      const response = await fetch("/api/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          message: form.message,
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to send message");
+      }
 
       setSuccess(true);
       setForm({ name: "", email: "", message: "" });

@@ -14,6 +14,7 @@ export interface ChurchEvent {
   description?: string;
   startDate: string;
   endDate?: string;
+  time?: string;
   location?: string;
   category?: string;
   imageUrl?: string;
