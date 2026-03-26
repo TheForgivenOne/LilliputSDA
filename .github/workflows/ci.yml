@@ -29,6 +29,8 @@ jobs:
 
       - name: Generate Convex types
         run: npx convex codegen
+        env:
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
 
       - name: Run TypeScript type check
         run: npx tsc --noEmit
@@ -53,6 +55,8 @@ jobs:
 
       - name: Generate Convex types
         run: npx convex codegen
+        env:
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
 
       - name: Build Next.js application
         run: npm run build
