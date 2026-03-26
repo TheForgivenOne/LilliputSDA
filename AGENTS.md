@@ -90,6 +90,41 @@ tests/              # Playwright tests
 
 ---
 
+## Git Branching Strategy
+
+### Branch Types
+- **`main`** - Production-ready code (protected)
+- **`develop`** - Integration branch for features
+- **`feature/<name>`** - New features (branch from `develop`)
+- **`bugfix/<name>`** - Bug fixes (branch from `develop`)
+- **`release/<version>`** - Release preparation
+- **`hotfix/<name>`** - Critical production fixes (branch from `main`)
+
+### Workflow
+1. Create feature branch from `develop`: `git checkout -b feature/my-feature develop`
+2. Work on feature, commit regularly
+3. Push and create PR to merge into `develop`
+4. When ready for release, merge `develop` into `main`
+
+### Syncing Branches
+To keep branches up to date with `main`:
+```bash
+git checkout develop
+git merge main
+```
+Or rebase for cleaner history:
+```bash
+git checkout develop
+git rebase main
+```
+
+### Key Rules
+- Never commit directly to `main` - use PRs
+- Delete merged feature branches
+- Sync branches with `main` regularly to avoid big merges
+
+---
+
 ## Best Practices
 
 ### Performance
