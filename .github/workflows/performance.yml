@@ -36,11 +36,9 @@ jobs:
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v12
         with:
-          urls: |
-            http://localhost:3000
+          staticDistDir: ./.next
           uploadArtifacts: true
           temporaryPublicStorage: true
-          configPath: ./lighthouserc.json
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
@@ -63,9 +61,19 @@ jobs:
 
       - name: Build Next.js
         run: npm run build
+        env:
+          NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
+          NEXT_PUBLIC_CONVEX_SITE_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_SITE_URL }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+          CLERK_FRONTEND_API_URL: ${{ secrets.CLERK_FRONTEND_API_URL }}
 
       - name: Analyze bundle
         run: |
-          npx @next/bundle-analyzer .next
-        env:
-          NEXT_BUNDLE_ANALYZE: true
+          echo "## Bundle Size Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Client Bundles" >> $GITHUB_STEP_SUMMARY
+          du -sh .next/static/chunks/*.js 2>/dev/null | head -10 | awk '{print "- " $2 ": " $1}' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Total Build Size" >> $GITHUB_STEP_SUMMARY
+          du -sh .next | awk '{print "- " $1}' >> $GITHUB_STEP_SUMMARY

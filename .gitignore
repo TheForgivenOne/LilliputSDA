@@ -54,5 +54,8 @@ next-env.d.ts
 *.swo
 *~
 
+# opencode
+/.opencode/
+
 # convex (generated files committed to enable CI without deploy key)
 # /convex/_generated/
