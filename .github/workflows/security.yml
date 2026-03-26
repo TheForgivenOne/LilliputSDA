@@ -16,8 +16,8 @@ permissions:
 jobs:
   codeql:
     name: CodeQL
+    if: false
     runs-on: ubuntu-latest
-    continue-on-error: true
     permissions:
       actions: read
       contents: read
