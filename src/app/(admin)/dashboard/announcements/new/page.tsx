@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Input, Textarea, Select, Checkbox } from "@/components/ui/Input";
+import { FormPageLayout, FormSection } from "@/components/admin/FormPageLayout";
+import { useToast } from "@/components/ui/Toast";
 import Button from "@/components/ui/Button";
-import { useRouter } from "next/navigation";
 import type { AnnouncementPriority, AnnouncementCategory } from "@/types/admin";
 
 const priorities: { value: AnnouncementPriority; label: string }[] = [
@@ -23,6 +25,7 @@ const categories: { value: AnnouncementCategory; label: string }[] = [
 
 export default function NewAnnouncementPage() {
   const router = useRouter();
+  const { success, error: showError } = useToast();
   const createAnnouncement = useMutation(api.announcements.mutations.create);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -58,10 +61,11 @@ export default function NewAnnouncementPage() {
         expiresAt: formData.expiresAt || undefined,
         isPinned: formData.isPinned,
       });
-
+      success("Announcement created successfully");
       router.push("/dashboard/announcements");
       router.refresh();
     } catch (err) {
+      showError("Failed to create announcement");
       setError(err instanceof Error ? err.message : "Failed to create announcement");
     } finally {
       setIsLoading(false);
@@ -69,21 +73,25 @@ export default function NewAnnouncementPage() {
   };
 
   return (
-    <div className="max-w-2xl">
-      <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100 mb-2">
-        Create Announcement
-      </h1>
-      <p className="text-stone-600 dark:text-stone-400 mb-8">
-        Add a new announcement to the church
-      </p>
-      <div className="bg-white dark:bg-stone-800 rounded-xl p-6 border border-stone-200 dark:border-stone-700">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
-            <div className="p-4 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded-lg text-rose-700 dark:text-rose-400">
-              {error}
-            </div>
-          )}
+    <FormPageLayout
+      title="Create Announcement"
+      description="Add a new announcement to the church"
+      breadcrumbs={[{ label: "Announcements", href: "/dashboard/announcements" }]}
+      isSaving={isLoading}
+      footerActions={
+        <Button type="submit" form="announcement-form" isLoading={isLoading}>
+          Create Announcement
+        </Button>
+      }
+    >
+      <form id="announcement-form" onSubmit={handleSubmit} className="space-y-8">
+        {error && (
+          <div className="p-4 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded-lg text-rose-700 dark:text-rose-400">
+            {error}
+          </div>
+        )}
 
+        <FormSection title="Content">
           <Input
             label="Title"
             required
@@ -100,7 +108,9 @@ export default function NewAnnouncementPage() {
             onChange={(e) => setFormData({ ...formData, content: e.target.value })}
             placeholder="Write your announcement..."
           />
+        </FormSection>
 
+        <FormSection title="Settings" description="Configure how this announcement appears">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Select
               label="Priority"
@@ -131,17 +141,8 @@ export default function NewAnnouncementPage() {
             onChange={(e) => setFormData({ ...formData, isPinned: e.target.checked })}
             helperText="This announcement will appear at the top of the list"
           />
-
-          <div className="flex gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={() => router.back()}>
-              Cancel
-            </Button>
-            <Button type="submit" isLoading={isLoading}>
-              Create Announcement
-            </Button>
-          </div>
-        </form>
-      </div>
-    </div>
+        </FormSection>
+      </form>
+    </FormPageLayout>
   );
 }
