@@ -30,6 +30,7 @@ jobs:
       - name: Generate Convex types
         run: npx convex codegen
         env:
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       - name: Run TypeScript type check
@@ -56,6 +57,7 @@ jobs:
       - name: Generate Convex types
         run: npx convex codegen
         env:
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       - name: Build Next.js application
