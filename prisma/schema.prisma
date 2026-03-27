@@ -50,7 +50,7 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?
-  role          String    @default("admin")
+  role          String    @default("user")
   accounts      Account[]
   sessions      Session[]
   createdAt     DateTime  @default(now())
