@@ -2,8 +2,31 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { compare } from "bcryptjs";
 import { signIn } from "@/auth";
+import { checkRateLimit, authLimiter } from "@/lib/rate-limit";
+
+function getClientIP(request: Request): string {
+  const headers = request.headers.get("x-forwarded-for");
+  if (headers) {
+    return headers.split(",")[0].trim();
+  }
+  const realIp = request.headers.get("x-real-ip");
+  if (realIp) {
+    return realIp;
+  }
+  return "anonymous";
+}
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(authLimiter, ip);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many login attempts. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
     const { email, password } = body;

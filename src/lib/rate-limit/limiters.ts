@@ -17,6 +17,8 @@ function createLimiter(prefix: string, limit: number, window: Duration) {
 export const emailLimiter = createLimiter("email", 5, "1 m");
 export const youtubeLimiter = createLimiter("youtube", 30, "1 m");
 export const scriptureLimiter = createLimiter("scripture", 20, "1 m");
+// Strict rate limit for authentication endpoints to prevent brute-force attacks
+export const authLimiter = createLimiter("auth", 5, "15 m");
 
 export async function checkRateLimit(
   limiter: Ratelimit | null,
