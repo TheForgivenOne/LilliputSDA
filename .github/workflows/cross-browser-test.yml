@@ -36,6 +36,7 @@ jobs:
       - name: Build the app
         run: npm run build
         env:
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET || 'dummy-secret-for-build-and-test' }}
           NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
           NEXT_PUBLIC_CONVEX_SITE_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_SITE_URL }}
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
@@ -46,6 +47,7 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test tests/e2e --project=${{ matrix.browser }}
         env:
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET || 'dummy-secret-for-build-and-test' }}
           NEXT_PUBLIC_API_URL: http://localhost:3000
           NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
           NEXT_PUBLIC_CONVEX_SITE_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_SITE_URL }}
