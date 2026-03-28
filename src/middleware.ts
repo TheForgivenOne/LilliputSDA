@@ -47,25 +47,33 @@ function isProtectedRoute(pathname: string): boolean {
   return protectedPaths.some((path) => pathname.startsWith(path));
 }
 
-export default async function proxy(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (isProtectedRoute(pathname)) {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.redirect(new URL("/sign-in", request.url));
+      const signInUrl = new URL("/sign-in", request.url);
+      signInUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(signInUrl);
     }
 
     // Check if user has admin role
     if (session.user.role !== "admin") {
-      return NextResponse.redirect(new URL("/", request.url));
+      // If unauthorized for admin routes, redirect to home
+      // Only redirect if not already at home to avoid potential loops
+      if (pathname !== "/") {
+        return NextResponse.redirect(new URL("/", request.url));
+      }
     }
 
     return NextResponse.next();
   }
 
   if (!isPublicRoute(pathname)) {
-    return NextResponse.redirect(new URL("/", request.url));
+    if (pathname !== "/") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
   }
 
   return NextResponse.next();
