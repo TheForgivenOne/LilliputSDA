@@ -55,6 +55,12 @@ export default async function proxy(request: NextRequest) {
     if (!session?.user) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
+
+    // Check if user has admin role
+    if (session.user.role !== "admin") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+
     return NextResponse.next();
   }
 
