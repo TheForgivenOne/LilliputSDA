@@ -39,7 +39,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           name: user.name,
           role: user.role,
-        } as any
+        };
       },
     }),
   ],
@@ -49,13 +49,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     jwt({ token, user }) {
       if (user) {
-        token.role = (user as any).role;
+        token.role = user.role;
       }
       return token;
     },
     session({ session, token }) {
       if (session.user) {
-        session.user.role = token.role;
+        session.user.role = token.role as string;
       }
       return session;
     },
