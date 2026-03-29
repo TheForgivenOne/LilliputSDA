@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
+import { emailLimiter, checkRateLimit } from "@/lib/rate-limit/index";
 
 export async function GET(request: NextRequest) {
   try {
@@ -32,6 +33,16 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
+    const { success } = await checkRateLimit(emailLimiter, `contact:${ip}`);
+
+    if (!success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
 
     const submission = await prisma.contactSubmission.create({
