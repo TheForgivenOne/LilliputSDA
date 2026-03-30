@@ -39,10 +39,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           name: user.name,
           role: user.role,
-        } as any
+        }
       },
     }),
   ],
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        token.role = user.role as string
+      }
+      return token
+    },
+    session({ session, token }) {
+      if (session.user) {
+        session.user.role = token.role as string
+      }
+      return session
+    },
+  },
   pages: {
     signIn: "/sign-in",
   },
