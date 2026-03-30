@@ -54,7 +54,7 @@ jobs:
           CLERK_FRONTEND_API_URL: ${{ secrets.CLERK_FRONTEND_API_URL }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-results-${{ matrix.browser }}
