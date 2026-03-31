@@ -47,7 +47,7 @@ function isProtectedRoute(pathname: string): boolean {
   return protectedPaths.some((path) => pathname.startsWith(path));
 }
 
-export default async function proxy(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (isProtectedRoute(pathname)) {
@@ -55,6 +55,14 @@ export default async function proxy(request: NextRequest) {
     if (!session?.user) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
+
+    // Role-based access control for admin routes
+    if (pathname.startsWith("/admin")) {
+      if (session.user.role !== "admin") {
+        return NextResponse.redirect(new URL("/", request.url));
+      }
+    }
+
     return NextResponse.next();
   }
 
