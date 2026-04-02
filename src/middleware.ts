@@ -57,7 +57,8 @@ export default async function proxy(request: NextRequest) {
     }
 
     // RBAC: Restrict admin/dashboard routes to users with 'admin' role
-    if (session.user.role !== "admin") {
+    // Only check role if the path is actually part of admin or dashboard
+    if ((pathname.startsWith("/admin") || pathname.startsWith("/dashboard")) && session.user.role !== "admin") {
       return NextResponse.redirect(new URL("/", request.url));
     }
 

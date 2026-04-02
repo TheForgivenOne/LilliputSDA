@@ -31,5 +31,9 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
+    env: {
+      AUTH_SECRET: process.env.AUTH_SECRET || 'any_secret_for_tests',
+      AUTH_TRUST_HOST: 'true',
+    },
   },
 });
