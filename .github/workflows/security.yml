@@ -54,7 +54,7 @@ jobs:
 
   dependency-review:
     name: Dependency Review
-    if: github.event_name == 'pull_request'
+    if: false # Disable until GitHub Advanced Security is enabled
     runs-on: ubuntu-latest
     permissions:
       actions: read
