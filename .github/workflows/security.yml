@@ -54,7 +54,7 @@ jobs:
 
   dependency-review:
     name: Dependency Review
-    if: false
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       actions: read

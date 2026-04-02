@@ -51,6 +51,7 @@ jobs:
       - name: Build Next.js application
         run: npm run build
         env:
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET || 'fallback-secret-for-build-only' }}
           NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
           CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
