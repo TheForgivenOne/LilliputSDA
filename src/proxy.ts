@@ -47,14 +47,23 @@ function isProtectedRoute(pathname: string): boolean {
   return protectedPaths.some((path) => pathname.startsWith(path));
 }
 
-export default async function proxy(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (isProtectedRoute(pathname)) {
     const session = await auth();
+
+    // Auth check
     if (!session?.user) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
+
+    // Role-Based Access Control (RBAC)
+    // Only 'admin' role can access /admin routes
+    if (pathname.startsWith("/admin") && session.user.role !== "admin") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+
     return NextResponse.next();
   }
 
