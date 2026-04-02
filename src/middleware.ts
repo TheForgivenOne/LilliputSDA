@@ -55,6 +55,12 @@ export default async function proxy(request: NextRequest) {
     if (!session?.user) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
+
+    // RBAC: Restrict admin/dashboard routes to users with 'admin' role
+    if (session.user.role !== "admin") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+
     return NextResponse.next();
   }
 

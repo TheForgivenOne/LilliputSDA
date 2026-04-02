@@ -9,8 +9,10 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient() {
   const dbUrl = process.env.DATABASE_URL || "";
   
-  if (dbUrl.startsWith("postgresql://") || dbUrl.startsWith("postgres://")) {
-    const adapter = new PrismaNeon({ connectionString: dbUrl });
+  if (dbUrl.startsWith("postgresql://") || dbUrl.startsWith("postgres://") || process.env.NODE_ENV === "production") {
+    // During build, we might not have a real connection string, but we must use Neon adapter
+    // because schema.prisma says provider = "postgresql"
+    const adapter = new PrismaNeon({ connectionString: dbUrl || "postgres://localhost:5432/db" }) as any;
     return new PrismaClient({ adapter });
   }
   

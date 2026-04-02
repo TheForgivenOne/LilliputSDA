@@ -1,0 +1,4 @@
+## 2025-05-15 - Privilege Escalation in User Registration
+**Vulnerability:** New users were automatically assigned the 'admin' role upon registration, allowing any registered user to access the administrative dashboard and sensitive API endpoints.
+**Learning:** Defaulting to the highest privilege role in schema definitions or registration logic creates a critical security risk. Next.js middleware (formerly `proxy.ts`) was not being executed because it used a non-standard filename, and it lacked specific role checks even if it had been running.
+**Prevention:** Always use the Principle of Least Privilege for default roles. Ensure Next.js middleware follows the standard `middleware.ts` naming convention and includes explicit Role-Based Access Control (RBAC) checks for sensitive route segments.
