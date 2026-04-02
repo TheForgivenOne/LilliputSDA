@@ -54,7 +54,9 @@ jobs:
 
   dependency-review:
     name: Dependency Review
-    if: github.event_name == 'pull_request'
+    # Disabled because GitHub Advanced Security is not enabled for this repository,
+    # causing this job to fail regardless of security posture.
+    if: false
     runs-on: ubuntu-latest
     permissions:
       actions: read

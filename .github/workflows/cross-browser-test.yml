@@ -8,6 +8,8 @@ on:
 
 jobs:
   test:
+    env:
+      AUTH_TRUST_HOST: "true"
     strategy:
       fail-fast: false
       matrix:
