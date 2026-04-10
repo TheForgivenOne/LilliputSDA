@@ -9,7 +9,7 @@ export interface YouTubeVideo {
 }
 
 export interface ChurchEvent {
-  _id: string;
+  id: string;
   title: string;
   description?: string;
   startDate: string;
@@ -23,7 +23,7 @@ export interface ChurchEvent {
 }
 
 export interface Announcement {
-  _id: string;
+  id: string;
   title: string;
   content: string;
   date: string;
@@ -35,7 +35,7 @@ export interface Announcement {
 }
 
 export interface Ministry {
-  _id?: string;
+  id?: string;
   name: string;
   description?: string;
   leaderId?: string;
@@ -48,7 +48,7 @@ export interface Ministry {
 }
 
 export interface StaffMember {
-  _id: string;
+  id: string;
   department?: string;
   name: string;
   role: string;

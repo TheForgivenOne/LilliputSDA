@@ -19,7 +19,7 @@ export default function MinistriesAdminPage() {
 
   const getLeaderName = (leaderId?: string) => {
     if (!leaderId) return "Unassigned";
-    const leader = staff?.find((s) => s._id === leaderId);
+    const leader = staff?.find((s) => s.id === leaderId);
     return leader?.name || "Unknown";
   };
 
@@ -114,7 +114,7 @@ export default function MinistriesAdminPage() {
       render: (ministry) => (
         <div className="flex items-center justify-end gap-2">
           <Link
-            href={`/dashboard/ministries/${ministry._id}`}
+            href={`/dashboard/ministries/${ministry.id}`}
             className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
           >
             <Pencil className="w-4 h-4 text-stone-500" />
@@ -122,7 +122,7 @@ export default function MinistriesAdminPage() {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              setDeleteId(ministry._id);
+              setDeleteId(ministry.id);
             }}
             className="p-2 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
           >
@@ -160,8 +160,8 @@ export default function MinistriesAdminPage() {
         <AdminTable
           data={ministries}
           columns={columns}
-          keyExtractor={(m) => m._id}
-          onRowClick={(m) => router.push(`/dashboard/ministries/${m._id}`)}
+          keyExtractor={(m) => m.id}
+          onRowClick={(m) => router.push(`/dashboard/ministries/${m.id}`)}
           emptyMessage="No ministries yet. Create your first ministry to get started."
         />
       )}

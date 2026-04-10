@@ -10,7 +10,7 @@ export default function EditMinistryPage() {
   const ministryId = params.id as string;
   const { data: ministries, isLoading } = useFetch<AdminMinistry[]>("/api/ministries");
 
-  const ministry = ministries?.find((m) => m._id === ministryId);
+  const ministry = ministries?.find((m) => m.id === ministryId);
 
   return (
     <div className="max-w-2xl">

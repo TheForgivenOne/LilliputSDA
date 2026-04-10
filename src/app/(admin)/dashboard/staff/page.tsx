@@ -125,7 +125,7 @@ export default function StaffAdminPage() {
       render: (person) => (
         <div className="flex items-center justify-end gap-2">
           <Link
-            href={`/dashboard/staff/${person._id}`}
+            href={`/dashboard/staff/${person.id}`}
             className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
           >
             <Pencil className="w-4 h-4 text-stone-500" />
@@ -133,7 +133,7 @@ export default function StaffAdminPage() {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              setDeleteId(person._id);
+              setDeleteId(person.id);
             }}
             className="p-2 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
           >
@@ -171,8 +171,8 @@ export default function StaffAdminPage() {
         <AdminTable
           data={staff}
           columns={columns}
-          keyExtractor={(person) => person._id}
-          onRowClick={(person) => router.push(`/dashboard/staff/${person._id}`)}
+          keyExtractor={(person) => person.id}
+          onRowClick={(person) => router.push(`/dashboard/staff/${person.id}`)}
           emptyMessage="No staff members yet. Add your first staff member to get started."
         />
       )}

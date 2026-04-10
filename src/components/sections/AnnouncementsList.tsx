@@ -47,7 +47,7 @@ export function AnnouncementsList({ announcements, isLoading, isError }: Announc
     <div className="space-y-6">
       {announcements.slice(0, 2).map((announcement: Announcement) => (
         <AnnouncementCard
-          key={announcement._id}
+          key={announcement.id}
           title={announcement.title}
           content={announcement.content}
           date={announcement.date}

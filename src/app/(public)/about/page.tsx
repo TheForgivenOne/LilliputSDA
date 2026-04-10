@@ -221,7 +221,7 @@ export default function AboutPage() {
               </div>
             ) : pastoralStaff.length > 0 ? (
               pastoralStaff.map((person: StaffMember) => (
-                <StaffCard key={person._id} {...person} />
+                <StaffCard key={person.id} {...person} />
               ))
             ) : (
               <StaffCard {...defaultPastor} />
@@ -239,7 +239,7 @@ export default function AboutPage() {
             ) : churchBoard.length > 0 ? (
               churchBoard.map((person: StaffMember) => (
                 <LeaderCard
-                  key={person._id}
+                  key={person.id}
                   name={person.name}
                   role={person.role}
                   title={person.title}
@@ -269,7 +269,7 @@ export default function AboutPage() {
             ) : departmentHeads.length > 0 ? (
               departmentHeads.map((person: StaffMember) => (
                 <LeaderCard
-                  key={person._id}
+                  key={person.id}
                   name={person.name}
                   role={person.role}
                   title={person.title}
