@@ -1,7 +1,9 @@
 import { defineConfig } from "prisma/config";
+import { config } from "dotenv";
 
-const dbUrl = process.env.DATABASE_URL 
-  || "postgresql://neondb_owner:npg_gKhZVQY5oB3u@ep-morning-haze-amtgrz1f-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
+config({ path: ".env.production" });
+config({ path: ".env.development" });
+config({ path: ".env" });
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -9,6 +11,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: dbUrl,
+    url: process.env.DATABASE_URL!,
   },
 });
