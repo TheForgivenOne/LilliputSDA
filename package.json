@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "prepare": "husky && prisma generate"
+    "prepare": "husky && prisma generate",
+    "db:seed": "npx tsx prisma/seed.ts",
+    "db:seed:prod": "DATABASE_URL=\"postgresql://neondb_owner:npg_gKhZVQY5oB3u@ep-morning-haze-amtgrz1f-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require\" npx tsx prisma/seed.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
@@ -26,6 +28,7 @@
     "lucide-react": "^0.577.0",
     "next": "^16.2.1",
     "next-auth": "^5.0.0-beta.30",
+    "pg": "^8.20.0",
     "prisma": "^7.5.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -47,6 +50,7 @@
     "lighthouse": "^13.0.3",
     "tailwindcss": "^4",
     "to-ico": "^1.0.1",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
