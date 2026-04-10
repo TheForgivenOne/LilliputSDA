@@ -65,7 +65,7 @@ export function EventsList({ events, isLoading, isError }: EventsListProps) {
       )}
       {others.map((event: ChurchEvent) => (
         <EventCard
-          key={event._id}
+          key={event.id}
           title={event.title}
           date={event.startDate}
           time={event.endDate ? `${event.startDate.split('T')[1]?.slice(0, 5)} - ${event.endDate.split('T')[1]?.slice(0, 5)}` : ""}

@@ -14,7 +14,7 @@ export type MinistryCategory = "youth" | "adult" | "family" | "music";
 export type Department = "pastoral" | "elder" | "deacon" | "music" | "youth" | "children" | "hospital" | "media";
 
 export interface AdminEvent {
-  _id: string;
+  id: string;
   _creationTime: number;
   title: string;
   description: string;
@@ -28,7 +28,7 @@ export interface AdminEvent {
 }
 
 export interface AdminAnnouncement {
-  _id: string;
+  id: string;
   _creationTime: number;
   title: string;
   content: string;
@@ -41,7 +41,7 @@ export interface AdminAnnouncement {
 }
 
 export interface AdminMinistry {
-  _id: string;
+  id: string;
   _creationTime: number;
   name: string;
   description: string;
@@ -54,7 +54,7 @@ export interface AdminMinistry {
 }
 
 export interface AdminStaff {
-  _id: string;
+  id: string;
   _creationTime: number;
   name: string;
   title: string;
@@ -69,7 +69,7 @@ export interface AdminStaff {
 }
 
 export interface AdminContactSubmission {
-  _id: string;
+  id: string;
   _creationTime: number;
   name: string;
   email: string;
@@ -79,7 +79,7 @@ export interface AdminContactSubmission {
 }
 
 export interface AdminPrayerRequest {
-  _id: string;
+  id: string;
   _creationTime: number;
   name: string;
   email: string;

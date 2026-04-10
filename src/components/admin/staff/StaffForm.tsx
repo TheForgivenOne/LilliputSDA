@@ -19,7 +19,7 @@ const departments = [
 
 interface StaffFormProps {
   staff?: {
-    _id: string;
+    id: string;
     name: string;
     role?: string;
     title: string;
@@ -71,8 +71,8 @@ export function StaffForm({ staff }: StaffFormProps) {
         isActive: formData.isActive,
       };
 
-      if (staff?._id) {
-        await updateItem(`/api/staff/${staff._id}`, data);
+      if (staff?.id) {
+        await updateItem(`/api/staff/${staff.id}`, data);
       } else {
         await createItem("/api/staff", data);
       }

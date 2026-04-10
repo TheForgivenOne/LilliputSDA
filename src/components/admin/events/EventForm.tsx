@@ -20,7 +20,7 @@ const recurrencePatterns = [
 
 interface EventFormProps {
   event?: {
-    _id: string;
+    id: string;
     title: string;
     description: string;
     startDate: string;
@@ -72,8 +72,8 @@ export function EventForm({ event, onSuccess }: EventFormProps) {
           : undefined,
       };
 
-      if (event?._id) {
-        await updateItem(`/api/events/${event._id}`, data);
+      if (event?.id) {
+        await updateItem(`/api/events/${event.id}`, data);
       } else {
         await createItem("/api/events", data);
       }

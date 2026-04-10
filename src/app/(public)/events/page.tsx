@@ -152,7 +152,7 @@ export default function EventsPage() {
                     <div className="space-y-6 stagger-children">
                       {filteredEvents.map((event: ChurchEvent) => (
                         <EventCard
-                          key={event._id}
+                          key={event.id}
                           title={event.title}
                           date={event.startDate}
                           time={event.endDate ? `${event.startDate.split('T')[1]?.slice(0, 5)} - ${event.endDate.split('T')[1]?.slice(0, 5)}` : undefined}
@@ -267,7 +267,7 @@ export default function EventsPage() {
                             .filter((a: Announcement) => a.priority === "high")
                             .map((announcement: Announcement) => (
                               <AnnouncementCard
-                                key={announcement._id}
+                                key={announcement.id}
                                 title={announcement.title}
                                 content={announcement.content}
                                 date={announcement.date}
@@ -287,7 +287,7 @@ export default function EventsPage() {
                             .filter((a: Announcement) => a.priority !== "high")
                             .map((announcement: Announcement) => (
                               <AnnouncementCard
-                                key={announcement._id}
+                                key={announcement.id}
                                 title={announcement.title}
                                 content={announcement.content}
                                 date={announcement.date}

@@ -10,7 +10,7 @@ export default function EditStaffPage() {
   const staffId = params.id as string;
   const { data: staff, isLoading } = useFetch<AdminStaff[]>("/api/staff");
 
-  const person = staff?.find((s) => s._id === staffId);
+  const person = staff?.find((s) => s.id === staffId);
 
   return (
     <div className="max-w-2xl">

@@ -16,7 +16,7 @@ const categories = [
 
 interface MinistryFormProps {
   ministry?: {
-    _id: string;
+    id: string;
     name: string;
     description: string;
     leaderId?: string;
@@ -48,7 +48,7 @@ export function MinistryForm({ ministry }: MinistryFormProps) {
 
   const staffOptions = [
     { value: "", label: "No leader assigned" },
-    ...(staffMembers?.map((s) => ({ value: s._id, label: s.name })) || []),
+    ...(staffMembers?.map((s) => ({ value: s.id, label: s.name })) || []),
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,8 +68,8 @@ export function MinistryForm({ ministry }: MinistryFormProps) {
         order: formData.order,
       };
 
-      if (ministry?._id) {
-        await updateItem(`/api/ministries/${ministry._id}`, data);
+      if (ministry?.id) {
+        await updateItem(`/api/ministries/${ministry.id}`, data);
       } else {
         await createItem("/api/ministries", data);
       }

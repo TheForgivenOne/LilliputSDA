@@ -10,7 +10,7 @@ export default function EditEventPage() {
   const eventId = params.id as string;
   const { data: events, isLoading } = useFetch<AdminEvent[]>("/api/events");
 
-  const event = events?.find((e) => e._id === eventId);
+  const event = events?.find((e) => e.id === eventId);
 
   return (
     <div className="max-w-2xl">

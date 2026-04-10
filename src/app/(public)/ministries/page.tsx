@@ -137,7 +137,7 @@ export default function MinistriesPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredMinistries.map((ministry: Ministry) => (
                 <MinistryDetailCard
-                  key={ministry._id || ministry.name}
+                  key={ministry.id || ministry.name}
                   name={ministry.name}
                   description={ministry.description || ""}
                   leader={ministry.leader}
