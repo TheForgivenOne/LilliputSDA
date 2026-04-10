@@ -19,13 +19,16 @@ const navItems = [
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = throttle(() => {
-      setIsScrolled(window.scrollY > 20);
-    }, 100);
+      const scrolled = window.scrollY;
+      const threshold = 20;
+      const progress = Math.min(scrolled / threshold, 1);
+      setScrollProgress(progress);
+    }, 16);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -45,52 +48,62 @@ export function Header() {
     };
   }, [isMobileMenuOpen]);
 
+  const p = scrollProgress;
+  const scaleValue = 0.95 + (p * 0.05);
+
   return (
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-          isScrolled
-            ? "bg-white/95 dark:bg-stone-900/95 backdrop-blur-xl shadow-lg shadow-stone-900/5 py-2"
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          p > 0.3 
+            ? "bg-white/95 dark:bg-stone-900/95 backdrop-blur-xl shadow-lg shadow-stone-900/5 py-2" 
             : "bg-transparent py-4"
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 lg:h-16">
             <Link href="/" className="flex items-center gap-3 group" aria-label="Lilliput SDA Church Home">
-              <div className={cn(
-                "relative p-2 rounded-xl transition-all duration-300",
-                isScrolled 
-                  ? "bg-gradient-to-br from-amber-500 to-orange-500 shadow-lg shadow-amber-500/30"
-                  : "bg-white/90 dark:bg-stone-800/90 backdrop-blur-sm"
-              )}>
+              <div 
+                className="relative p-2 rounded-xl transition-all duration-500 ease-out"
+                style={{
+                  transform: `scale(${scaleValue})`,
+                  background: p > 0.3 
+                    ? "linear-gradient(135deg, rgba(245,158,11,0.9), rgba(249,115,22,0.9))"
+                    : "rgba(255,255,255,0.9)",
+                  boxShadow: p > 0.5 ? "0 10px 15px -3px rgba(245,158,11,0.3)" : "none",
+                }}
+              >
                 <Image
                   src="/images/logos/logo-128.png"
                   alt="Lilliput SDA Church"
                   width={40}
                   height={40}
-                  className={cn(
-                    "w-10 h-10 flex-shrink-0 object-contain transition-transform duration-300 group-hover:scale-110",
-                    !isScrolled && "brightness-0 dark:invert"
-                  )}
+                  className="w-10 h-10 flex-shrink-0 object-contain transition-all duration-500 ease-out group-hover:scale-110"
+                  style={{
+                    filter: p < 0.5 ? "brightness(0)" : "brightness(1)",
+                    opacity: p < 0.5 ? 0.9 : 1,
+                  }}
                   priority
                 />
               </div>
               <div className="flex flex-col">
-                <span className={cn(
-                  "text-lg lg:text-xl font-bold font-[family-name:var(--font-playfair)] leading-tight transition-colors duration-300",
-                  isScrolled 
-                    ? "text-stone-900 dark:text-stone-100" 
-                    : "text-white drop-shadow-sm"
-                )}>
+                <span 
+                  className="text-lg lg:text-xl font-bold font-[family-name:var(--font-playfair)] leading-tight transition-all duration-500 ease-out"
+                  style={{
+                    color: p < 0.5 ? "rgba(255,255,255,1)" : "rgba(28,25,23,1)",
+                    textShadow: p < 0.5 ? "0 2px 4px rgba(0,0,0,0.3)" : "none",
+                  }}
+                >
                   Lilliput SDA
                 </span>
-                <span className={cn(
-                  "text-[10px] lg:text-xs tracking-wide uppercase leading-none font-medium transition-colors duration-300",
-                  isScrolled
-                    ? "text-stone-500 dark:text-stone-400"
-                    : "text-white/80 drop-shadow-sm"
-                )}>
+                <span 
+                  className="text-[10px] lg:text-xs tracking-wide uppercase leading-none font-medium transition-all duration-500 ease-out"
+                  style={{
+                    color: p < 0.5 ? "rgba(255,255,255,0.8)" : "rgba(120,113,108,1)",
+                    textShadow: p < 0.5 ? "0 1px 2px rgba(0,0,0,0.2)" : "none",
+                  }}
+                >
                   St. James, Jamaica
                 </span>
               </div>
@@ -102,13 +115,13 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "relative px-4 py-2 text-sm font-semibold transition-all duration-200 rounded-full",
-                    pathname === item.href
-                      ? isScrolled 
+                    "relative px-4 py-2 text-sm font-semibold rounded-full transition-all duration-300",
+                    p > 0.3
+                      ? pathname === item.href
                         ? "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20"
-                        : "text-amber-300 bg-white/10"
-                      : isScrolled
-                        ? "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"
+                        : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"
+                      : pathname === item.href
+                        ? "text-amber-300 bg-white/10"
                         : "text-white/90 hover:text-white hover:bg-white/10"
                   )}
                 >
@@ -123,7 +136,7 @@ export function Header() {
                 size="sm"
                 className={cn(
                   "!bg-transparent",
-                  isScrolled
+                  p > 0.3 
                     ? "!text-stone-600 hover:!text-amber-600 dark:!text-stone-400 dark:hover:!text-amber-400"
                     : "!text-white/90 hover:!text-white hover:!bg-white/10"
                 )}
@@ -133,8 +146,8 @@ export function Header() {
               <Link
                 href="/visit"
                 className={cn(
-                  "px-5 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 shadow-lg hover:-translate-y-0.5 hover:shadow-xl",
-                  isScrolled
+                  "px-5 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:-translate-y-0.5 hover:shadow-xl",
+                  p > 0.3
                     ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-amber-500/25 hover:shadow-amber-500/40"
                     : "bg-white text-amber-600 shadow-white/20 hover:shadow-white/40"
                 )}
@@ -145,12 +158,12 @@ export function Header() {
 
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className={cn(
-                "lg:hidden p-2 -mr-2 rounded-lg transition-colors",
-                isScrolled
-                  ? "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"
-                  : "text-white hover:bg-white/10"
-              )}
+              className="lg:hidden p-2 -mr-2 rounded-lg transition-all duration-500 ease-out"
+              style={{
+                color: p < 0.5 
+                  ? `rgba(255,255,255,${1 - p * 0.2})`
+                  : "rgba(28,25,23,1)",
+              }}
               aria-label="Open menu"
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-menu"

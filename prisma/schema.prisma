@@ -5,7 +5,7 @@ generator client {
 // Use PostgreSQL for production (Neon)
 // For SQLite local dev, use: provider = "sqlite"
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 model Account {
