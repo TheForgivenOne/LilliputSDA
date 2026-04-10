@@ -8,7 +8,6 @@ import { CategoryFilter } from "@/components/ui/CategoryFilter";
 import { EventsSidebar } from "@/components/sections/EventsSidebar";
 import { DataLoadError } from "@/components/ui/DataLoadError";
 import type { ChurchEvent, Announcement } from "@/types";
-import { STATIC_EVENTS } from "@/config/staticData";
 
 const categories = [
   { id: "all", label: "All Events" },
@@ -62,13 +61,9 @@ export default function EventsPage() {
     fetchData();
   }, []);
 
-  const staticEvents: ChurchEvent[] = STATIC_EVENTS;
-
-  const filteredEvents = events 
-    ? [...staticEvents, ...events].filter((event: ChurchEvent) =>
-        selectedCategory === "all" ? true : event.category === selectedCategory
-      )
-    : staticEvents;
+  const filteredEvents = events.filter((event: ChurchEvent) =>
+    selectedCategory === "all" ? true : event.category === selectedCategory
+  );
 
   const filteredAnnouncements = announcements
     ? announcements.filter((announcement: Announcement) =>
@@ -131,24 +126,11 @@ export default function EventsPage() {
                   </h2>
                   
                   {eventsError ? (
-                    <div className="space-y-6">
-                      <DataLoadError
-                        title="Unable to Load Events"
-                        message="We're having trouble loading events. Please check your connection."
-                        variant="card"
-                      />
-                      {staticEvents.map((event: ChurchEvent) => (
-                        <EventCard
-                          key={event._id}
-                          title={event.title}
-                          date={event.startDate}
-                          time={event.endDate ? `${event.startDate.split('T')[1]?.slice(0, 5)} - ${event.endDate.split('T')[1]?.slice(0, 5)}` : undefined}
-                          location={event.location || "TBD"}
-                          description={event.description}
-                          category={event.category as "service" | "special" | "youth" | "community" | undefined}
-                        />
-                      ))}
-                    </div>
+                    <DataLoadError
+                      title="Unable to Load Events"
+                      message="We're having trouble loading events. Please check your connection."
+                      variant="card"
+                    />
                   ) : eventsLoading ? (
                     <div className="space-y-6">
                       {[1, 2, 3].map((i) => (
