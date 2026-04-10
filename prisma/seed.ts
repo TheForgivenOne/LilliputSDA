@@ -2,9 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import { config } from "dotenv";
 
-config({ path: ".env.production" });
-config({ path: ".env.development" });
 config({ path: ".env" });
+config({ path: ".env.development" });
+config({ path: ".env.production" });
 
 const prisma = new PrismaClient({
   adapter: new PrismaNeon({ 

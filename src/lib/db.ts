@@ -3,9 +3,9 @@ import { PrismaNeon } from "@prisma/adapter-neon";
 import { config } from "dotenv";
 
 if (process.env.NODE_ENV !== "production") {
-  config({ path: ".env.production" });
-  config({ path: ".env.development" });
   config({ path: ".env" });
+  config({ path: ".env.development" });
+  config({ path: ".env.production" });
 }
 
 const globalForPrisma = globalThis as unknown as {
