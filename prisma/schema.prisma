@@ -133,6 +133,24 @@ model PrayerRequest {
   date       DateTime @default(now())
 }
 
+model Decision {
+  id          String   @id @default(cuid())
+  name        String
+  email       String?
+  phone       String?
+  decision    String
+  isAdventist String?
+  ageGroup    String?
+  address     String?
+  parish      String?
+  country     String?
+  prayerRequest String?
+  comments    String?
+  source      String?
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
 model Media {
   id          String   @id @default(cuid())
   name        String

@@ -54,6 +54,7 @@ export default function DashboardPage() {
   const { data: announcements } = useFetch<DashboardAnnouncement[]>("/api/announcements?limit=5");
   const { data: staff } = useFetch<{ id: string }[]>("/api/staff?active=true");
   const { data: ministries } = useFetch<DashboardMinistry[]>("/api/ministries");
+  const { data: contactSubmissions } = useFetch<{ id: string }[]>("/api/contact");
 
   const colorStyles: Record<string, { bg: string; text: string; icon: string }> = {
     amber: { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-600", icon: "bg-amber-500" },
@@ -79,6 +80,7 @@ export default function DashboardPage() {
           if (stat.label.includes("Events") && events) count = events.length;
           if (stat.label.includes("Announcements") && announcements) count = announcements.length;
           if (stat.label.includes("Staff") && staff) count = staff.length;
+          if (stat.label.includes("Contact") && contactSubmissions) count = contactSubmissions.length;
 
           return (
             <Link

@@ -100,6 +100,7 @@ export default function DecisionCardPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = useCallback((field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -108,15 +109,27 @@ export default function DecisionCardPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError("");
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const response = await fetch("/api/decision", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    setIsSubmitting(false);
-    setIsSuccess(true);
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to submit decision");
+      }
 
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: "smooth" });
+      setIsSuccess(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to submit. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {
@@ -378,6 +391,11 @@ export default function DecisionCardPage() {
                 variants={itemVariants}
                 className="p-6 sm:p-8 bg-stone-50 dark:bg-stone-800/50 border-t border-stone-200 dark:border-stone-800"
               >
+                {error && (
+                  <div className="mb-4 p-3 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded-lg text-rose-700 dark:text-rose-400 text-sm">
+                    {error}
+                  </div>
+                )}
                 <Button
                   type="submit"
                   variant="primary"

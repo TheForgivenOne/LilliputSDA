@@ -76,6 +76,7 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState("");
   const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -110,32 +111,45 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError("");
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    setIsSubmitting(false);
-    setIsSuccess(true);
-
-    // Reset after showing success
-    setTimeout(() => {
-      setIsSuccess(false);
-      setFormData({
-        name: "",
-        decision: "",
-        isAdventist: "",
-        phone: "",
-        ageGroup: "",
-        address: "",
-        parish: "",
-        country: "",
-        email: "",
-        prayerRequest: "",
-        comments: "",
-        source: "",
+    try {
+      const response = await fetch("/api/decision", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
-      onClose();
-    }, 2000);
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to submit decision");
+      }
+
+      setIsSuccess(true);
+
+      setTimeout(() => {
+        setIsSuccess(false);
+        setFormData({
+          name: "",
+          decision: "",
+          isAdventist: "",
+          phone: "",
+          ageGroup: "",
+          address: "",
+          parish: "",
+          country: "",
+          email: "",
+          prayerRequest: "",
+          comments: "",
+          source: "",
+        });
+        onClose();
+      }, 2000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to submit decision");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const modalContent = (
@@ -404,6 +418,11 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
 
                     {/* Submit Button */}
                     <div className="pt-6 border-t border-stone-200 dark:border-stone-700">
+                      {error && (
+                        <div className="mb-4 p-3 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded-lg text-rose-700 dark:text-rose-400 text-sm">
+                          {error}
+                        </div>
+                      )}
                       <Button
                         type="submit"
                         variant="primary"
