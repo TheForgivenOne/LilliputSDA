@@ -27,7 +27,7 @@ export function MediaGrid() {
         const data = await response.json();
         setMediaList(data);
       }
-    } catch (err) {
+    } catch {
       setError("Failed to load media");
     } finally {
       setLoading(false);
@@ -38,7 +38,7 @@ export function MediaGrid() {
     try {
       await fetch(`/api/media/${id}`, { method: "DELETE" });
       setMediaList(mediaList.filter((m) => m.id !== id));
-    } catch (err) {
+    } catch {
       setError("Failed to delete media");
     }
   };

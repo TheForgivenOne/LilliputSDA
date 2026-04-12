@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PrismaClient } from "@prisma/client"
 import { PrismaNeon } from "@prisma/adapter-neon"
 
@@ -54,7 +55,7 @@ async function main() {
     }
   }
   
-  console.log("\n✓ Database sync complete!")
+  console.log("\nSync complete!")
   await devPrisma.$disconnect()
   await prodPrisma.$disconnect()
 }

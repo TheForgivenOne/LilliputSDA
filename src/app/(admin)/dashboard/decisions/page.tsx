@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { format } from "date-fns";
-import { Eye, Check, Mail, Phone, MessageSquare, Trash2 } from "lucide-react";
+import { Eye, Mail, Phone, MessageSquare, Trash2 } from "lucide-react";
 import { AdminTable, ConfirmDialog, Column, Modal } from "@/components/admin";
 import { useFetch, updateItem, deleteItem } from "@/hooks/useData";
 

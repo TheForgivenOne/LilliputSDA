@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Upload, X, Image, Loader2 } from "lucide-react";
+import { Upload, X, Loader2 } from "lucide-react";
 
 export function MediaUploader() {
   const [file, setFile] = useState<File | null>(null);
