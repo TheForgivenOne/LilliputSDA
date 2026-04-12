@@ -47,19 +47,33 @@ function isProtectedRoute(pathname: string): boolean {
   return protectedPaths.some((path) => pathname.startsWith(path));
 }
 
-export default async function proxy(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (isProtectedRoute(pathname)) {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.redirect(new URL("/sign-in", request.url));
+      const signInUrl = new URL("/sign-in", request.url);
+      signInUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(signInUrl);
     }
+
+    // Check if user has admin role
+    if (session.user.role !== "admin") {
+      // If unauthorized for admin routes, redirect to home
+      // Only redirect if not already at home to avoid potential loops
+      if (pathname !== "/") {
+        return NextResponse.redirect(new URL("/", request.url));
+      }
+    }
+
     return NextResponse.next();
   }
 
   if (!isPublicRoute(pathname)) {
-    return NextResponse.redirect(new URL("/", request.url));
+    if (pathname !== "/") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
   }
 
   return NextResponse.next();
@@ -67,7 +81,14 @@ export default async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    "/(api|trpc)(.*)",
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public (public folder)
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico|public).*)",
   ],
 };
