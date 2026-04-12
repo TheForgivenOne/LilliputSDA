@@ -20,7 +20,7 @@ export const CHURCH_IMAGES = {
    * Hero & Background Images
    */
   hero: {
-    churchBuilding: "/images/logos/current-church.jpg",
+    churchBuilding: "/images/logos/current-church.png",
     churchExterior: "https://images.unsplash.com/photo-1519491050282-cf00c82424b4?w=1920&h=600&fit=crop&auto=format&q=80",
   },
 

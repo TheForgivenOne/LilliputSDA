@@ -16,6 +16,8 @@ import {
   X,
   LogOut,
   ClipboardList,
+  MessageSquare,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -29,6 +31,8 @@ const navItems = [
   { href: "/dashboard/prayers", label: "Prayers", icon: Heart },
   { href: "/dashboard/contact", label: "Contact", icon: Mail },
   { href: "/dashboard/decisions", label: "Decisions", icon: ClipboardList },
+  { href: "/dashboard/testimonials", label: "Testimonials", icon: MessageSquare },
+  { href: "/dashboard/site-content", label: "Site Content", icon: Settings },
 ];
 
 export function AdminSidebar() {

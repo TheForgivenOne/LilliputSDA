@@ -28,8 +28,12 @@ const publicPaths = [
   "/api/auth/register",
   "/api/auth/session",
   "/api/auth/callback",
+  "/api/testimonials",
+  "/api/site-content",
   "/visit",
   "/decision",
+  "/favicons",
+  "/images",
 ];
 
 const protectedPaths = [
@@ -50,28 +54,28 @@ function isProtectedRoute(pathname: string): boolean {
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Debug logging
+  console.log("[Middleware]", pathname);
+
   if (isProtectedRoute(pathname)) {
+    console.log("[Middleware] Protected route, checking auth...");
     const session = await auth();
+    console.log("[Middleware] Session:", session?.user ? "exists" : "none");
+
     if (!session?.user) {
+      console.log("[Middleware] No session, redirecting to sign-in");
       const signInUrl = new URL("/sign-in", request.url);
       signInUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(signInUrl);
     }
 
-    // Check if user has admin role
-    if (session.user.role !== "admin") {
-      // If unauthorized for admin routes, redirect to home
-      // Only redirect if not already at home to avoid potential loops
-      if (pathname !== "/") {
-        return NextResponse.redirect(new URL("/", request.url));
-      }
-    }
-
+    console.log("[Middleware] Session found, allowing access");
     return NextResponse.next();
   }
 
   if (!isPublicRoute(pathname)) {
     if (pathname !== "/") {
+      console.log("[Middleware] Not public, redirecting to home");
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
@@ -81,14 +85,6 @@ export default async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public (public folder)
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico|public).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|public|images|fonts|favicons).*)",
   ],
 };

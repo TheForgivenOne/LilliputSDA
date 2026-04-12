@@ -4,7 +4,7 @@
 
 interface TestimonialCardProps {
   name: string;
-  role: string;
+  role?: string;
   memberSince?: string;
   content: string;
 }
@@ -26,7 +26,7 @@ export function TestimonialCard({ name, role, memberSince, content }: Testimonia
           <div>
             <p className="font-bold text-stone-900 dark:text-stone-100 font-[family-name:var(--font-playfair)]">{name}</p>
             <p className="text-sm text-amber-600 dark:text-amber-400 font-medium">
-              {memberSince ? `Member since ${memberSince}` : role}
+              {memberSince ? `Member since ${memberSince}` : role || "Member"}
             </p>
           </div>
         </div>

@@ -13,6 +13,12 @@ import { LeaderCard, LeaderCardGroup } from "@/components/cards/LeaderCard";
 import { HistoricalSlideshow } from "@/components/cards/HistoricalSlideshow";
 import { PageHero } from "@/components/sections/PageHero";
 import { Timeline } from "@/components/sections/Timeline";
+
+type SiteContent = {
+  key: string;
+  content: string | null;
+  imageUrl: string | null;
+};
 import { MissionVision } from "@/components/sections/MissionVision";
 import { BeliefGrid } from "@/components/cards/BeliefCard";
 import { PageStats } from "@/components/sections/PageStats";
@@ -73,20 +79,30 @@ export default function AboutPage() {
   const [visibleCount, setVisibleCount] = useState(8);
   const [staff, setStaff] = useState<StaffMember[]>([]);
   const [staffLoading, setStaffLoading] = useState(true);
+  const [siteContent, setSiteContent] = useState<SiteContent[]>([]);
+
+  const aboutTitle = siteContent.find(c => c.key === "about_title")?.content;
+  const aboutDescription = siteContent.find(c => c.key === "about_description")?.content;
+  const aboutImage = siteContent.find(c => c.key === "about_image")?.imageUrl;
 
   useEffect(() => {
-    async function fetchStaff() {
+    async function fetchData() {
       try {
-        const res = await fetch("/api/staff");
-        const data = await res.json();
-        if (data.staff) setStaff(data.staff);
+        const [staffRes, contentRes] = await Promise.all([
+          fetch("/api/staff"),
+          fetch("/api/site-content"),
+        ]);
+        const staffData = await staffRes.json();
+        const contentData = await contentRes.json();
+        if (staffData.staff) setStaff(staffData.staff);
+        if (Array.isArray(contentData)) setSiteContent(contentData);
       } catch (err) {
-        console.error("Failed to fetch staff:", err);
+        console.error("Failed to fetch data:", err);
       } finally {
         setStaffLoading(false);
       }
     }
-    fetchStaff();
+    fetchData();
   }, []);
 
   const pastoralStaff = staff.filter((s) => s.department === "Pastoral");
@@ -96,10 +112,10 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen">
       <PageHero
-        title="Growing Together in Faith Since 1974"
-        description="For over 52 years, Lilliput SDA Church has been a beacon of hope and faith in the St. James community, serving God and our neighbors with love."
+        title={aboutTitle || "Growing Together in Faith Since 1974"}
+        description={aboutDescription || "For over 52 years, Lilliput SDA Church has been a beacon of hope and faith in the St. James community, serving God and our neighbors with love."}
         badge={<span className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-stone-300 font-semibold text-sm backdrop-blur-sm"><span className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />Our Story</span>}
-        backgroundImage={CHURCH_IMAGES.history.oldSite[0].src}
+        backgroundImage={aboutImage || CHURCH_IMAGES.history.oldSite[0].src}
         theme="stone"
       />
 

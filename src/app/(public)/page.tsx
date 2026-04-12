@@ -11,9 +11,24 @@ import { QuickMinistryCard } from "@/components/cards/QuickMinistryCard";
 import { CTASection } from "@/components/sections/CTASection";
 import { SermonList, VideoModal } from "@/components/media";
 import { TestimonialCard } from "@/components/cards/TestimonialCard";
+
 import { EventsList } from "@/components/sections/EventsList";
 import { AnnouncementsList } from "@/components/sections/AnnouncementsList";
 import type { YouTubeVideo, ChurchEvent, Announcement } from "@/types";
+
+type SiteContent = {
+  key: string;
+  content: string | null;
+  imageUrl: string | null;
+};
+
+type Testimonial = {
+  id: string;
+  name: string;
+  role: string | null;
+  memberSince: string | null;
+  content: string;
+};
 
 export default function Home() {
   const [events, setEvents] = useState<ChurchEvent[]>([]);
@@ -22,23 +37,35 @@ export default function Home() {
   const [eventsError, setEventsError] = useState(false);
   const [announcementsLoading, setAnnouncementsLoading] = useState(true);
   const [announcementsError, setAnnouncementsError] = useState(false);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [testimonialsLoading, setTestimonialsLoading] = useState(true);
+  const [siteContent, setSiteContent] = useState<SiteContent[]>([]);
   
   const [sermonVideos, setSermonVideos] = useState<YouTubeVideo[]>([]);
   const [videosLoading, setVideosLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null);
 
+  const heroTitle = siteContent.find(c => c.key === "hero_title")?.content;
+  const heroSubtitle = siteContent.find(c => c.key === "hero_subtitle")?.content;
+  const heroDescription = siteContent.find(c => c.key === "hero_description")?.content;
+  const heroImage = siteContent.find(c => c.key === "hero_background")?.imageUrl;
+
   useEffect(() => {
     async function fetchData() {
       try {
-        const [eventsRes, announcementsRes, videosRes] = await Promise.all([
+        const [eventsRes, announcementsRes, videosRes, testimonialsRes, contentRes] = await Promise.all([
           fetch("/api/events"),
           fetch("/api/announcements"),
           fetch("/api/youtube/videos?maxResults=6"),
+          fetch("/api/testimonials"),
+          fetch("/api/site-content"),
         ]);
         
         const eventsData = await eventsRes.json();
         const announcementsData = await announcementsRes.json();
         const videosData = await videosRes.json();
+        const testimonialsData = await testimonialsRes.json();
+        const contentData = await contentRes.json();
         
         if (Array.isArray(eventsData)) setEvents(eventsData);
         else if (!eventsRes.ok) setEventsError(true);
@@ -47,6 +74,10 @@ export default function Home() {
         else if (!announcementsRes.ok) setAnnouncementsError(true);
         
         if (videosData.videos) setSermonVideos(videosData.videos);
+        
+        if (Array.isArray(testimonialsData)) setTestimonials(testimonialsData);
+        
+        if (Array.isArray(contentData)) setSiteContent(contentData);
       } catch {
         setEventsError(true);
         setAnnouncementsError(true);
@@ -54,6 +85,7 @@ export default function Home() {
         setEventsLoading(false);
         setAnnouncementsLoading(false);
         setVideosLoading(false);
+        setTestimonialsLoading(false);
       }
     }
     fetchData();
@@ -72,6 +104,8 @@ export default function Home() {
     </div>
   ), []);
 
+  const imageSrc = CHURCH_IMAGES.congregation.main;
+
   const ministries = useMemo(() => [
     { name: "Youth Ministries", imageUrl: CHURCH_IMAGES.ministries.youth.worship, bgColor: "bg-gradient-to-br from-emerald-500 to-emerald-700", href: "/ministries" },
     { name: "Women's Ministry", imageUrl: CHURCH_IMAGES.ministries.womens.main, bgColor: "bg-gradient-to-br from-rose-300 to-rose-500", href: "/ministries" },
@@ -82,12 +116,12 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <HeroSection
-        title="Welcome to"
-        subtitle="Lilliput SDA Church"
-        description="A warm, welcoming community in the heart of St. James, Jamaica. Join us as we grow together in faith, love, and service."
+        title={heroTitle || "Welcome to"}
+        subtitle={heroSubtitle || "Lilliput SDA Church"}
+        description={heroDescription || "A warm, welcoming community in the heart of St. James, Jamaica. Join us as we grow together in faith, love, and service."}
         badge="Growing together in faith since 1974"
         badgeHref="/about"
-        backgroundImage={CHURCH_IMAGES.hero.churchBuilding}
+        backgroundImage={heroImage || CHURCH_IMAGES.hero.churchBuilding}
         primaryAction={{ label: "Plan Your Visit", href: "/visit" }}
         secondaryAction={{ label: "Watch Online", href: "/media" }}
         quickInfo={quickInfoContent}
@@ -98,7 +132,7 @@ export default function Home() {
         title="A Place to Belong, Believe, and Become"
         description="Founded in 1974, Lilliput SDA Church has been a beacon of hope and faith in the St. James community for over 50 years. With over 700 members, we are a vibrant, welcoming congregation dedicated to sharing God's love through worship, fellowship, and service."
         additionalText="Whether you're a lifelong Adventist or just beginning your spiritual journey, there's a place for you here. Come experience the warmth of our church family."
-        imageSrc={CHURCH_IMAGES.congregation.main}
+        imageSrc={imageSrc}
         imageAlt="Church congregation"
         stats={{ value: "700+", label: "Active Members", position: "bottom-left" }}
         action={{ label: "Learn Our Story", href: "/about" }}
@@ -126,27 +160,40 @@ export default function Home() {
           <SectionHeader
             label="Voices of Faith"
             title="Member Testimonies"
-            href="/testimonies"
-            linkText="View All"
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <TestimonialCard
-              name="Sister Marie T."
-              role="Member"
-              memberSince="2010"
-              content="When I first walked through these doors, I was searching for answers. The warmth and acceptance I found here changed my life forever. Lilliput became my family."
-            />
-            <TestimonialCard
-              name="Brother David J."
-              role="Youth Leader"
-              content="Growing up in this church, I experienced God's love through mentors who invested in my life. Now I have the privilege of pouring into the next generation."
-            />
-            <TestimonialCard
-              name="Sister Angela R."
-              role="Women's Ministry"
-              content="The sisterhood here is powerful. Through prayer and fellowship, I've witnessed lives transformed and bonds formed that will last for eternity."
-            />
-          </div>
+          {testimonialsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bg-white dark:bg-stone-800 rounded-xl p-6 animate-pulse">
+                  <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-1/3 mb-4" />
+                  <div className="h-20 bg-stone-200 dark:bg-stone-700 rounded" />
+                </div>
+              ))}
+            </div>
+          ) : testimonials.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {testimonials.slice(0, 3).map((testimonial) => (
+                <TestimonialCard
+                  key={testimonial.id}
+                  name={testimonial.name}
+                  role={testimonial.role || undefined}
+                  memberSince={testimonial.memberSince || undefined}
+                  content={testimonial.content}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4">
+                <svg className="w-8 h-8 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <p className="text-stone-600 dark:text-stone-400 max-w-md">
+                Member testimonies coming soon. Share your story with us to inspire others.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
