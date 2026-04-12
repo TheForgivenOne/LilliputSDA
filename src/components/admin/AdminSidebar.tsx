@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import {
   LayoutDashboard,
   Calendar,
@@ -14,8 +15,8 @@ import {
   Menu,
   X,
   LogOut,
+  ClipboardList,
 } from "lucide-react";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -27,6 +28,7 @@ const navItems = [
   { href: "/dashboard/media", label: "Media", icon: Image },
   { href: "/dashboard/prayers", label: "Prayers", icon: Heart },
   { href: "/dashboard/contact", label: "Contact", icon: Mail },
+  { href: "/dashboard/decisions", label: "Decisions", icon: ClipboardList },
 ];
 
 export function AdminSidebar() {

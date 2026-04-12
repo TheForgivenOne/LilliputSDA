@@ -67,6 +67,17 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    if (decision === "prayer" && prayerRequest) {
+      await prisma.prayerRequest.create({
+        data: {
+          name,
+          email: email || null,
+          request: prayerRequest,
+          isPublic: false,
+        },
+      });
+    }
+
     return NextResponse.json(newDecision, { status: 201 });
   } catch (error) {
     console.error("Failed to create decision:", error);

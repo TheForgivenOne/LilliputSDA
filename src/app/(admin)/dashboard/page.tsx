@@ -9,6 +9,7 @@ import {
   Heart,
   Clock,
   ArrowRight,
+  ClipboardList,
 } from "lucide-react";
 import { format } from "date-fns";
 import { useFetch } from "@/hooks/useData";
@@ -18,6 +19,7 @@ const statCards = [
   { label: "Active Announcements", icon: Megaphone, href: "/dashboard/announcements", color: "blue" },
   { label: "Staff Members", icon: Users, href: "/dashboard/staff", color: "green" },
   { label: "Contact Submissions", icon: Mail, href: "/dashboard/contact", color: "purple" },
+  { label: "Decisions", icon: ClipboardList, href: "/dashboard/decisions", color: "orange" },
 ];
 
 const quickActions = [
@@ -55,12 +57,14 @@ export default function DashboardPage() {
   const { data: staff } = useFetch<{ id: string }[]>("/api/staff?active=true");
   const { data: ministries } = useFetch<DashboardMinistry[]>("/api/ministries");
   const { data: contactSubmissions } = useFetch<{ id: string }[]>("/api/contact");
+  const { data: decisions } = useFetch<{ id: string }[]>("/api/decision");
 
   const colorStyles: Record<string, { bg: string; text: string; icon: string }> = {
     amber: { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-600", icon: "bg-amber-500" },
     blue: { bg: "bg-blue-100 dark:bg-blue-900/30", text: "text-blue-600", icon: "bg-blue-500" },
     green: { bg: "bg-green-100 dark:bg-green-900/30", text: "text-green-600", icon: "bg-green-500" },
     purple: { bg: "bg-purple-100 dark:bg-purple-900/30", text: "text-purple-600", icon: "bg-purple-500" },
+    orange: { bg: "bg-orange-100 dark:bg-orange-900/30", text: "text-orange-600", icon: "bg-orange-500" },
   };
 
   return (
@@ -72,7 +76,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {statCards.map((stat) => {
           const style = colorStyles[stat.color];
           const Icon = stat.icon;
@@ -81,6 +85,7 @@ export default function DashboardPage() {
           if (stat.label.includes("Announcements") && announcements) count = announcements.length;
           if (stat.label.includes("Staff") && staff) count = staff.length;
           if (stat.label.includes("Contact") && contactSubmissions) count = contactSubmissions.length;
+          if (stat.label.includes("Decisions") && decisions) count = decisions.length;
 
           return (
             <Link
