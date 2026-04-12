@@ -132,3 +132,13 @@ model PrayerRequest {
   isAnswered Boolean  @default(false)
   date       DateTime @default(now())
 }
+
+model Media {
+  id          String   @id @default(cuid())
+  name        String
+  url         String
+  blobPathname String?
+  type        String   @default("image")
+  size        Int?
+  uploadedAt  DateTime @default(now())
+}
