@@ -47,7 +47,7 @@
     "husky": "^9.1.7",
     "lighthouse": "^13.0.3",
     "tailwindcss": "^4",
-    "to-ico": "^1.0.1",
+    "to-ico": "^1.1.5",
     "tsx": "^4.21.0",
     "typescript": "^5"
   }
