@@ -68,9 +68,12 @@ export default function ContactForm({ onSuccess, className }: ContactFormProps) 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          message: form.message,
+          type: "contact",
+          data: {
+            name: form.name,
+            email: form.email,
+            message: form.message,
+          },
         }),
       });
 
@@ -108,7 +111,7 @@ export default function ContactForm({ onSuccess, className }: ContactFormProps) 
             Message Sent!
           </h3>
           <p className="text-stone-600 dark:text-stone-400">
-            Have a question or want to learn more? We&apos;d love to hear from you.
+            Thank you! We&apos;ll be in touch soon.
           </p>
           <Button
             variant="outline"
@@ -176,7 +179,7 @@ export default function ContactForm({ onSuccess, className }: ContactFormProps) 
         <Input
           label="Email"
           type="email"
-          placeholder="your.email@example.com"
+          placeholder="your@email.com"
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           error={errors.email}

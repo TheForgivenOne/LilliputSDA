@@ -4,6 +4,7 @@ import "./globals.css";
 import "@/styles/tokens.css";
 import { DirectionProvider } from "@/components/providers/DirectionProvider";
 import { AuthProvider } from "@/components/providers/AuthProvider";
+import { Analytics } from "@/components/Analytics";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -22,10 +23,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://lilliputsda.org"
+
 export const metadata: Metadata = {
   title: "Lilliput SDA Church | Growing Together in Faith",
   description:
-    "Welcome to Lilliput Seventh-day Adventist Church in St. James, Jamaica. Join us for worship, fellowship, and community service.",
+    "A warm Seventh-day Adventist congregation in Lilliput, Montego Bay, St. James, Jamaica. Saturdays at 11AM.",
+  metadataBase: new URL(BASE_URL),
   keywords: [
     "Lilliput SDA",
     "Seventh-day Adventist",
@@ -36,9 +41,27 @@ export const metadata: Metadata = {
     "Worship",
   ],
   openGraph: {
-    title: "Lilliput SDA Church",
-    description: "Growing together in faith since 1974",
+    title: "Lilliput SDA Church | Growing Together in Faith",
+    description:
+      "A warm Seventh-day Adventist congregation in Lilliput, Montego Bay, St. James, Jamaica. Saturdays at 11AM.",
+    url: "/",
     type: "website",
+    siteName: "Lilliput SDA Church",
+    images: [
+      {
+        url: "/images/logos/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Lilliput SDA Church",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Lilliput SDA Church | Growing Together in Faith",
+    description:
+      "A warm Seventh-day Adventist congregation in Lilliput, Montego Bay, St. James, Jamaica. Saturdays at 11AM.",
+    images: ["/images/logos/og-image.png"],
   },
   icons: {
     icon: [
@@ -53,6 +76,8 @@ export const metadata: Metadata = {
       { url: "/favicons/favicon.svg", type: "image/svg+xml", rel: "icon" },
     ],
   },
+  manifest: "/manifest.json",
+  themeColor: "#1A0800",
 };
 
 export default function RootLayout({
@@ -76,6 +101,7 @@ export default function RootLayout({
             {children}
           </DirectionProvider>
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );

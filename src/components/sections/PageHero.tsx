@@ -37,6 +37,7 @@ export function PageHero({
             fill
             sizes="100vw"
             className="object-cover"
+            priority
           />
         </div>
       )}

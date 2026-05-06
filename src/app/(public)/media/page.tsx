@@ -144,15 +144,6 @@ export default function MediaPage() {
                   />
                 ))}
               </div>
-
-              {filteredVideos.length === 0 && !loading && (
-                <div className="text-center py-16">
-                  <Search className="w-16 h-16 text-stone-300 mx-auto mb-4" />
-                  <p className="text-stone-500 dark:text-stone-400 text-lg">
-                    No videos found matching your search.
-                  </p>
-                </div>
-              )}
             </>
           )}
         </div>

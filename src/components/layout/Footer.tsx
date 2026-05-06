@@ -101,10 +101,10 @@ export function Footer() {
                   <Phone className="w-5 h-5 text-amber-600 dark:text-amber-500 flex-shrink-0" />
                 </div>
                 <a
-                  href="tel:+18761234567"
+                  href={`tel:${process.env.NEXT_PUBLIC_CHURCH_PHONE}`}
                   className="text-stone-600 dark:text-stone-300 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                 >
-                  (876) 123-4567
+                  {process.env.NEXT_PUBLIC_CHURCH_PHONE}
                 </a>
               </div>
               <div className="flex items-center gap-3">

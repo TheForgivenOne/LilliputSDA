@@ -160,7 +160,7 @@ export function StaffForm({ staff }: StaffFormProps) {
           type="tel"
           value={formData.phone}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          placeholder="(555) 123-4567"
+          placeholder={process.env.NEXT_PUBLIC_CHURCH_PHONE || "Phone number"}
         />
       </div>
 

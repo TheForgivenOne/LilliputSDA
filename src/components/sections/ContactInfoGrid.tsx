@@ -20,8 +20,8 @@ const contactInfo = [
     title: "Phone",
     content: (
       <>
-        <a href="tel:+18761234567" className="hover:text-amber-700 dark:hover:text-amber-400">
-          (876) 123-4567
+        <a href={`tel:${process.env.NEXT_PUBLIC_CHURCH_PHONE}`} className="hover:text-amber-700 dark:hover:text-amber-400">
+          {process.env.NEXT_PUBLIC_CHURCH_PHONE}
         </a>
         <br />
         <span className="text-xs text-stone-400">

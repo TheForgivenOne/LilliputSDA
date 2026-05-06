@@ -332,7 +332,7 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
                         required
                         value={formData.phone}
                         onChange={(e) => handleChange("phone", e.target.value)}
-                        placeholder="(876) 123-4567"
+                        placeholder={process.env.NEXT_PUBLIC_CHURCH_PHONE || "Phone number"}
                         leftIcon={<Phone className="w-5 h-5" />}
                       />
 
@@ -379,7 +379,7 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
                         type="email"
                         value={formData.email}
                         onChange={(e) => handleChange("email", e.target.value)}
-                        placeholder="your.email@example.com"
+                        placeholder="your@email.com"
                       />
                     </div>
 

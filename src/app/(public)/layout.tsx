@@ -1,6 +1,6 @@
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { MobileBottomBar } from "@/components/layout/MobileBottomBar";
+import { Header } from "@/components/layout/Header"
+import { Footer } from "@/components/layout/Footer"
+import { MobileBottomBar } from "@/components/layout/MobileBottomBar"
 
 export default function PublicLayout({
   children,

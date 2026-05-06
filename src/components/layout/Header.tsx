@@ -109,7 +109,7 @@ export function Header() {
               </div>
             </Link>
 
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-1">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
@@ -130,7 +130,7 @@ export function Header() {
               ))}
             </nav>
 
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-3">
               <DecisionCardTrigger 
                 variant="ghost" 
                 size="sm"
@@ -158,7 +158,7 @@ export function Header() {
 
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden p-2 -mr-2 rounded-lg transition-all duration-500 ease-out"
+              className="md:hidden p-2 -mr-2 rounded-lg transition-all duration-500 ease-out"
               style={{
                 color: p < 0.5 
                   ? `rgba(255,255,255,${1 - p * 0.2})`
@@ -177,7 +177,7 @@ export function Header() {
       <div
         id="mobile-menu"
         className={cn(
-          "fixed inset-0 z-50 lg:hidden",
+          "fixed inset-0 z-50 md:hidden",
           isMobileMenuOpen ? "pointer-events-auto" : "pointer-events-none"
         )}
         aria-hidden={!isMobileMenuOpen}

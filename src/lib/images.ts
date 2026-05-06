@@ -28,7 +28,7 @@ export const CHURCH_IMAGES = {
    * Congregation & Worship Images
    */
   congregation: {
-    main: "https://images.unsplash.com/photo-1545987796-200677ee1011?w=800&h=600&fit=crop&auto=format&q=80",
+    main: "https://images.unsplash.com/photo-1438032005730-c779502df39b?w=800&h=600&fit=crop&auto=format&q=80",
     worship: "https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800&h=600&fit=crop&auto=format&q=80",
     handsRaised: "https://images.unsplash.com/photo-1507692049790-de58290a4334?w=640&h=360&fit=crop&auto=format&q=80",
     gathering: "https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?w=800&h=600&fit=crop&auto=format&q=80",
@@ -39,16 +39,16 @@ export const CHURCH_IMAGES = {
    */
   ministries: {
     youth: {
-      main: "https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&h=400&fit=crop&auto=format&q=80",
-      worship: "https://images.unsplash.com/photo-1507692049790-de58290a4334?w=400&h=300&fit=crop&auto=format&q=80",
+      main: "https://images.unsplash.com/photo-1594913508822-54188645ed4b?w=600&h=400&fit=crop&auto=format&q=80",
+      worship: "https://images.unsplash.com/photo-1594913508822-54188645ed4b?w=400&h=300&fit=crop&auto=format&q=80",
       camping: "https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?w=600&h=400&fit=crop&auto=format&q=80",
     },
     womens: {
-      main: "https://images.unsplash.com/photo-1515169067868-5387ec356754?w=600&h=400&fit=crop&auto=format&q=80",
-      fellowship: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&h=300&fit=crop&auto=format&q=80",
+      main: "https://images.unsplash.com/photo-1634334867692-bc2ad0e164f2?w=600&h=400&fit=crop&auto=format&q=80",
+      fellowship: "https://images.unsplash.com/photo-1555817128-342e1c8b3101?w=400&h=300&fit=crop&auto=format&q=80",
     },
     mens: {
-      main: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop&auto=format&q=80",
+      main: "https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=600&h=400&fit=crop&auto=format&q=80",
       fellowship: "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?w=400&h=300&fit=crop&auto=format&q=80",
     },
     music: {
@@ -79,14 +79,14 @@ export const CHURCH_IMAGES = {
     oldSite: [
       {
         src: "/images/history/old_church_congregation.jpg",
-        alt: "Old photo of church",
-        caption: "Old photo of church",
+        alt: "Congregation gathered outside the original church building",
+        caption: "Original church building",
         year: "",
       },
       {
         src: "/images/history/current_church_building_2016.jpg",
-        alt: "",
-        caption: "",
+        alt: "Current church building in 2016",
+        caption: "Current church building, 2016",
         year: "",
       },
       {
@@ -115,19 +115,19 @@ export const CHURCH_IMAGES = {
       },
       {
         src: "/images/history/img_20161016_group2.jpg",
-        alt: "Church group photo",
+        alt: "Church members gathered for fellowship, October 2016",
         caption: "Fellowship and community",
         year: "October 16, 2016",
       },
       {
         src: "/images/history/fb_img_2016_group.jpg",
-        alt: "Facebook group photo",
+        alt: "Church community gathering, July 2016",
         caption: "Church community",
         year: "July 26, 2016",
       },
       {
         src: "/images/history/fb_img_2016_worship.jpg",
-        alt: "Facebook worship photo",
+        alt: "Congregation during worship service, September 2016",
         caption: "Worship and praise",
         year: "September 16, 2016",
       },

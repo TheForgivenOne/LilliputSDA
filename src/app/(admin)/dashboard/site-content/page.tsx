@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Image as ImageIcon, FileText, X, Check, Upload, FolderOpen } from "lucide-react";
+import Image from "next/image";
 import Button from "@/components/ui/Button";
 import { useFetch } from "@/hooks/useData";
 import { CHURCH_IMAGES } from "@/lib/utils";
@@ -384,7 +385,14 @@ export default function SiteContentAdminPage() {
                         formData.imageUrl === item.url ? "border-amber-500 ring-2 ring-amber-500" : "border-transparent"
                       }`}
                     >
-                      <img src={item.url} alt={item.name} className="w-full h-full object-cover" />
+                      <Image
+                        src={item.url}
+                        alt={item.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, 33vw"
+                        className="object-cover"
+                        unoptimized
+                      />
                       <div className="absolute bottom-0 left-0 right-0 bg-black/60 px-2 py-1">
                         <p className="text-xs text-white truncate">{item.name}</p>
                       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, MapPin, Play, Calendar } from "lucide-react";
+import { Clock, MapPin, Play } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { CHURCH_IMAGES } from "@/lib/utils";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -155,80 +155,74 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20 lg:py-28 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-50 dark:from-amber-900/10 dark:via-orange-900/10 dark:to-amber-900/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            label="Voices of Faith"
-            title="Member Testimonies"
-          />
-          {testimonialsLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white dark:bg-stone-800 rounded-xl p-6 animate-pulse">
-                  <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-1/3 mb-4" />
-                  <div className="h-20 bg-stone-200 dark:bg-stone-700 rounded" />
-                </div>
-              ))}
-            </div>
-          ) : testimonials.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {testimonials.slice(0, 3).map((testimonial) => (
-                <TestimonialCard
-                  key={testimonial.id}
-                  name={testimonial.name}
-                  role={testimonial.role || undefined}
-                  memberSince={testimonial.memberSince || undefined}
-                  content={testimonial.content}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4">
-                <svg className="w-8 h-8 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
+      {testimonials.length > 0 && (
+        <section className="py-20 lg:py-28 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-50 dark:from-amber-900/10 dark:via-orange-900/10 dark:to-amber-900/10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <SectionHeader
+              label="Voices of Faith"
+              title="Member Testimonies"
+            />
+            {testimonialsLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="bg-white dark:bg-stone-800 rounded-xl p-6 animate-pulse">
+                    <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-1/3 mb-4" />
+                    <div className="h-20 bg-stone-200 dark:bg-stone-700 rounded" />
+                  </div>
+                ))}
               </div>
-              <p className="text-stone-600 dark:text-stone-400 max-w-md">
-                Member testimonies coming soon. Share your story with us to inspire others.
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {testimonials.slice(0, 3).map((testimonial) => (
+                  <TestimonialCard
+                    key={testimonial.id}
+                    name={testimonial.name}
+                    role={testimonial.role || undefined}
+                    memberSince={testimonial.memberSince || undefined}
+                    content={testimonial.content}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
-      <section className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            label="What's Happening"
-            title="Upcoming Events"
-            href="/events"
-            linkText="View Calendar"
-            icon={Calendar}
-          />
-          <EventsList
-            events={events}
-            isLoading={eventsLoading}
-            isError={eventsError}
-          />
-        </div>
-      </section>
+      {!eventsLoading && events.length === 0 ? null : (
+        <section className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <SectionHeader
+              label="What's Happening"
+              title="Upcoming Events"
+              href="/events"
+              linkText="View Calendar"
+            />
+            <EventsList
+              events={events}
+              isLoading={eventsLoading}
+              isError={eventsError}
+            />
+          </div>
+        </section>
+      )}
 
-      <section className="py-20 lg:py-28 bg-white dark:bg-stone-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            label="Church News"
-            title="Latest Announcements"
-            href="/events"
-            linkText="View All"
-          />
-          <AnnouncementsList
-            announcements={announcements}
-            isLoading={announcementsLoading}
-            isError={announcementsError}
-          />
-        </div>
-      </section>
+      {!announcementsLoading && announcements.length === 0 ? null : (
+        <section className="py-20 lg:py-28 bg-white dark:bg-stone-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <SectionHeader
+              label="Church News"
+              title="Latest Announcements"
+              href="/events"
+              linkText="View All"
+            />
+            <AnnouncementsList
+              announcements={announcements}
+              isLoading={announcementsLoading}
+              isError={announcementsError}
+            />
+          </div>
+        </section>
+      )}
 
       <section className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -181,7 +181,7 @@ export default function PrayerRequestForm({ onSuccess, className }: PrayerReques
         <Input
           label="Email"
           type="email"
-          placeholder="your.email@example.com"
+          placeholder="your@email.com"
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           error={errors.email}

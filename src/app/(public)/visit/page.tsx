@@ -251,11 +251,11 @@ export default function VisitPage() {
                   <ChevronRight className="w-5 h-5" />
                 </Link>
                 <a
-                  href="tel:+18761234567"
+                  href={`tel:${process.env.NEXT_PUBLIC_CHURCH_PHONE}`}
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-amber-800/50 text-white rounded-2xl font-semibold hover:bg-amber-800/70 transition-all border border-amber-600/50"
                 >
                   <Phone className="w-5 h-5" />
-                  Call (876) 123-4567
+                  {process.env.NEXT_PUBLIC_CHURCH_PHONE}
                 </a>
               </div>
             </div>

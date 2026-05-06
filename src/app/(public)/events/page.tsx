@@ -162,17 +162,7 @@ export default function EventsPage() {
                         />
                       ))}
                     </div>
-                  ) : (
-                    <div className="text-center py-16 bg-white dark:bg-stone-800 rounded-2xl">
-                      <CalendarIcon className="w-16 h-16 text-stone-300 mx-auto mb-4" />
-                      <p className="text-stone-500 dark:text-stone-400 text-lg font-medium">
-                        No events found in this category.
-                      </p>
-                      <p className="text-sm text-stone-400 dark:text-stone-500 mt-2">
-                        Check back soon for upcoming events.
-                      </p>
-                    </div>
-                  )}
+                  ) : null}
                 </div>
 
                 <div className="space-y-6">
@@ -298,17 +288,7 @@ export default function EventsPage() {
                         </div>
                       </div>
                     </>
-                  ) : (
-                    <div className="text-center py-16 bg-white dark:bg-stone-800 rounded-2xl">
-                      <Bell className="w-16 h-16 text-stone-300 mx-auto mb-4" />
-                      <p className="text-stone-500 dark:text-stone-400 text-lg font-medium">
-                        No announcements found in this category.
-                      </p>
-                      <p className="text-sm text-stone-400 dark:text-stone-500 mt-2">
-                        Check back soon for the latest news.
-                      </p>
-                    </div>
-                  )}
+                  ) : null}
                 </div>
 
                 <div className="space-y-6">

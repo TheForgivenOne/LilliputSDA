@@ -71,7 +71,7 @@ const defaultPastor = {
   bio: "Pastor Hamilton leads the Lilliput SDA Church with a passion for community outreach and spiritual growth. Under his leadership, the church has seen continued growth and expanded ministry programs.",
   photoUrl: "",
   email: "lhamilton@westjamaica.org",
-  phone: "(876) 123-4567",
+  phone: process.env.NEXT_PUBLIC_CHURCH_PHONE || "",
   department: "Pastoral",
 };
 
@@ -263,11 +263,7 @@ export default function AboutPage() {
                   email={person.email}
                 />
               ))
-            ) : (
-              <p className="text-stone-500 dark:text-stone-400 col-span-full text-center py-4">
-                Church board information coming soon.
-              </p>
-            )}
+            ) : null}
           </LeaderCardGroup>
         </div>
       </section>
@@ -293,11 +289,7 @@ export default function AboutPage() {
                   email={person.email}
                 />
               ))
-            ) : (
-              <p className="text-stone-500 dark:text-stone-400 col-span-full text-center py-4">
-                Department head information coming soon.
-              </p>
-            )}
+            ) : null}
           </LeaderCardGroup>
         </div>
       </section>

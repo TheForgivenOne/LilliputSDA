@@ -190,8 +190,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
     }
 
-    if (!process.env.ADMIN_EMAIL || !process.env.PRAYER_TEAM_EMAIL) {
-      console.error("Email configuration missing");
+    if (!process.env.ADMIN_EMAIL || !process.env.PRAYER_TEAM_EMAIL || !process.env.FROM_EMAIL) {
+      console.error("Email configuration missing (ADMIN_EMAIL, PRAYER_TEAM_EMAIL, FROM_EMAIL)");
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
     }
 
@@ -212,14 +212,14 @@ export async function POST(request: Request) {
       
       const [adminResult, thankYouResult] = await Promise.all([
         resend.emails.send({
-          from: "Lilliput SDA <onboarding@resend.dev>",
+          from: process.env.FROM_EMAIL!,
           to: process.env.ADMIN_EMAIL,
           subject: `New Contact Form Submission from ${payload.name}`,
           html: contactNotificationHtml(payload),
           replyTo: payload.email,
         }),
         resend.emails.send({
-          from: "Lilliput SDA <onboarding@resend.dev>",
+          from: process.env.FROM_EMAIL!,
           to: payload.email,
           subject: "We Received Your Message",
           html: thankYouHtml("contact"),
@@ -243,14 +243,14 @@ export async function POST(request: Request) {
       
       const [prayerResult, thankYouResult] = await Promise.all([
         resend.emails.send({
-          from: "Lilliput SDA <onboarding@resend.dev>",
+          from: process.env.FROM_EMAIL!,
           to: process.env.PRAYER_TEAM_EMAIL,
           subject: `Prayer Request from ${payload.name}`,
           html: prayerNotificationHtml(payload),
           replyTo: payload.email,
         }),
         resend.emails.send({
-          from: "Lilliput SDA <onboarding@resend.dev>",
+          from: process.env.FROM_EMAIL!,
           to: payload.email,
           subject: "Prayer Request Received",
           html: thankYouHtml("prayer"),

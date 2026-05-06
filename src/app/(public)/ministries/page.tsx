@@ -83,7 +83,7 @@ export default function MinistriesPage() {
       try {
         const res = await fetch("/api/ministries");
         const data = await res.json();
-        if (data.ministries) setMinistries(data.ministries);
+        if (Array.isArray(data)) setMinistries(data);
       } catch (err) {
         console.error("Failed to fetch ministries:", err);
       } finally {
