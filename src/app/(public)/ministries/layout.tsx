@@ -3,11 +3,11 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Ministries | Lilliput SDA Church",
   description:
-    "Youth, Women, Men, Music and more. Find your place to serve at Lilliput SDA Church in Montego Bay, Jamaica.",
+    "Youth, Women, Men, Music, Health, Community Services, and more. Find your place to serve at Lilliput SDA Church in Montego Bay, Jamaica.",
   openGraph: {
     title: "Ministries | Lilliput SDA Church",
     description:
-      "Youth, Women, Men, Music and more. Find your place to serve at Lilliput SDA Church in Montego Bay, Jamaica.",
+      "Youth, Women, Men, Music, Health, Community Services, and more. Find your place to serve at Lilliput SDA Church in Montego Bay, Jamaica.",
     url: "/ministries",
     type: "website",
     siteName: "Lilliput SDA Church",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ministries | Lilliput SDA Church",
     description:
-      "Youth, Women, Men, Music and more. Find your place to serve at Lilliput SDA Church in Montego Bay, Jamaica.",
+      "Youth, Women, Men, Music, Health, Community Services, and more. Find your place to serve at Lilliput SDA Church in Montego Bay, Jamaica.",
     images: ["/images/logos/og-image.png"],
   },
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { MinistryDetailCard } from "@/components/ui/Card";
 import { CHURCH_IMAGES } from "@/lib/utils";
-import { Users, Music, Heart, BookOpen, Star } from "lucide-react";
+import { Users, Music, Heart, BookOpen, Star, Stethoscope, Hand } from "lucide-react";
 import type { Ministry } from "@/types";
 import { PageHero } from "@/components/sections/PageHero";
 import { CategoryFilter } from "@/components/ui/CategoryFilter";
@@ -63,6 +63,69 @@ const defaultMinistries = [
     imageUrl: CHURCH_IMAGES.ministries.community.main,
     category: "adult" as const,
   },
+  {
+    name: "Health Ministry",
+    description: "Promoting whole-person health through seminars, screenings, and wellness programs. We share God's message of health and wholeness through community health initiatives and lifestyle education.",
+    leader: "Sister Patricia Gordon",
+    meetingTime: "Third Saturday at 2:30 PM",
+    meetingLocation: "Fellowship Hall",
+    imageUrl: CHURCH_IMAGES.ministries.community.main,
+    category: "adult" as const,
+  },
+  {
+    name: "Personal Ministries",
+    description: "Equipping members for personal witness and soul-winning. Through Bible studies, literature distribution, and visitation programs, we share Christ's love one-on-one with our community.",
+    leader: "Brother Samuel Clarke",
+    meetingTime: "Sundays at 10:00 AM",
+    meetingLocation: "Conference Room",
+    imageUrl: CHURCH_IMAGES.ministries.community.main,
+    category: "adult" as const,
+  },
+  {
+    name: "Stewardship Ministry",
+    description: "Teaching biblical principles of faithful stewardship of time, talents, and treasures. We help members understand God's ownership and our role as faithful managers.",
+    leader: "Brother Howard Campbell",
+    meetingTime: "First Sabbath at 2:30 PM",
+    meetingLocation: "Conference Room",
+    imageUrl: CHURCH_IMAGES.ministries.community.main,
+    category: "adult" as const,
+  },
+  {
+    name: "Education Ministry",
+    description: "Supporting academic excellence and Adventist education. We provide scholarships, tutoring, and resources to help our youth succeed in their educational journey.",
+    leader: "Sister Marcia Wright",
+    meetingTime: "Monthly Sabbath at 2:30 PM",
+    meetingLocation: "Fellowship Hall",
+    imageUrl: CHURCH_IMAGES.ministries.community.main,
+    category: "family" as const,
+  },
+  {
+    name: "Family Life Ministry",
+    description: "Strengthening families through marriage enrichment, parenting seminars, and family fellowship events. We believe strong families build a strong church.",
+    leader: "Pastor Lataniel Hamilton",
+    meetingTime: "Quarterly at 2:30 PM",
+    meetingLocation: "Sanctuary",
+    imageUrl: CHURCH_IMAGES.ministries.community.main,
+    category: "family" as const,
+  },
+  {
+    name: "Children's Ministry",
+    description: "Nurturing the spiritual growth of our children through Sabbath School, Vacation Bible School, and age-appropriate activities that teach God's love.",
+    leader: "Sister Karen Daley",
+    meetingTime: "Sabbath School at 9:30 AM",
+    meetingLocation: "Children's Wing",
+    imageUrl: CHURCH_IMAGES.ministries.community.main,
+    category: "family" as const,
+  },
+  {
+    name: "Communications Ministry",
+    description: "Sharing the gospel through media, social media, and technology. Our team manages the website, live streaming, photography, and all church communications.",
+    leader: "Brother Andre Johnson",
+    meetingTime: "Monthly at 5:00 PM",
+    meetingLocation: "Media Room",
+    imageUrl: CHURCH_IMAGES.ministries.community.main,
+    category: "youth" as const,
+  },
 ];
 
 const ministryCategories = [
@@ -71,6 +134,8 @@ const ministryCategories = [
   { id: "adult", label: "Adult", icon: Heart },
   { id: "family", label: "Family", icon: BookOpen },
   { id: "music", label: "Music", icon: Music },
+  { id: "health", label: "Health", icon: Stethoscope },
+  { id: "service", label: "Community", icon: Hand },
 ];
 
 export default function MinistriesPage() {

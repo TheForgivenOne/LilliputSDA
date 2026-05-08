@@ -10,7 +10,6 @@ import {
   Shirt,
   Baby,
   ChevronRight,
-  Phone,
 } from "lucide-react";
 import Link from "next/link";
 import { MapEmbed } from "@/components/sections/MapEmbed";
@@ -21,7 +20,7 @@ import { PageHero } from "@/components/sections/PageHero";
 
 const scheduleItems = [
   {
-    time: "9:00 AM",
+    time: "9:30 AM",
     title: "Sabbath School",
     description: "Bible study & fellowship",
     icon: Clock,
@@ -151,7 +150,7 @@ export default function VisitPage() {
                 <InfoItem icon={Car} title="Landmarks">
                   <p className="text-stone-600 dark:text-stone-400">
                     Near Lilliput Primary School<br />
-                    About 15 minutes from downtown Montego Bay
+                    Near the Lilliput community
                   </p>
                 </InfoItem>
               </div>
@@ -250,13 +249,6 @@ export default function VisitPage() {
                   Contact Us
                   <ChevronRight className="w-5 h-5" />
                 </Link>
-                <a
-                  href={`tel:${process.env.NEXT_PUBLIC_CHURCH_PHONE}`}
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-amber-800/50 text-white rounded-2xl font-semibold hover:bg-amber-800/70 transition-all border border-amber-600/50"
-                >
-                  <Phone className="w-5 h-5" />
-                  {process.env.NEXT_PUBLIC_CHURCH_PHONE}
-                </a>
               </div>
             </div>
           </div>

@@ -104,7 +104,7 @@ export default function Home() {
     </div>
   ), []);
 
-  const imageSrc = CHURCH_IMAGES.congregation.main;
+  const imageSrc = "/images/history/current_church_building_2016.jpg";
 
   const ministries = useMemo(() => [
     { name: "Youth Ministries", imageUrl: CHURCH_IMAGES.ministries.youth.worship, bgColor: "bg-gradient-to-br from-emerald-500 to-emerald-700", href: "/ministries" },
@@ -130,11 +130,11 @@ export default function Home() {
       <AboutSplit
         label="About Our Church"
         title="A Place to Belong, Believe, and Become"
-        description="Founded in 1974, Lilliput SDA Church has been a beacon of hope and faith in the St. James community for over 50 years. With over 700 members, we are a vibrant, welcoming congregation dedicated to sharing God's love through worship, fellowship, and service."
+        description="Founded in 1974, Lilliput SDA Church has been a beacon of hope and faith in the St. James community for over 50 years. Today we are a vibrant congregation of 463 members dedicated to sharing God's love through worship, fellowship, and service."
         additionalText="Whether you're a lifelong Adventist or just beginning your spiritual journey, there's a place for you here. Come experience the warmth of our church family."
         imageSrc={imageSrc}
         imageAlt="Church congregation"
-        stats={{ value: "700+", label: "Active Members", position: "bottom-left" }}
+        stats={{ value: "463", label: "Active Members", position: "bottom-left" }}
         action={{ label: "Learn Our Story", href: "/about" }}
       />
 

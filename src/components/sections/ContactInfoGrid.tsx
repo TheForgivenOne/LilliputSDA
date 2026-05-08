@@ -1,4 +1,4 @@
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { MapPin, Mail, Clock } from "lucide-react";
 import { ContactInfoCard } from "@/components/ui/ContactInfoCard";
 
 const contactInfo = [
@@ -12,21 +12,6 @@ const contactInfo = [
         Montego Bay, St. James
         <br />
         Jamaica
-      </>
-    ),
-  },
-  {
-    icon: Phone,
-    title: "Phone",
-    content: (
-      <>
-        <a href={`tel:${process.env.NEXT_PUBLIC_CHURCH_PHONE}`} className="hover:text-amber-700 dark:hover:text-amber-400">
-          {process.env.NEXT_PUBLIC_CHURCH_PHONE}
-        </a>
-        <br />
-        <span className="text-xs text-stone-400">
-          Mon-Fri, 9:00 AM - 4:00 PM
-        </span>
       </>
     ),
   },
@@ -47,9 +32,11 @@ const contactInfo = [
     title: "Office Hours",
     content: (
       <>
-        Monday - Friday
+        By Appointment
         <br />
-        9:00 AM - 4:00 PM
+        <span className="text-xs text-stone-400">
+          Contact us to schedule a visit
+        </span>
       </>
     ),
   },
@@ -57,7 +44,7 @@ const contactInfo = [
 
 export function ContactInfoGrid() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {contactInfo.map((info) => (
         <ContactInfoCard key={info.title} icon={info.icon} title={info.title}>
           {info.content}

@@ -25,12 +25,12 @@ import { PageStats } from "@/components/sections/PageStats";
 import type { StaffMember } from "@/types";
 
 const milestones = [
-  { year: "1974", title: "Foundation", description: "Brother George Heavens and Miss Catherine Morrison initiate the work in Lilliput District. First Sunday School held at Mr. Lawrence Lee's home." },
+  { year: "1974", title: "Foundation", description: "Brother George Heavens and Miss Catherine Morrison initiated the work in Lilliput District. First Sunday School held at Mr. Lawrence Lee's home." },
   { year: "1975", title: "First Building", description: "First zinc church structure built by the roadside with foundation members including Sister Thelma Lee and Brother Renford McIntosh." },
-  { year: "1985", title: "Church Organized", description: "Church officially organized with 400 members after crusade by Pastor Oliphant." },
+  { year: "1985", title: "Church Organized", description: "Church officially organized with 400 members after a crusade by Pastor Oliphant." },
   { year: "1988", title: "Hurricane Gilbert", description: "Hurricane Gilbert destroys the building. Church rebuilt with canvas and continued serving the community." },
   { year: "1993", title: "Relocation", description: "Relocated to current site after being forced out by Urban Development Corporation." },
-  { year: "2026", title: "52 Years of Faith", description: "Celebrating 52 years of ministry with over 700 active members, multiple daughter churches, and continued community impact." },
+  { year: "2026", title: "52 Years of Faith", description: "Celebrating 52 years of ministry with 463 members, 5 churches in the Lilliput District, and continued community impact." },
 ];
 
 const beliefs = [
@@ -71,7 +71,7 @@ const defaultPastor = {
   bio: "Pastor Hamilton leads the Lilliput SDA Church with a passion for community outreach and spiritual growth. Under his leadership, the church has seen continued growth and expanded ministry programs.",
   photoUrl: "",
   email: "lhamilton@westjamaica.org",
-  phone: process.env.NEXT_PUBLIC_CHURCH_PHONE || "",
+  phone: "",
   department: "Pastoral",
 };
 
@@ -134,7 +134,7 @@ export default function AboutPage() {
                   The Lilliput Seventh-day Adventist Church story began in 1974 through a divine 
                   conversation between Brother George Heavens and Miss Catherine Morrison. What 
                   started as a small Sunday School gathering in Mr. Lawrence Lee&apos;s home has 
-                  grown into a vibrant congregation of over 700 members.
+                  grown into a vibrant congregation of 463 members.
                 </p>
                 <p className="text-stone-600 dark:text-stone-300 leading-relaxed mb-4">
                   Through trials and triumphs—including surviving Hurricane Gilbert in 1988 and 
@@ -144,7 +144,7 @@ export default function AboutPage() {
                 </p>
                 <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
                   Under the leadership of Pastor Lataniel Hamilton and the West Jamaica Conference, 
-                  we have expanded our ministry to include daughter churches and community outreach 
+                  we have expanded our ministry across the Lilliput District and community outreach 
                   programs that touch lives throughout St. James.
                 </p>
               </div>
@@ -297,8 +297,8 @@ export default function AboutPage() {
       <PageStats
         stats={[
           { number: "52+", label: "Years of Ministry" },
-          { number: "700+", label: "Active Members" },
-          { number: "5", label: "Daughter Churches" },
+          { number: "463", label: "Active Members" },
+          { number: "5", label: "Churches in Lilliput District" },
           { number: "10+", label: "Active Ministries" },
         ]}
       />

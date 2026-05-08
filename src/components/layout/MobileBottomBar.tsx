@@ -1,6 +1,6 @@
 "use client";
 
-import { Phone, MapPin, Heart } from "lucide-react";
+import { Mail, MapPin, Heart } from "lucide-react";
 import Link from "next/link";
 
 export function MobileBottomBar() {
@@ -18,11 +18,11 @@ export function MobileBottomBar() {
         </a>
 
         <a
-          href={`tel:${process.env.NEXT_PUBLIC_CHURCH_PHONE}`}
+          href="mailto:lhamilton@westjamaica.org"
           className="flex flex-col items-center justify-center gap-1 text-stone-600 dark:text-stone-400 hover:text-amber-700 dark:hover:text-amber-400 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors"
         >
-          <Phone className="w-5 h-5" />
-          <span className="text-xs font-medium">Call</span>
+          <Mail className="w-5 h-5" />
+          <span className="text-xs font-medium">Email</span>
         </a>
 
         <Link

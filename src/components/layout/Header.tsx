@@ -58,7 +58,7 @@ export function Header() {
           "fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
           p > 0.3 
             ? "bg-white/95 dark:bg-stone-900/95 backdrop-blur-xl shadow-lg shadow-stone-900/5 py-2" 
-            : "bg-transparent py-4"
+            : "bg-stone-900/10 dark:bg-transparent backdrop-blur-sm py-4"
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -81,8 +81,8 @@ export function Header() {
                   height={40}
                   className="w-10 h-10 flex-shrink-0 object-contain transition-all duration-500 ease-out group-hover:scale-110"
                   style={{
-                    filter: p < 0.5 ? "brightness(0)" : "brightness(1)",
-                    opacity: p < 0.5 ? 0.9 : 1,
+                    filter: p < 0.3 ? "brightness(0) invert(1)" : "brightness(1)",
+                    opacity: p < 0.3 ? 0.95 : 1,
                   }}
                   priority
                 />
@@ -91,8 +91,8 @@ export function Header() {
                 <span 
                   className="text-lg lg:text-xl font-bold font-[family-name:var(--font-playfair)] leading-tight transition-all duration-500 ease-out"
                   style={{
-                    color: p < 0.5 ? "rgba(255,255,255,1)" : "rgba(28,25,23,1)",
-                    textShadow: p < 0.5 ? "0 2px 4px rgba(0,0,0,0.3)" : "none",
+                    color: p < 0.3 ? "rgba(255,255,255,1)" : "rgba(28,25,23,1)",
+                    textShadow: p < 0.3 ? "0 2px 4px rgba(0,0,0,0.3)" : "none",
                   }}
                 >
                   Lilliput SDA
@@ -100,8 +100,8 @@ export function Header() {
                 <span 
                   className="text-[10px] lg:text-xs tracking-wide uppercase leading-none font-medium transition-all duration-500 ease-out"
                   style={{
-                    color: p < 0.5 ? "rgba(255,255,255,0.8)" : "rgba(120,113,108,1)",
-                    textShadow: p < 0.5 ? "0 1px 2px rgba(0,0,0,0.2)" : "none",
+                    color: p < 0.3 ? "rgba(255,255,255,0.8)" : "rgba(120,113,108,1)",
+                    textShadow: p < 0.3 ? "0 1px 2px rgba(0,0,0,0.2)" : "none",
                   }}
                 >
                   St. James, Jamaica
@@ -160,8 +160,8 @@ export function Header() {
               onClick={() => setIsMobileMenuOpen(true)}
               className="md:hidden p-2 -mr-2 rounded-lg transition-all duration-500 ease-out"
               style={{
-                color: p < 0.5 
-                  ? `rgba(255,255,255,${1 - p * 0.2})`
+                color: p < 0.3 
+                  ? `rgba(255,255,255,${1 - p * 0.3})`
                   : "rgba(28,25,23,1)",
               }}
               aria-label="Open menu"

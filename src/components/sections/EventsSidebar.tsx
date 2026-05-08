@@ -49,7 +49,7 @@ export function EventsSidebar({ services = defaultServices }: EventsSidebarProps
         <div className="flex items-start gap-3">
           <MapPin className="w-5 h-5 text-amber-700 dark:text-amber-400 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium text-stone-900 dark-text-stone-100">
+            <p className="font-medium text-stone-900 dark:text-stone-100">
               Lilliput SDA Church
             </p>
             <p className="text-sm text-stone-500 dark:text-stone-400">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Calendar as CalendarIcon, Bell } from "lucide-react";
+import { Bell } from "lucide-react";
 import { EventCard, AnnouncementCard } from "@/components/ui/Card";
 import { PageHero } from "@/components/sections/PageHero";
 import { CategoryFilter } from "@/components/ui/CategoryFilter";
@@ -175,7 +175,7 @@ export default function EventsPage() {
                     </p>
                     <div className="flex gap-3">
                       <a
-                        href="https://facebook.com/lilliputsda"
+                        href="https://facebook.com/p/Seventh-day-Adventist-Church-Lilliput-100064748378477/"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-2.5 bg-white/10 rounded-xl hover:bg-white/20 transition-colors"

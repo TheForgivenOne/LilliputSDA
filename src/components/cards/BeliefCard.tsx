@@ -29,14 +29,27 @@ interface BeliefGridProps {
   onShowMore?: () => void;
 }
 
-export function BeliefGrid({ beliefs, visibleCount }: BeliefGridProps) {
+export function BeliefGrid({ beliefs, visibleCount, onShowMore }: BeliefGridProps) {
   const displayBeliefs = visibleCount !== undefined ? beliefs.slice(0, visibleCount) : beliefs;
+  const isShowingAll = visibleCount !== undefined && visibleCount >= beliefs.length;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {displayBeliefs.map((belief, index) => (
-        <BeliefCard key={`${belief.title}-${index}`} {...belief} />
-      ))}
+    <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {displayBeliefs.map((belief, index) => (
+          <BeliefCard key={`${belief.title}-${index}`} {...belief} />
+        ))}
+      </div>
+      {onShowMore && (
+        <div className="text-center mt-10">
+          <button
+            onClick={onShowMore}
+            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:-translate-y-0.5 transition-all"
+          >
+            {isShowingAll ? "Show Less" : `Show All ${beliefs.length} Beliefs`}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

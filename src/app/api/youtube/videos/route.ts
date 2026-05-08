@@ -141,10 +141,7 @@ export async function GET(request: NextRequest) {
   
   try {
     if (!YOUTUBE_API_KEY) {
-      return NextResponse.json(
-        { error: "YouTube API key not configured", code: "CONFIG_ERROR" },
-        { status: 500 }
-      );
+      throw new Error("YouTube API key not configured");
     }
 
     const { searchParams } = new URL(request.url);

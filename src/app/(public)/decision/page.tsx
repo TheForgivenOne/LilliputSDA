@@ -172,7 +172,7 @@ export default function DecisionCardPage() {
               My Decision Card
             </h1>
             <p className="text-lg sm:text-xl text-amber-100 max-w-2xl mx-auto leading-relaxed">
-              Your friends from the Lilliput Seventh Day Adventist Church are so
+              Your friends from the Lilliput Seventh-day Adventist Church are so
               happy that you were blessed in worship today and have decided to
               make a change in your life.
             </p>
