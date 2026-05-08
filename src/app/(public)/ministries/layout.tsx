@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Youth, Women, Men, Music, Health, Community Services, and more. Find your place to serve at Lilliput SDA Church in Montego Bay, Jamaica.",
   openGraph: {
-    title: "Ministries | Lilliput SDA Church",
+    title: "Ministries & Departments | Lilliput SDA Church",
     description:
       "Youth, Women, Men, Music, Health, Community Services, and more. Find your place to serve at Lilliput SDA Church in Montego Bay, Jamaica.",
     url: "/ministries",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ministries | Lilliput SDA Church",
+    title: "Ministries & Departments | Lilliput SDA Church",
     description:
       "Youth, Women, Men, Music, Health, Community Services, and more. Find your place to serve at Lilliput SDA Church in Montego Bay, Jamaica.",
     images: ["/images/logos/og-image.png"],

@@ -168,8 +168,8 @@ export default function MinistriesPage() {
     <div className="min-h-screen">
       <PageHero
         badge={<span className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-amber-200 font-semibold text-sm backdrop-blur-sm"><span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />Get Involved</span>}
-        title="Our Ministries"
-        description="Discover your place in our church family. We have ministries for every age and interest, all focused on growing together in Christ."
+        title="Our Ministries & Departments"
+        description="Discover your place in our church family. We have departments for every age and interest, all focused on growing together in Christ."
         theme="amber"
       />
 

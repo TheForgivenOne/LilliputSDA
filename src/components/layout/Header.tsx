@@ -177,8 +177,8 @@ export function Header() {
         <div
           id="mobile-menu"
           className={cn(
-            "fixed inset-0 z-50 md:hidden",
-            isMobileMenuOpen ? "pointer-events-auto" : "pointer-events-none invisible"
+            "fixed inset-0 z-[60] md:hidden",
+            isMobileMenuOpen ? "pointer-events-auto" : "pointer-events-none"
           )}
         >
         <div
@@ -205,14 +205,14 @@ export function Header() {
             </span>
             <button
               onClick={() => setIsMobileMenuOpen(false)}
-              className="p-2 rounded-lg text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+              className="p-2 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
               aria-label="Close menu"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          <nav className="flex-1 px-3 py-6" aria-label="Mobile navigation">
+          <nav className="flex-1 px-3 py-6 overflow-y-auto" aria-label="Mobile navigation">
             <div className="space-y-1">
               {navItems.map((item) => (
                 <Link
@@ -233,7 +233,7 @@ export function Header() {
             </div>
           </nav>
 
-          <div className="p-4 border-t border-stone-100 dark:border-stone-800 space-y-3">
+          <div className="p-4 border-t border-stone-100 dark:border-stone-800 space-y-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
             <DecisionCardTrigger
               variant="outline"
               size="sm"
