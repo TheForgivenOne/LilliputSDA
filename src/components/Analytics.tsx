@@ -3,7 +3,7 @@ import Script from "next/script"
 export function Analytics() {
   const gaId = process.env.NEXT_PUBLIC_GA_ID
 
-  if (!gaId || process.env.NODE_ENV !== "production") {
+  if (!gaId || gaId.includes("XXXXXXXXXX") || process.env.NODE_ENV !== "production") {
     return null
   }
 

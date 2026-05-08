@@ -174,14 +174,13 @@ export function Header() {
         </div>
       </header>
 
-      <div
-        id="mobile-menu"
-        className={cn(
-          "fixed inset-0 z-50 md:hidden",
-          isMobileMenuOpen ? "pointer-events-auto" : "pointer-events-none"
-        )}
-        aria-hidden={!isMobileMenuOpen}
-      >
+        <div
+          id="mobile-menu"
+          className={cn(
+            "fixed inset-0 z-50 md:hidden",
+            isMobileMenuOpen ? "pointer-events-auto" : "pointer-events-none invisible"
+          )}
+        >
         <div
           className={cn(
             "absolute inset-0 bg-stone-900/80 backdrop-blur-sm transition-opacity duration-300",
