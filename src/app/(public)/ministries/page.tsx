@@ -69,7 +69,7 @@ const defaultMinistries = [
     leader: "Sister Patricia Gordon",
     meetingTime: "Third Saturday at 2:30 PM",
     meetingLocation: "Fellowship Hall",
-    imageUrl: CHURCH_IMAGES.ministries.community.main,
+    imageUrl: CHURCH_IMAGES.ministries.health.main,
     category: "adult" as const,
   },
   {
@@ -78,7 +78,7 @@ const defaultMinistries = [
     leader: "Brother Samuel Clarke",
     meetingTime: "Sundays at 10:00 AM",
     meetingLocation: "Conference Room",
-    imageUrl: CHURCH_IMAGES.ministries.community.main,
+    imageUrl: CHURCH_IMAGES.ministries.personal.main,
     category: "adult" as const,
   },
   {
@@ -87,7 +87,7 @@ const defaultMinistries = [
     leader: "Brother Howard Campbell",
     meetingTime: "First Sabbath at 2:30 PM",
     meetingLocation: "Conference Room",
-    imageUrl: CHURCH_IMAGES.ministries.community.main,
+    imageUrl: CHURCH_IMAGES.ministries.stewardship.main,
     category: "adult" as const,
   },
   {
@@ -96,7 +96,7 @@ const defaultMinistries = [
     leader: "Sister Marcia Wright",
     meetingTime: "Monthly Sabbath at 2:30 PM",
     meetingLocation: "Fellowship Hall",
-    imageUrl: CHURCH_IMAGES.ministries.community.main,
+    imageUrl: CHURCH_IMAGES.ministries.education.main,
     category: "family" as const,
   },
   {
@@ -105,7 +105,7 @@ const defaultMinistries = [
     leader: "Pastor Lataniel Hamilton",
     meetingTime: "Quarterly at 2:30 PM",
     meetingLocation: "Sanctuary",
-    imageUrl: CHURCH_IMAGES.ministries.community.main,
+    imageUrl: CHURCH_IMAGES.ministries.family.main,
     category: "family" as const,
   },
   {
@@ -114,7 +114,7 @@ const defaultMinistries = [
     leader: "Sister Karen Daley",
     meetingTime: "Sabbath School at 9:30 AM",
     meetingLocation: "Children's Wing",
-    imageUrl: CHURCH_IMAGES.ministries.community.main,
+    imageUrl: CHURCH_IMAGES.ministries.children.main,
     category: "family" as const,
   },
   {
@@ -123,7 +123,7 @@ const defaultMinistries = [
     leader: "Brother Andre Johnson",
     meetingTime: "Monthly at 5:00 PM",
     meetingLocation: "Media Room",
-    imageUrl: CHURCH_IMAGES.ministries.community.main,
+    imageUrl: CHURCH_IMAGES.ministries.communications.main,
     category: "youth" as const,
   },
 ];

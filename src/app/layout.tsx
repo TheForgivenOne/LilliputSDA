@@ -4,6 +4,7 @@ import "./globals.css";
 import "@/styles/tokens.css";
 import { DirectionProvider } from "@/components/providers/DirectionProvider";
 import { AuthProvider } from "@/components/providers/AuthProvider";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/next"
 import { Analytics } from "@/components/Analytics";
 
 const dmSans = DM_Sans({
@@ -102,6 +103,7 @@ export default function RootLayout({
           </DirectionProvider>
         </AuthProvider>
         <Analytics />
+        <VercelAnalytics />
       </body>
     </html>
   );

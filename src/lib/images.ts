@@ -64,6 +64,27 @@ export const CHURCH_IMAGES = {
       main: "https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?w=600&h=400&fit=crop&auto=format&q=80",
       outdoor: "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?w=600&h=400&fit=crop&auto=format&q=80",
     },
+    health: {
+      main: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop&auto=format&q=80",
+    },
+    personal: {
+      main: "https://images.unsplash.com/photo-1526976668912-1a811878dd37?w=600&h=400&fit=crop&auto=format&q=80",
+    },
+    stewardship: {
+      main: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&h=400&fit=crop&auto=format&q=80",
+    },
+    education: {
+      main: "https://images.unsplash.com/photo-1523050854058-8df90110c7f1?w=600&h=400&fit=crop&auto=format&q=80",
+    },
+    family: {
+      main: "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=600&h=400&fit=crop&auto=format&q=80",
+    },
+    children: {
+      main: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&h=400&fit=crop&auto=format&q=80",
+    },
+    communications: {
+      main: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&h=400&fit=crop&auto=format&q=80",
+    },
   },
 
   /**
