@@ -89,20 +89,22 @@ export function Header() {
               </div>
               <div className="flex flex-col">
                 <span 
-                  className="text-lg lg:text-xl font-bold font-[family-name:var(--font-playfair)] leading-tight transition-all duration-500 ease-out"
-                  style={{
-                    color: p < 0.3 ? "rgba(255,255,255,1)" : "rgba(28,25,23,1)",
-                    textShadow: p < 0.3 ? "0 2px 4px rgba(0,0,0,0.3)" : "none",
-                  }}
+                  className={cn(
+                    "text-lg lg:text-xl font-bold font-[family-name:var(--font-playfair)] leading-tight transition-colors duration-500 ease-out",
+                    p > 0.3
+                      ? "text-stone-900 dark:text-white"
+                      : "text-white"
+                  )}
                 >
                   Lilliput SDA
                 </span>
                 <span 
-                  className="text-[10px] lg:text-xs tracking-wide uppercase leading-none font-medium transition-all duration-500 ease-out"
-                  style={{
-                    color: p < 0.3 ? "rgba(255,255,255,0.8)" : "rgba(120,113,108,1)",
-                    textShadow: p < 0.3 ? "0 1px 2px rgba(0,0,0,0.2)" : "none",
-                  }}
+                  className={cn(
+                    "text-[10px] lg:text-xs tracking-wide uppercase leading-none font-medium transition-colors duration-500 ease-out",
+                    p > 0.3
+                      ? "text-stone-500 dark:text-stone-400"
+                      : "text-white/80"
+                  )}
                 >
                   St. James, Jamaica
                 </span>
@@ -158,12 +160,12 @@ export function Header() {
 
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden p-2 -mr-2 rounded-lg transition-all duration-500 ease-out"
-              style={{
-                color: p < 0.3 
-                  ? `rgba(255,255,255,${1 - p * 0.3})`
-                  : "rgba(28,25,23,1)",
-              }}
+              className={cn(
+                "md:hidden p-2 -mr-2 rounded-lg transition-all duration-500 ease-out",
+                p > 0.3
+                  ? "text-stone-700 dark:text-stone-200"
+                  : "text-white"
+              )}
               aria-label="Open menu"
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-menu"
