@@ -66,7 +66,7 @@ export interface StaffMember {
 }
 
 export interface PrayerRequest {
-  _id?: string;
+  id?: string;
   name: string;
   email: string;
   request: string;
@@ -76,13 +76,15 @@ export interface PrayerRequest {
 }
 
 export interface ContactSubmission {
-  _id?: string;
+  id?: string;
   name: string;
   email: string;
   message: string;
   date?: string;
   isRead?: boolean;
 }
+
+export type UserRole = "admin" | "editor" | "member";
 
 export interface FormErrors {
   [key: string]: string | undefined;

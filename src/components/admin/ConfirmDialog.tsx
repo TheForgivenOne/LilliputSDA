@@ -34,15 +34,15 @@ export function ConfirmDialog({
   const variantStyles = {
     danger: {
       icon: "text-rose-500",
-      button: "bg-rose-600 hover:bg-rose-700 focus:ring-rose-500",
+      button: "bg-[var(--accent-wine)] hover:bg-[#561F30] focus:ring-[var(--accent-wine)]",
     },
     warning: {
-      icon: "text-amber-500",
-      button: "bg-amber-600 hover:bg-amber-700 focus:ring-amber-500",
+      icon: "text-[var(--primary)]",
+      button: "bg-[var(--primary)] hover:bg-[var(--primary-hover)] focus:ring-[var(--primary)]",
     },
     info: {
-      icon: "text-blue-500",
-      button: "bg-blue-600 hover:bg-blue-700 focus:ring-blue-500",
+      icon: "text-[var(--accent-cool)]",
+      button: "bg-[var(--accent-cool)] hover:bg-[#524F6B] focus:ring-[var(--accent-cool)]",
     },
   };
 

@@ -24,6 +24,9 @@ export async function checkRateLimit(
   identifier: string
 ): Promise<{ success: boolean }> {
   if (!isRedisConfigured || !limiter) {
+    if (!isRedisConfigured) {
+      console.warn("[RateLimit] Redis not configured — rate limiting disabled");
+    }
     return { success: true };
   }
   return limiter.limit(identifier);

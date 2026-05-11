@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { adminGuard } from "@/lib/auth";
 
 export async function GET(
   request: NextRequest,
@@ -26,6 +27,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const guard = await adminGuard();
+  if (guard) return guard;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -54,6 +58,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const guard = await adminGuard();
+  if (guard) return guard;
+
   try {
     const { id } = await params;
     await prisma.siteContent.delete({ where: { id } });

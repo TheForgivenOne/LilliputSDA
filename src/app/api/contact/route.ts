@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { auth } from "@/auth";
+import { adminGuard } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const guard = await adminGuard();
+  if (guard) return guard;
 
+  try {
     const { searchParams } = new URL(request.url);
     const unread = searchParams.get("unread");
 
@@ -33,12 +31,29 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    const { name, email, message } = body;
+
+    if (!name || !email || !message) {
+      return NextResponse.json({ error: "Name, email, and message are required" }, { status: 400 });
+    }
+
+    if (typeof name !== "string" || name.length > 200) {
+      return NextResponse.json({ error: "Invalid name" }, { status: 400 });
+    }
+
+    if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 320) {
+      return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+    }
+
+    if (typeof message !== "string" || message.length > 5000) {
+      return NextResponse.json({ error: "Message too long (max 5000 chars)" }, { status: 400 });
+    }
 
     const submission = await prisma.contactSubmission.create({
       data: {
-        name: body.name,
-        email: body.email,
-        message: body.message,
+        name,
+        email,
+        message,
       },
     });
 

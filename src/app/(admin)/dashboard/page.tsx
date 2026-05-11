@@ -16,10 +16,10 @@ import { useFetch } from "@/hooks/useData";
 
 const statCards = [
   { label: "Upcoming Events", icon: Calendar, href: "/dashboard/events", color: "amber" },
-  { label: "Active Announcements", icon: Megaphone, href: "/dashboard/announcements", color: "blue" },
-  { label: "Staff Members", icon: Users, href: "/dashboard/staff", color: "green" },
-  { label: "Contact Submissions", icon: Mail, href: "/dashboard/contact", color: "purple" },
-  { label: "Decisions", icon: ClipboardList, href: "/dashboard/decisions", color: "orange" },
+  { label: "Active Announcements", icon: Megaphone, href: "/dashboard/announcements", color: "amber" },
+  { label: "Staff Members", icon: Users, href: "/dashboard/staff", color: "emerald" },
+  { label: "Contact Submissions", icon: Mail, href: "/dashboard/contact", color: "stone" },
+  { label: "Decisions", icon: ClipboardList, href: "/dashboard/decisions", color: "amber" },
 ];
 
 const quickActions = [
@@ -61,10 +61,8 @@ export default function DashboardPage() {
 
   const colorStyles: Record<string, { bg: string; text: string; icon: string }> = {
     amber: { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-600", icon: "bg-amber-500" },
-    blue: { bg: "bg-blue-100 dark:bg-blue-900/30", text: "text-blue-600", icon: "bg-blue-500" },
-    green: { bg: "bg-green-100 dark:bg-green-900/30", text: "text-green-600", icon: "bg-green-500" },
-    purple: { bg: "bg-purple-100 dark:bg-purple-900/30", text: "text-purple-600", icon: "bg-purple-500" },
-    orange: { bg: "bg-orange-100 dark:bg-orange-900/30", text: "text-orange-600", icon: "bg-orange-500" },
+    emerald: { bg: "bg-emerald-100 dark:bg-emerald-900/30", text: "text-emerald-600", icon: "bg-emerald-500" },
+    stone: { bg: "bg-stone-100 dark:bg-stone-700", text: "text-stone-600", icon: "bg-stone-500" },
   };
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 interface UseFetchOptions<T> {
   initialData?: T;
@@ -23,6 +23,7 @@ export function useFetch<T>(
   const [data, setData] = useState<T | undefined>(initialData);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const mountedRef = useRef(true);
 
   const fetchData = useCallback(async () => {
     if (!enabled) return;
@@ -32,20 +33,25 @@ export function useFetch<T>(
 
     try {
       const response = await fetch(url);
+      if (!mountedRef.current) return;
       if (!response.ok) {
         throw new Error(`Failed to fetch: ${response.statusText}`);
       }
       const result = await response.json();
-      setData(result);
+      if (mountedRef.current) setData(result);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error("Unknown error"));
+      if (mountedRef.current) setError(err instanceof Error ? err : new Error("Unknown error"));
     } finally {
-      setIsLoading(false);
+      if (mountedRef.current) setIsLoading(false);
     }
   }, [url, enabled]);
 
   useEffect(() => {
+    mountedRef.current = true;
     fetchData();
+    return () => {
+      mountedRef.current = false;
+    };
   }, [fetchData]);
 
   return { data, isLoading, error, refetch: fetchData };

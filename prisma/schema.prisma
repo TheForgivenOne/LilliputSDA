@@ -51,6 +51,7 @@ model User {
   role          String    @default("user")
   accounts      Account[]
   sessions      Session[]
+  ministries    Ministry[] @relation("MinistryLeader")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -67,21 +68,27 @@ model Announcement {
   isPinned  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([date, isPinned])
+  @@index([category])
 }
 
 model Event {
-  id              String   @id @default(cuid())
-  title           String
-  description     String?
-  startDate       DateTime
-  endDate         DateTime?
-  location        String?
-  category        String   @default("service")
-  imageUrl        String?
-  isRecurring     Boolean  @default(false)
+  id                String   @id @default(cuid())
+  title             String
+  description       String?
+  startDate         DateTime
+  endDate           DateTime?
+  location          String?
+  category          String   @default("service")
+  imageUrl          String?
+  isRecurring       Boolean  @default(false)
   recurrencePattern String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([startDate])
+  @@index([category])
 }
 
 model Ministry {
@@ -91,11 +98,14 @@ model Ministry {
   category        String   @default("adult")
   imageUrl        String?
   leaderId        String?
+  leader          User?    @relation("MinistryLeader", fields: [leaderId], references: [id], onDelete: SetNull)
   meetingTime     String?
   meetingLocation String?
   order           Int      @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  @@index([category])
 }
 
 model Staff {
@@ -112,15 +122,21 @@ model Staff {
   order      Int      @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  @@index([isActive, order])
+  @@index([department])
 }
 
 model ContactSubmission {
-  id      String   @id @default(cuid())
-  name    String
-  email   String
-  message String
-  date    DateTime @default(now())
-  isRead  Boolean  @default(false)
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  date      DateTime @default(now())
+  isRead    Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+
+  @@index([isRead, date])
 }
 
 model PrayerRequest {
@@ -131,34 +147,43 @@ model PrayerRequest {
   isPublic   Boolean  @default(false)
   isAnswered Boolean  @default(false)
   date       DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([isPublic, isAnswered])
+  @@index([date])
 }
 
 model Decision {
-  id          String   @id @default(cuid())
-  name        String
-  email       String?
-  phone       String?
-  decision    String
-  isAdventist String?
-  ageGroup    String?
-  address     String?
-  parish      String?
-  country     String?
+  id            String   @id @default(cuid())
+  name          String
+  email         String?
+  phone         String?
+  decision      String
+  isAdventist   String?
+  ageGroup      String?
+  address       String?
+  parish        String?
+  country       String?
   prayerRequest String?
-  comments    String?
-  source      String?
-  isRead      Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  comments      String?
+  source        String?
+  isRead        Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@index([isRead, createdAt])
 }
 
 model Media {
-  id          String   @id @default(cuid())
-  name        String
-  url         String
+  id           String   @id @default(cuid())
+  name         String
+  url          String
   blobPathname String?
-  type        String   @default("image")
-  size        Int?
-  uploadedAt  DateTime @default(now())
+  type         String   @default("image")
+  size         Int?
+  uploadedAt   DateTime @default(now())
+
+  @@index([type])
+  @@index([uploadedAt])
 }
 
 model Testimonial {
@@ -171,6 +196,8 @@ model Testimonial {
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([isActive, order])
 }
 
 model SiteContent {
@@ -183,4 +210,6 @@ model SiteContent {
   order     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([isActive, order])
 }

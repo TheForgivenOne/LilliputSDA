@@ -381,50 +381,17 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error("Error fetching YouTube videos:", error);
-    
-    const fallbackVideos: YouTubeVideo[] = [
-      {
-        id: "dQw4w9WgXcQ",
-        title: "Welcome to Lilliput SDA Church",
-        description: "Join us for worship every Sabbath at 11:00 AM.",
-        publishedAt: new Date().toISOString(),
-        thumbnailUrl: getYouTubeThumbnailFallback("dQw4w9WgXcQ", "high"),
-        duration: "3:45",
-        viewCount: "0",
-        status: "past",
-      },
-      {
-        id: "example1",
-        title: "Sabbath School - Growing in Faith",
-        description: "Our Sabbath School program helps us grow together in God's Word.",
-        publishedAt: new Date(Date.now() - 86400000).toISOString(),
-        thumbnailUrl: getYouTubeThumbnailFallback("example1", "high"),
-        duration: "45:00",
-        viewCount: "0",
-        status: "past",
-      },
-      {
-        id: "example2",
-        title: "Youth Ministry Highlights",
-        description: "See what our young people are doing in the community.",
-        publishedAt: new Date(Date.now() - 172800000).toISOString(),
-        thumbnailUrl: getYouTubeThumbnailFallback("example2", "high"),
-        duration: "12:30",
-        viewCount: "0",
-        status: "past",
-      },
-    ];
-    
+
     return NextResponse.json(
-      { 
-        error: "Using cached/fallback content", 
-        code: "FALLBACK", 
-        videos: fallbackVideos,
-        count: fallbackVideos.length,
+      {
+        error: "Service temporarily unavailable",
+        code: "SERVICE_UNAVAILABLE",
+        videos: [],
+        count: 0,
         liveCount: 0,
         upcomingCount: 0,
       },
-      { status: 200 }
+      { status: 503 }
     );
   }
 }

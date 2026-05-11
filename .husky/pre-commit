@@ -1,1 +1,1 @@
-. ~/.nvm/nvm.sh && nvm use 22 && npm run lint -- --fix && npm run typecheck
+npm run lint -- --fix && npm run typecheck

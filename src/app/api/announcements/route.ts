@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { auth } from "@/auth";
+import { adminGuard } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
@@ -31,14 +31,16 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const guard = await adminGuard();
+  if (guard) return guard;
 
+  try {
     const body = await request.json();
     
+    if (!body.title || !body.content) {
+      return NextResponse.json({ error: "Title and content are required" }, { status: 400 });
+    }
+
     const announcement = await prisma.announcement.create({
       data: {
         title: body.title,

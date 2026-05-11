@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { format } from "date-fns";
-import { Plus, Pencil, Trash2, Pin, PinOff, Bell } from "lucide-react";
-import { AdminTable, ConfirmDialog, Column } from "@/components/admin";
-import Button from "@/components/ui/Button";
+import { Pencil, Trash2, Pin, PinOff, Bell } from "lucide-react";
+import { AdminPageShell, AdminTable, ConfirmDialog, Column } from "@/components/admin";
 import { useFetch, deleteItem } from "@/hooks/useData";
 
 type Announcement = {
@@ -21,11 +19,20 @@ type Announcement = {
   isPinned: boolean;
 };
 
-export default function AnnouncementsAdminPage() {
-  const { data: announcements, isLoading, refetch } = useFetch<Announcement[]>(
-    "/api/announcements"
-  );
+const priorityBadge: Record<string, string> = {
+  high: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400",
+  low: "bg-stone-100 text-stone-700 dark:bg-stone-700 dark:text-stone-300",
+  normal: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+};
 
+const priorityIconBg: Record<string, string> = {
+  high: "bg-rose-100 dark:bg-rose-900/30 text-rose-600",
+  low: "bg-stone-100 dark:bg-stone-700 text-stone-600",
+  normal: "bg-amber-100 dark:bg-amber-900/30 text-amber-600",
+};
+
+export default function AnnouncementsAdminPage() {
+  const { data: announcements, isLoading, refetch } = useFetch<Announcement[]>("/api/announcements");
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -36,8 +43,7 @@ export default function AnnouncementsAdminPage() {
       await deleteItem(`/api/announcements/${deleteId}`);
       setDeleteId(null);
       refetch();
-    } catch (error) {
-      console.error("Failed to delete:", error);
+    } catch {
     } finally {
       setIsDeleting(false);
     }
@@ -51,9 +57,7 @@ export default function AnnouncementsAdminPage() {
         body: JSON.stringify({ isPinned: !currentPinned }),
       });
       refetch();
-    } catch (error) {
-      console.error("Failed to toggle pin:", error);
-    }
+    } catch {}
   };
 
   const columns: Column<Announcement>[] = [
@@ -63,37 +67,17 @@ export default function AnnouncementsAdminPage() {
       sortable: true,
       render: (announcement) => (
         <div className="flex items-start gap-3">
-          <div
-            className={`mt-1 p-2 rounded-lg ${
-              announcement.priority === "high"
-                ? "bg-rose-100 dark:bg-rose-900/30"
-                : announcement.priority === "low"
-                ? "bg-stone-100 dark:bg-stone-700"
-                : "bg-blue-100 dark:bg-blue-900/30"
-            }`}
-          >
-            <Bell
-              className={`w-4 h-4 ${
-                announcement.priority === "high"
-                  ? "text-rose-600"
-                  : "text-blue-600"
-              }`}
-            />
+          <div className={`mt-1 p-2 rounded-lg ${priorityIconBg[announcement.priority] || priorityIconBg.normal}`}>
+            <Bell className="w-4 h-4" />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <p className="font-medium text-stone-900 dark:text-stone-100 truncate">
-                {announcement.title}
-              </p>
+              <p className="font-medium text-stone-900 dark:text-stone-100 truncate">{announcement.title}</p>
               {announcement.isPinned && (
-                <span className="px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded-full">
-                  Pinned
-                </span>
+                <span className="px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded-full">Pinned</span>
               )}
             </div>
-            <p className="text-sm text-stone-500 line-clamp-2 mt-1">
-              {announcement.content}
-            </p>
+            <p className="text-sm text-stone-500 line-clamp-2 mt-1">{announcement.content}</p>
           </div>
         </div>
       ),
@@ -102,15 +86,7 @@ export default function AnnouncementsAdminPage() {
       key: "priority",
       header: "Priority",
       render: (announcement) => (
-        <span
-          className={`px-2 py-1 text-xs font-medium rounded-full ${
-            announcement.priority === "high"
-              ? "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400"
-              : announcement.priority === "low"
-              ? "bg-stone-100 text-stone-700 dark:bg-stone-700 dark:text-stone-300"
-              : "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
-          }`}
-        >
+        <span className={`px-2 py-1 text-xs font-medium rounded-full ${priorityBadge[announcement.priority] || priorityBadge.normal}`}>
           {announcement.priority || "normal"}
         </span>
       ),
@@ -119,9 +95,7 @@ export default function AnnouncementsAdminPage() {
       key: "category",
       header: "Category",
       render: (announcement) => (
-        <span className="text-sm text-stone-600 dark:text-stone-400">
-          {announcement.category || "general"}
-        </span>
+        <span className="text-sm text-stone-600 dark:text-stone-400">{announcement.category || "general"}</span>
       ),
     },
     {
@@ -129,9 +103,7 @@ export default function AnnouncementsAdminPage() {
       header: "Date",
       sortable: true,
       render: (announcement) => (
-        <span className="text-sm text-stone-500 dark:text-stone-400">
-          {format(new Date(announcement.date), "MMM d, yyyy")}
-        </span>
+        <span className="text-sm text-stone-500 dark:text-stone-400">{format(new Date(announcement.date), "MMM d, yyyy")}</span>
       ),
     },
     {
@@ -141,33 +113,16 @@ export default function AnnouncementsAdminPage() {
       render: (announcement) => (
         <div className="flex items-center justify-end gap-1">
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleTogglePin(announcement.id, announcement.isPinned);
-            }}
-            className={`p-2 rounded-lg transition-colors ${
-              announcement.isPinned
-                ? "hover:bg-amber-100 dark:hover:bg-amber-900/30"
-                : "hover:bg-stone-100 dark:hover:bg-stone-700"
-            }`}
+            onClick={(e) => { e.stopPropagation(); handleTogglePin(announcement.id, announcement.isPinned); }}
+            className={`p-2 rounded-lg transition-colors ${announcement.isPinned ? "hover:bg-amber-100 dark:hover:bg-amber-900/30" : "hover:bg-stone-100 dark:hover:bg-stone-700"}`}
           >
-            {announcement.isPinned ? (
-              <PinOff className="w-4 h-4 text-amber-600" />
-            ) : (
-              <Pin className="w-4 h-4 text-stone-400" />
-            )}
+            {announcement.isPinned ? <PinOff className="w-4 h-4 text-amber-600" /> : <Pin className="w-4 h-4 text-stone-400" />}
           </button>
-          <a
-            href={`/dashboard/announcements/${announcement.id}`}
-            className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
-          >
+          <a href={`/dashboard/announcements/${announcement.id}`} className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors">
             <Pencil className="w-4 h-4 text-stone-500" />
           </a>
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setDeleteId(announcement.id);
-            }}
+            onClick={(e) => { e.stopPropagation(); setDeleteId(announcement.id); }}
             className="p-2 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
           >
             <Trash2 className="w-4 h-4 text-rose-500" />
@@ -178,36 +133,19 @@ export default function AnnouncementsAdminPage() {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100">
-            Announcements
-          </h1>
-          <p className="text-stone-600 dark:text-stone-400 mt-1">
-            Manage church announcements and news
-          </p>
-        </div>
-        <Link href="/dashboard/announcements/new">
-          <Button leftIcon={<Plus className="w-4 h-4" />}>Add Announcement</Button>
-        </Link>
-      </div>
-
-      {isLoading ? (
-        <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
-          <div className="animate-pulse">
-            <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/4 mx-auto mb-4" />
-            <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-1/2 mx-auto" />
-          </div>
-        </div>
-      ) : (
-        <AdminTable
-          data={announcements || []}
-          columns={columns}
-          keyExtractor={(a) => a.id}
-          emptyMessage="No announcements yet. Create your first announcement to get started."
-        />
-      )}
+    <AdminPageShell
+      title="Announcements"
+      description="Manage church announcements and news"
+      addButtonLabel="Add Announcement"
+      addButtonHref="/dashboard/announcements/new"
+      isLoading={isLoading}
+    >
+      <AdminTable
+        data={announcements || []}
+        columns={columns}
+        keyExtractor={(a) => a.id}
+        emptyMessage="No announcements yet. Create your first announcement to get started."
+      />
 
       <ConfirmDialog
         isOpen={!!deleteId}
@@ -218,6 +156,6 @@ export default function AnnouncementsAdminPage() {
         confirmText="Delete"
         isLoading={isDeleting}
       />
-    </div>
+    </AdminPageShell>
   );
 }

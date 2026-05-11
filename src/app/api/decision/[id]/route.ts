@@ -1,17 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { auth } from "@/auth";
+import { adminGuard } from "@/lib/auth";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const guard = await adminGuard();
+  if (guard) return guard;
 
+  try {
     const { id } = await params;
     const decision = await prisma.decision.findUnique({
       where: { id },
@@ -32,18 +30,18 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const guard = await adminGuard();
+  if (guard) return guard;
 
+  try {
     const { id } = await params;
     const body = await request.json();
 
     const decision = await prisma.decision.update({
       where: { id },
-      data: body,
+      data: {
+        ...(body.isRead !== undefined && { isRead: body.isRead }),
+      },
     });
 
     return NextResponse.json(decision);
@@ -57,12 +55,10 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const guard = await adminGuard();
+  if (guard) return guard;
 
+  try {
     const { id } = await params;
     await prisma.decision.delete({ where: { id } });
 

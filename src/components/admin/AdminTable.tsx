@@ -54,7 +54,15 @@ export function AdminTable<T>({
         if (aVal === bVal) return 0;
         if (aVal === null || aVal === undefined) return 1;
         if (bVal === null || bVal === undefined) return -1;
-        const comparison = String(aVal).localeCompare(String(bVal));
+
+        let comparison: number;
+        if (typeof aVal === "number" && typeof bVal === "number") {
+          comparison = aVal - bVal;
+        } else if (aVal instanceof Date && bVal instanceof Date) {
+          comparison = aVal.getTime() - bVal.getTime();
+        } else {
+          comparison = String(aVal).localeCompare(String(bVal));
+        }
         return sortOrder === "asc" ? comparison : -comparison;
       })
     : data;
@@ -65,17 +73,17 @@ export function AdminTable<T>({
 
   if (data.length === 0) {
     return (
-      <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
+      <div className="bg-[var(--surface)] dark:bg-stone-800 rounded-xl p-12 text-center border border-[var(--border-subtle)] dark:border-stone-700">
         <p className="text-stone-500 dark:text-stone-400">{emptyMessage}</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 overflow-hidden">
+    <div className="bg-[var(--surface)] dark:bg-stone-800 rounded-xl border border-[var(--border-subtle)] dark:border-stone-700 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-stone-50 dark:bg-stone-900 border-b border-stone-200 dark:border-stone-700">
+          <thead className="bg-[var(--background)] dark:bg-stone-900 border-b border-[var(--border-subtle)] dark:border-stone-700">
             <tr>
               {columns.map((col) => (
                 <th
@@ -104,7 +112,7 @@ export function AdminTable<T>({
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-stone-200 dark:divide-stone-700">
+          <tbody className="divide-y divide-[var(--border-subtle)] dark:divide-stone-700">
             {sortedData.map((item) => (
               <tr
                 key={keyExtractor(item)}
@@ -131,7 +139,7 @@ export function AdminTable<T>({
       </div>
 
       {pagination && totalPages > 1 && (
-        <div className="flex items-center justify-between px-4 py-3 border-t border-stone-200 dark:border-stone-700">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-[var(--border-subtle)] dark:border-stone-700">
           <p className="text-sm text-stone-500 dark:text-stone-400">
             Showing {(pagination.page - 1) * pagination.pageSize + 1} to{" "}
             {Math.min(pagination.page * pagination.pageSize, pagination.total)} of{" "}

@@ -54,28 +54,20 @@ function isProtectedRoute(pathname: string): boolean {
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Debug logging
-  console.debug("[Middleware]", pathname);
-
   if (isProtectedRoute(pathname)) {
-    console.debug("[Middleware] Protected route, checking auth...");
     const session = await auth();
-    console.debug("[Middleware] Session:", session?.user ? "exists" : "none");
 
     if (!session?.user) {
-      console.debug("[Middleware] No session, redirecting to sign-in");
       const signInUrl = new URL("/sign-in", request.url);
       signInUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(signInUrl);
     }
 
-    console.debug("[Middleware] Session found, allowing access");
     return NextResponse.next();
   }
 
   if (!isPublicRoute(pathname)) {
     if (pathname !== "/") {
-      console.debug("[Middleware] Not public, redirecting to home");
       return NextResponse.redirect(new URL("/", request.url));
     }
   }

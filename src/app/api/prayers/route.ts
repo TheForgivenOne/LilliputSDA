@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { auth } from "@/auth";
+import { adminGuard } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const guard = await adminGuard();
+  if (guard) return guard;
 
+  try {
     const { searchParams } = new URL(request.url);
     const publicOnly = searchParams.get("public");
 
@@ -34,13 +32,30 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    const { name, email, request: prayerRequest, isPublic } = body;
+
+    if (!name || !prayerRequest) {
+      return NextResponse.json({ error: "Name and prayer request are required" }, { status: 400 });
+    }
+
+    if (typeof name !== "string" || name.length > 200) {
+      return NextResponse.json({ error: "Invalid name" }, { status: 400 });
+    }
+
+    if (email && (typeof email !== "string" || email.length > 320)) {
+      return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+    }
+
+    if (typeof prayerRequest !== "string" || prayerRequest.length > 2000) {
+      return NextResponse.json({ error: "Prayer request too long (max 2000 chars)" }, { status: 400 });
+    }
 
     const prayer = await prisma.prayerRequest.create({
       data: {
-        name: body.name,
-        email: body.email,
-        request: body.request,
-        isPublic: body.isPublic || false,
+        name,
+        email: email || null,
+        request: prayerRequest,
+        isPublic: isPublic === true,
       },
     });
 

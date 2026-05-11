@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { adminGuard } from "@/lib/auth";
 
 export async function GET() {
   try {
@@ -14,12 +15,19 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const guard = await adminGuard();
+  if (guard) return guard;
+
   try {
     const body = await request.json();
     const { key, title, content, imageUrl, isActive, order } = body;
 
-    if (!key) {
-      return NextResponse.json({ error: "Key is required" }, { status: 400 });
+    if (!key || typeof key !== "string" || key.length > 100) {
+      return NextResponse.json({ error: "Valid key is required (max 100 chars)" }, { status: 400 });
+    }
+
+    if (title && typeof title !== "string") {
+      return NextResponse.json({ error: "Title must be a string" }, { status: 400 });
     }
 
     const existing = await prisma.siteContent.findUnique({ where: { key } });

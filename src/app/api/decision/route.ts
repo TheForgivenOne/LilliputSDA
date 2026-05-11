@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { adminGuard } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
+  const guard = await adminGuard();
+  if (guard) return guard;
+
   try {
     const { searchParams } = new URL(request.url);
     const unread = searchParams.get("unread");
@@ -47,6 +51,10 @@ export async function POST(request: NextRequest) {
         { error: "Name and decision are required" },
         { status: 400 }
       );
+    }
+
+    if (typeof name !== "string" || name.length > 200) {
+      return NextResponse.json({ error: "Invalid name" }, { status: 400 });
     }
 
     const newDecision = await prisma.decision.create({

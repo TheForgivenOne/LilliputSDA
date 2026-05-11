@@ -1,6 +1,8 @@
 import { auth } from "@/auth";
+import { NextResponse } from "next/server";
+import type { UserRole } from "@/types";
 
-export type UserRole = "admin" | "editor" | "member";
+export { type UserRole };
 
 export async function checkRole(role: UserRole): Promise<boolean> {
   const session = await auth();
@@ -16,14 +18,19 @@ export async function checkEditor(): Promise<boolean> {
   return checkRole("editor");
 }
 
-export async function getUserRole(): Promise<UserRole | null> {
+export async function getUserRole(): Promise<string | null> {
   const session = await auth();
-  return session?.user?.role as UserRole | null;
+  const role = session?.user?.role;
+  return typeof role === "string" ? role : null;
 }
 
-export async function requireRole(role: UserRole): Promise<void> {
-  const hasRole = await checkRole(role);
-  if (!hasRole) {
-    throw new Error(`Access denied: requires ${role} role`);
+export async function adminGuard(): Promise<NextResponse | null> {
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if (session.user.role !== "admin") {
+    return NextResponse.json({ error: "Forbidden: admin role required" }, { status: 403 });
+  }
+  return null;
 }

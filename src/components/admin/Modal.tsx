@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useEffect } from "react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -21,8 +21,6 @@ export function Modal({
   size = "md",
   showClose = true,
 }: ModalProps) {
-  const overlayRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -55,13 +53,12 @@ export function Modal({
 
   return (
     <div
-      ref={overlayRef}
       className={cn(
         "fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300",
         isOpen ? "opacity-100" : "opacity-0"
       )}
       onClick={(e) => {
-        if (e.target === overlayRef.current) {
+        if (e.target === e.currentTarget) {
           onClose();
         }
       }}
@@ -69,13 +66,13 @@ export function Modal({
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
       <div
         className={cn(
-          "relative bg-white dark:bg-stone-900 rounded-xl shadow-2xl w-full overflow-hidden transition-all duration-300",
+           "relative bg-[var(--surface)] dark:bg-stone-900 rounded-xl shadow-2xl w-full overflow-hidden transition-all duration-300",
           sizes[size],
           isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
         )}
       >
         {(title || showClose) && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-stone-200 dark:border-stone-700">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-subtle)] dark:border-stone-700">
             {title && (
               <h2 className="text-xl font-semibold text-stone-900 dark:text-stone-100">
                 {title}

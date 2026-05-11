@@ -4,9 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
-import { Plus, Pencil, Trash2, Calendar, MapPin, Clock } from "lucide-react";
-import { AdminTable, ConfirmDialog, Column } from "@/components/admin";
-import Button from "@/components/ui/Button";
+import { Pencil, Trash2, Calendar, MapPin, Clock } from "lucide-react";
+import { AdminPageShell, AdminTable, ConfirmDialog, Column } from "@/components/admin";
 import { useFetch, deleteItem } from "@/hooks/useData";
 
 type AdminEvent = {
@@ -23,6 +22,13 @@ type AdminEvent = {
   recurrencePattern?: "weekly" | "monthly";
 };
 
+const badgeColors: Record<string, string> = {
+  service: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+  special: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400",
+  youth: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+  community: "bg-stone-100 text-stone-700 dark:bg-stone-700 dark:text-stone-300",
+};
+
 export default function EventsAdminPage() {
   const router = useRouter();
   const { data: events, isLoading, refetch } = useFetch<AdminEvent[]>("/api/events");
@@ -36,8 +42,7 @@ export default function EventsAdminPage() {
       await deleteItem(`/api/events/${deleteId}`);
       setDeleteId(null);
       refetch();
-    } catch (error) {
-      console.error("Failed to delete:", error);
+    } catch {
     } finally {
       setIsDeleting(false);
     }
@@ -51,24 +56,16 @@ export default function EventsAdminPage() {
       render: (event) => (
         <div className="flex items-center gap-3">
           {event.imageUrl ? (
-            <img
-              src={event.imageUrl}
-              alt=""
-              className="w-12 h-12 rounded-lg object-cover"
-            />
+            <img src={event.imageUrl} alt="" className="w-12 h-12 rounded-lg object-cover" />
           ) : (
             <div className="w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
               <Calendar className="w-6 h-6 text-amber-600" />
             </div>
           )}
           <div>
-            <p className="font-medium text-stone-900 dark:text-stone-100">
-              {event.title}
-            </p>
+            <p className="font-medium text-stone-900 dark:text-stone-100">{event.title}</p>
             {event.description && (
-              <p className="text-sm text-stone-500 line-clamp-1">
-                {event.description}
-              </p>
+              <p className="text-sm text-stone-500 line-clamp-1">{event.description}</p>
             )}
           </div>
         </div>
@@ -99,17 +96,7 @@ export default function EventsAdminPage() {
       key: "category",
       header: "Category",
       render: (event) => (
-        <span
-          className={`px-2 py-1 text-xs font-medium rounded-full ${
-            event.category === "youth"
-              ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
-              : event.category === "service"
-              ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-              : event.category === "community"
-              ? "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
-              : "bg-stone-100 text-stone-700 dark:bg-stone-700 dark:text-stone-300"
-          }`}
-        >
+        <span className={`px-2 py-1 text-xs font-medium rounded-full ${badgeColors[event.category] || badgeColors.community}`}>
           {event.category}
         </span>
       ),
@@ -127,10 +114,7 @@ export default function EventsAdminPage() {
             <Pencil className="w-4 h-4 text-stone-500" />
           </Link>
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setDeleteId(event.id);
-            }}
+            onClick={(e) => { e.stopPropagation(); setDeleteId(event.id); }}
             className="p-2 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
           >
             <Trash2 className="w-4 h-4 text-rose-500" />
@@ -141,37 +125,20 @@ export default function EventsAdminPage() {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100">
-            Events
-          </h1>
-          <p className="text-stone-600 dark:text-stone-400 mt-1">
-            Manage church events and calendar
-          </p>
-        </div>
-        <Link href="/dashboard/events/new">
-          <Button leftIcon={<Plus className="w-4 h-4" />}>Add Event</Button>
-        </Link>
-      </div>
-
-      {isLoading ? (
-        <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
-          <div className="animate-pulse">
-            <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/4 mx-auto mb-4" />
-            <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-1/2 mx-auto" />
-          </div>
-        </div>
-      ) : (
-        <AdminTable
-          data={events || []}
-          columns={columns}
-          keyExtractor={(event) => event.id}
-          onRowClick={(event) => router.push(`/dashboard/events/${event.id}`)}
-          emptyMessage="No events yet. Create your first event to get started."
-        />
-      )}
+    <AdminPageShell
+      title="Events"
+      description="Manage church events and calendar"
+      addButtonLabel="Add Event"
+      addButtonHref="/dashboard/events/new"
+      isLoading={isLoading}
+    >
+      <AdminTable
+        data={events || []}
+        columns={columns}
+        keyExtractor={(event) => event.id}
+        onRowClick={(event) => router.push(`/dashboard/events/${event.id}`)}
+        emptyMessage="No events yet. Create your first event to get started."
+      />
 
       <ConfirmDialog
         isOpen={!!deleteId}
@@ -182,6 +149,6 @@ export default function EventsAdminPage() {
         confirmText="Delete"
         isLoading={isDeleting}
       />
-    </div>
+    </AdminPageShell>
   );
 }

@@ -106,7 +106,7 @@ export function AdminSidebar() {
                     className={cn(
                       "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
                       isActive
-                        ? "bg-amber-600 text-white"
+                        ? "bg-[var(--primary)] text-white"
                         : "text-stone-300 hover:bg-stone-800 hover:text-white"
                     )}
                   >

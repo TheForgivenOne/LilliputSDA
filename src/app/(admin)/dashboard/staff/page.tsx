@@ -3,16 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Pencil, Trash2, Mail, Phone } from "lucide-react";
-import { AdminTable, ConfirmDialog, Column } from "@/components/admin";
-import Button from "@/components/ui/Button";
+import { Pencil, Trash2, Mail, Phone } from "lucide-react";
+import { AdminPageShell, AdminTable, ConfirmDialog, Column } from "@/components/admin";
 import { useFetch, deleteItem } from "@/hooks/useData";
 import type { AdminStaff } from "@/types/admin";
 
 export default function StaffAdminPage() {
   const router = useRouter();
   const { data: staff, isLoading, refetch } = useFetch<AdminStaff[]>("/api/staff");
-
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -23,8 +21,7 @@ export default function StaffAdminPage() {
       await deleteItem(`/api/staff/${deleteId}`);
       setDeleteId(null);
       refetch();
-    } catch (error) {
-      console.error("Failed to delete:", error);
+    } catch {
     } finally {
       setIsDeleting(false);
     }
@@ -38,25 +35,15 @@ export default function StaffAdminPage() {
       render: (person) => (
         <div className="flex items-center gap-3">
           {person.photoUrl ? (
-            <img
-              src={person.photoUrl}
-              alt=""
-              className="w-12 h-12 rounded-full object-cover"
-            />
+            <img src={person.photoUrl} alt="" className="w-12 h-12 rounded-full object-cover" />
           ) : (
             <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-              <span className="text-lg font-semibold text-amber-700 dark:text-amber-400">
-                {person.name.charAt(0)}
-              </span>
+              <span className="text-lg font-semibold text-amber-700 dark:text-amber-400">{person.name.charAt(0)}</span>
             </div>
           )}
           <div>
-            <p className="font-medium text-stone-900 dark:text-stone-100">
-              {person.name}
-            </p>
-            <p className="text-sm text-stone-500 dark:text-stone-400">
-              {person.title}
-            </p>
+            <p className="font-medium text-stone-900 dark:text-stone-100">{person.name}</p>
+            <p className="text-sm text-stone-500 dark:text-stone-400">{person.title}</p>
           </div>
         </div>
       ),
@@ -64,11 +51,7 @@ export default function StaffAdminPage() {
     {
       key: "role",
       header: "Role",
-      render: (person) => (
-        <span className="text-sm text-stone-600 dark:text-stone-400">
-          {person.role}
-        </span>
-      ),
+      render: (person) => <span className="text-sm text-stone-600 dark:text-stone-400">{person.role}</span>,
     },
     {
       key: "department",
@@ -85,18 +68,12 @@ export default function StaffAdminPage() {
       render: (person) => (
         <div className="flex items-center gap-3">
           {person.email && (
-            <a
-              href={`mailto:${person.email}`}
-              className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
-            >
+            <a href={`mailto:${person.email}`} className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors">
               <Mail className="w-4 h-4 text-stone-400" />
             </a>
           )}
           {person.phone && (
-            <a
-              href={`tel:${person.phone}`}
-              className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
-            >
+            <a href={`tel:${person.phone}`} className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors">
               <Phone className="w-4 h-4 text-stone-400" />
             </a>
           )}
@@ -107,13 +84,11 @@ export default function StaffAdminPage() {
       key: "isActive",
       header: "Status",
       render: (person) => (
-        <span
-          className={`px-2 py-1 text-xs font-medium rounded-full ${
-            person.isActive
-              ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-              : "bg-stone-100 text-stone-500 dark:bg-stone-700 dark:text-stone-400"
-          }`}
-        >
+        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+          person.isActive
+            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+            : "bg-stone-100 text-stone-500 dark:bg-stone-700 dark:text-stone-400"
+        }`}>
           {person.isActive ? "Active" : "Inactive"}
         </span>
       ),
@@ -124,19 +99,10 @@ export default function StaffAdminPage() {
       className: "w-24",
       render: (person) => (
         <div className="flex items-center justify-end gap-2">
-          <Link
-            href={`/dashboard/staff/${person.id}`}
-            className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
-          >
+          <Link href={`/dashboard/staff/${person.id}`} className="p-2 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors">
             <Pencil className="w-4 h-4 text-stone-500" />
           </Link>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setDeleteId(person.id);
-            }}
-            className="p-2 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
-          >
+          <button onClick={(e) => { e.stopPropagation(); setDeleteId(person.id); }} className="p-2 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-lg transition-colors">
             <Trash2 className="w-4 h-4 text-rose-500" />
           </button>
         </div>
@@ -145,37 +111,20 @@ export default function StaffAdminPage() {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100">
-            Staff
-          </h1>
-          <p className="text-stone-600 dark:text-stone-400 mt-1">
-            Manage church staff and leadership
-          </p>
-        </div>
-        <Link href="/dashboard/staff/new">
-          <Button leftIcon={<Plus className="w-4 h-4" />}>Add Staff Member</Button>
-        </Link>
-      </div>
-
-      {isLoading ? (
-        <div className="bg-white dark:bg-stone-800 rounded-xl p-12 text-center border border-stone-200 dark:border-stone-700">
-          <div className="animate-pulse">
-            <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded w-1/4 mx-auto mb-4" />
-            <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded w-1/2 mx-auto" />
-          </div>
-        </div>
-      ) : (
-        <AdminTable
-          data={staff}
-          columns={columns}
-          keyExtractor={(person) => person.id}
-          onRowClick={(person) => router.push(`/dashboard/staff/${person.id}`)}
-          emptyMessage="No staff members yet. Add your first staff member to get started."
-        />
-      )}
+    <AdminPageShell
+      title="Staff"
+      description="Manage church staff and leadership"
+      addButtonLabel="Add Staff Member"
+      addButtonHref="/dashboard/staff/new"
+      isLoading={isLoading}
+    >
+      <AdminTable
+        data={staff}
+        columns={columns}
+        keyExtractor={(person) => person.id}
+        onRowClick={(person) => router.push(`/dashboard/staff/${person.id}`)}
+        emptyMessage="No staff members yet. Add your first staff member to get started."
+      />
 
       <ConfirmDialog
         isOpen={!!deleteId}
@@ -186,6 +135,6 @@ export default function StaffAdminPage() {
         confirmText="Delete"
         isLoading={isDeleting}
       />
-    </div>
+    </AdminPageShell>
   );
 }
