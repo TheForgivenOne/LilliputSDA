@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "prepare": "husky && prisma generate",
     "db:seed": "npx tsx prisma/seed.ts",
     "db:seed:prod": "DATABASE_URL=\"postgresql://neondb_owner:npg_gKhZVQY5oB3u@ep-morning-haze-amtgrz1f-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require\" npx tsx prisma/seed.ts"
@@ -39,16 +42,22 @@
     "@next/bundle-analyzer": "^16.2.1",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/bcryptjs": "^3.0.0",
     "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/coverage-v8": "^4.1.6",
     "eslint": "^10.3.0",
     "eslint-config-next": "16.2.6",
     "husky": "^9.1.7",
+    "jsdom": "^29.1.1",
     "lighthouse": "^13.3.0",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
-    "typescript": "^6"
+    "typescript": "^6",
+    "vitest": "^4.1.6"
   }
 }
