@@ -17,24 +17,44 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Create issue for failed workflow
+      - name: Create or update issue for failed workflow
         uses: actions/github-script@v6
         with:
           script: |
             const workflow = context.payload.workflow_run;
             const repo = context.repo;
+            const title = `🚨 Fix failing workflow: ${workflow.name}`;
 
-            const issue = await github.rest.issues.create({
+            const { data: issues } = await github.rest.issues.listForRepo({
               owner: repo.owner,
               repo: repo.repo,
-              title: `🚨 Fix failing workflow: ${workflow.name}`,
-              body: `Workflow **${workflow.name}** failed on branch \`${workflow.head_branch}\`.
-
-            [View run](${workflow.html_url})
-
-            Triggered by: ${workflow.event}
-            Commit: ${workflow.head_commit.message}`,
-              labels: ['jules-fix']
+              state: 'open',
+              labels: 'jules-fix',
             });
 
-            console.log(`Created issue #${issue.data.number}`);
+            const existing = issues.find(i => i.title === title);
+
+            if (existing) {
+              const body = existing.body + `\n\n---\nAnother failure on \`${workflow.head_branch}\` — [View run](${workflow.html_url})`;
+              await github.rest.issues.update({
+                owner: repo.owner,
+                repo: repo.repo,
+                issue_number: existing.number,
+                body,
+              });
+              console.log(`Updated existing issue #${existing.number}`);
+            } else {
+              const issue = await github.rest.issues.create({
+                owner: repo.owner,
+                repo: repo.repo,
+                title,
+                body: `Workflow **${workflow.name}** failed on branch \`${workflow.head_branch}\`.
+
+      [View run](${workflow.html_url})
+
+      Triggered by: ${workflow.event}
+      Commit: ${workflow.head_commit.message}`,
+                labels: ['jules-fix']
+              });
+              console.log(`Created issue #${issue.data.number}`);
+            }
