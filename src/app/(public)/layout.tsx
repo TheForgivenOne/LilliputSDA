@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import { MobileBottomBar } from "@/components/layout/MobileBottomBar"
+import { QuickActionFAB } from "@/components/layout/QuickActionFAB"
 
 export default function PublicLayout({
   children,
@@ -15,6 +16,7 @@ export default function PublicLayout({
       </main>
       <Footer />
       <MobileBottomBar />
+      <QuickActionFAB />
     </div>
   );
 }

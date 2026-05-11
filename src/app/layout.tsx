@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Playfair_Display, Geist_Mono } from "next/font/google";
+import { Inter, Fraunces, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "@/styles/tokens.css";
 import { DirectionProvider } from "@/components/providers/DirectionProvider";
@@ -7,16 +7,20 @@ import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/next"
 import { Analytics } from "@/components/Analytics";
 
-const dmSans = DM_Sans({
+// Body — Inter (variable). CSS variable name kept stable as --font-dm-sans for back-compat.
+const inter = Inter({
   variable: "--font-dm-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  axes: ["opsz"],
+  display: "swap",
 });
 
-const playfair = Playfair_Display({
+// Display — Fraunces (variable). Soft + Opsz axes for warm, optically-sized serif.
+const fraunces = Fraunces({
   variable: "--font-playfair",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  axes: ["SOFT", "opsz"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
@@ -78,7 +82,7 @@ export const metadata: Metadata = {
     ],
   },
   manifest: "/manifest.json",
-  themeColor: "#1A0800",
+  themeColor: "#1B1A2E",
 };
 
 export default function RootLayout({
@@ -89,7 +93,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" data-scroll-behavior="smooth">
       <body
-        className={`${dmSans.variable} ${playfair.variable} ${geistMono.variable} antialiased bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-100`}
+        className={`${inter.variable} ${fraunces.variable} ${geistMono.variable} antialiased bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-100`}
       >
         <AuthProvider>
           <DirectionProvider>

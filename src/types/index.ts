@@ -1,3 +1,5 @@
+export type VideoStatus = "live" | "upcoming" | "past";
+
 export interface YouTubeVideo {
   id: string;
   title: string;
@@ -6,6 +8,8 @@ export interface YouTubeVideo {
   thumbnailUrl: string;
   duration: string;
   viewCount: string;
+  status: VideoStatus;
+  scheduledStartTime?: string;
 }
 
 export interface ChurchEvent {

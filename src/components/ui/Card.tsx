@@ -26,9 +26,13 @@ export function Card({ children, className, hover = true, padding = "md" }: Card
         "border border-stone-100 dark:border-stone-700",
         hover && [
           "shadow-sm transition-all duration-300",
-          "hover:shadow-xl hover:shadow-amber-500/5",
-          "hover:-translate-y-1 hover:border-amber-200 dark:hover:border-amber-800",
-          "focus-within:ring-2 focus-within:ring-amber-500 focus-within:ring-offset-2",
+          "hover:shadow-xl hover:shadow-[rgba(59,58,143,0.10)]",
+          "hover:-translate-y-1 hover:border-[var(--primary)]/35 dark:hover:border-[var(--primary)]/50",
+          "focus-within:ring-2 focus-within:ring-[var(--primary)] focus-within:ring-offset-2",
+          "relative",
+          "before:content-[''] before:absolute before:left-6 before:right-6 before:bottom-0 before:h-px",
+          "before:bg-gradient-to-r before:from-transparent before:via-[var(--accent-warm)]/0 before:to-transparent",
+          "before:transition-all before:duration-500 hover:before:via-[var(--accent-warm)]/60",
         ],
         paddingMap[padding],
         className

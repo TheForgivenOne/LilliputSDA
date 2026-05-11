@@ -1,39 +1,181 @@
 @import "tailwindcss";
 
+/* ============================================
+   VESPER — Lilliput SDA Design System
+   Liturgical jewel-tones (indigo + brass + mulberry).
+   See src/styles/tokens.css for the full token spec.
+   ============================================ */
+
 :root {
-  --background: #fafaf9;
-  --foreground: #1c1917;
-  --accent-warm: #c4321f;
-  --accent-cool: #78716c;
-  --accent-olive: #6b7c5e;
-  --gradient-primary: linear-gradient(135deg, #d97706 0%, #b45309 50%, #92400e 100%);
-  --gradient-hero: linear-gradient(135deg, rgba(217, 119, 6, 0.15) 0%, rgba(180, 83, 9, 0.1) 100%);
-  --glow-amber: 0 0 40px rgba(217, 119, 6, 0.3);
-  --glow-amber-sm: 0 0 20px rgba(217, 119, 6, 0.2);
+  /* Surface (light) */
+  --background:    #F6F1E7;  /* warm parchment */
+  --foreground:    #1B1A2E;  /* ink with cool undertone */
+  --surface:       #FDFBF5;  /* elevated cards */
+  --border-subtle: #E5DDCB;
+
+  /* Brand */
+  --primary:       #3B3A8F;  /* vesper indigo */
+  --primary-hover: #2D2C73;
+  --accent-warm:   #C8A24A;  /* antique brass — yellow-gold */
+  --accent-cool:   #6F6883;  /* slate-mauve */
+  --accent-olive:  #6E2A3E;  /* now mulberry (alias kept) */
+  --accent-wine:   #6E2A3E;
+  --accent-lilac:  #B8A8D4;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #3B3A8F 0%, #5B4FA0 50%, #C8A24A 110%);
+  --gradient-hero:    linear-gradient(135deg, rgba(59, 58, 143, 0.18) 0%, rgba(200, 162, 74, 0.10) 100%);
+
+  /* Glows */
+  --glow-primary:    0 0 40px rgba(59, 58, 143, 0.30);
+  --glow-primary-sm: 0 0 20px rgba(59, 58, 143, 0.22);
+  --glow-gold:       0 0 30px rgba(200, 162, 74, 0.25);
+  /* Legacy aliases — old selectors keep compiling */
+  --glow-amber:      var(--glow-primary);
+  --glow-amber-sm:   var(--glow-primary-sm);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-accent-warm: var(--accent-warm);
-  --color-accent-cool: var(--accent-cool);
-  --color-accent-olive: var(--accent-olive);
-  --font-sans: var(--font-dm-sans);
-  --font-serif: var(--font-playfair);
-  --font-mono: var(--font-geist-mono);
+  /* Surface aliases */
+  --color-background:    var(--background);
+  --color-foreground:    var(--foreground);
+  --color-surface:       var(--surface);
+  --color-border-subtle: var(--border-subtle);
+
+  /* Brand aliases */
+  --color-primary:       var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-accent-warm:   var(--accent-warm);
+  --color-accent-cool:   var(--accent-cool);
+  --color-accent-olive:  var(--accent-olive);
+  --color-accent-wine:   var(--accent-wine);
+  --color-accent-lilac:  var(--accent-lilac);
+
+  /* Fonts (variable names kept stable; values resolve to Fraunces / Inter via layout.tsx) */
+  --font-sans:    var(--font-dm-sans);
+  --font-serif:   var(--font-playfair);
+  --font-mono:    var(--font-geist-mono);
+  --font-display: var(--font-playfair);
+
+  /* ============================================
+     TAILWIND PALETTE REMAP
+     ============================================
+     Hardcoded `bg-amber-*`, `bg-orange-*`, `text-stone-*`, `bg-olive-*`
+     classes across ~68 files keep working but render in Vesper.
+     Once components are migrated to semantic tokens, these can be removed. */
+
+  /* amber-* → Vesper Indigo */
+  --color-amber-50:  #F4F2FB;
+  --color-amber-100: #E5E2F4;
+  --color-amber-200: #C8C3E8;
+  --color-amber-300: #A39CD8;
+  --color-amber-400: #7C76C4;
+  --color-amber-500: #5B4FA0;
+  --color-amber-600: #3B3A8F;
+  --color-amber-700: #2D2C73;
+  --color-amber-800: #232358;
+  --color-amber-900: #181842;
+
+  /* orange-* → Antique Brass */
+  --color-orange-50:  #FBF6E8;
+  --color-orange-100: #F4E8C4;
+  --color-orange-200: #E8D38B;
+  --color-orange-300: #DDB761;
+  --color-orange-400: #C8A24A;
+  --color-orange-500: #B68D40;
+  --color-orange-600: #997535;
+  --color-orange-700: #7A5D2A;
+  --color-orange-800: #5C4621;
+  --color-orange-900: #3F3017;
+
+  /* stone-* → cool parchment / slate-mauve neutrals (replaces warm stone) */
+  --color-stone-50:  #FDFBF5;
+  --color-stone-100: #F6F1E7;
+  --color-stone-200: #E5DDCB;
+  --color-stone-300: #C9C1B0;
+  --color-stone-400: #9C95A9;
+  --color-stone-500: #6F6883;
+  --color-stone-600: #524F6B;
+  --color-stone-700: #3B3950;
+  --color-stone-800: #25243A;
+  --color-stone-900: #1B1A2E;
+
+  /* olive-* (any legacy refs) → Mulberry */
+  --color-olive-50:  #FBF2F4;
+  --color-olive-100: #F4DCE2;
+  --color-olive-200: #E5B5C0;
+  --color-olive-300: #CD8395;
+  --color-olive-400: #B05A72;
+  --color-olive-500: #8A3E55;
+  --color-olive-600: #6E2A3E;
+  --color-olive-700: #561F30;
+  --color-olive-800: #3E1722;
+  --color-olive-900: #2A0F18;
+
+  /* yellow-* (warning surfaces) → Brass */
+  --color-yellow-50:  #FBF6E8;
+  --color-yellow-100: #F4E8C4;
+  --color-yellow-400: #DDB761;
+  --color-yellow-500: #C8A24A;
+  --color-yellow-600: #B68D40;
+
+  /* rose-* (destructive) → Mulberry/crimson */
+  --color-rose-50:  #FBEEF0;
+  --color-rose-100: #F4D2D8;
+  --color-rose-500: #A23545;
+  --color-rose-600: #862936;
+  --color-rose-700: #66202B;
+
+  /* green-* and emerald-* (success states) → desaturated Teal.
+   * Avoids literal green political signal while remaining a clearly "positive" hue. */
+  --color-green-50:  #ECF5F2;
+  --color-green-100: #D2EBE3;
+  --color-green-200: #ACD9CD;
+  --color-green-300: #7FC0AF;
+  --color-green-400: #54A290;
+  --color-green-500: #3F7A6E;
+  --color-green-600: #2E6256;
+  --color-green-700: #214A42;
+  --color-green-800: #143028;
+  --color-green-900: #0B1F1A;
+
+  --color-emerald-50:  #ECF5F2;
+  --color-emerald-100: #D2EBE3;
+  --color-emerald-200: #ACD9CD;
+  --color-emerald-300: #7FC0AF;
+  --color-emerald-400: #54A290;
+  --color-emerald-500: #3F7A6E;
+  --color-emerald-600: #2E6256;
+  --color-emerald-700: #214A42;
+  --color-emerald-800: #143028;
+  --color-emerald-900: #0B1F1A;
+
+  --color-lime-500: #C8A24A;
+  --color-teal-500: #3F7A6E;
 }
 
+/* Dark Mode — Night-sky indigo */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #1c1917;
-    --foreground: #fafaf9;
-    --accent-warm: #e5452a;
-    --accent-cool: #a8a29e;
-    --accent-olive: #94b487;
-    --gradient-primary: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
-    --gradient-hero: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.05) 100%);
-    --glow-amber: 0 0 60px rgba(245, 158, 11, 0.25);
-    --glow-amber-sm: 0 0 30px rgba(245, 158, 11, 0.15);
+    --background:    #0F0E1C;
+    --foreground:    #EFEAE0;
+    --surface:       #181729;
+    --border-subtle: #2A2842;
+
+    --primary:       #7C7AE0;
+    --primary-hover: #9892D8;
+    --accent-warm:   #DDB761;
+    --accent-cool:   #A39DC0;
+    --accent-olive:  #B86A82;
+    --accent-wine:   #B86A82;
+    --accent-lilac:  #C9BCE3;
+
+    --gradient-primary: linear-gradient(135deg, #5B4FA0 0%, #7C7AE0 50%, #DDB761 110%);
+    --gradient-hero:    linear-gradient(135deg, rgba(124, 122, 224, 0.14) 0%, rgba(221, 183, 97, 0.08) 100%);
+
+    --glow-primary:    0 0 60px rgba(124, 122, 224, 0.28);
+    --glow-primary-sm: 0 0 30px rgba(124, 122, 224, 0.20);
+    --glow-gold:       0 0 40px rgba(221, 183, 97, 0.22);
   }
 }
 
@@ -56,41 +198,34 @@ body {
   pointer-events: none;
 }
 
+/* Vesper hero mesh — indigo + brass radial wash */
 .gradient-mesh {
-  background: 
-    radial-gradient(ellipse at 20% 30%, rgba(217, 119, 6, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 70%, rgba(251, 146, 60, 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(180, 83, 9, 0.05) 0%, transparent 70%);
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(59, 58, 143, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 70%, rgba(200, 162, 74, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(110, 42, 62, 0.06) 0%, transparent 70%);
 }
 
 /* Respect font scaling for accessibility */
 html {
   font-size: 100%;
   -webkit-text-size-adjust: 100%;
-}
-
-/* Smooth scrolling */
-html {
   scroll-behavior: smooth;
 }
 
-/* Focus visible for accessibility - high contrast focus ring */
+/* Focus visible — Vesper indigo ring */
 :focus-visible {
-  outline: 3px solid var(--accent-warm);
+  outline: 3px solid var(--primary);
   outline-offset: 2px;
   box-shadow: 0 0 0 5px var(--background);
 }
 
-/* Ensure focus ring is visible in high contrast mode */
 @media (forced-colors: active) {
   :focus-visible {
     outline: 3px solid CanvasText;
     outline-offset: 2px;
   }
-}
 
-/* High contrast mode improvements */
-@media (forced-colors: active) {
   .bg-white { background-color: Canvas; }
   .bg-stone-800 { background-color: Canvas; }
   .border-stone-100 { border-color: CanvasText; }
@@ -99,16 +234,16 @@ html {
   .text-stone-100 { color: CanvasText; }
 }
 
-/* Respect reduced motion preferences */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  
+
   .animate-pulse {
     animation: none;
   }
-  
+
   *,
   *::before,
   *::after {
@@ -129,118 +264,99 @@ html {
 }
 
 /* ============================================
-    BASIC ANIMATIONS
-    ============================================ */
+   ANIMATIONS — Vesper
+   ============================================ */
 
 @keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slide-in {
   from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+  to   { transform: translateX(0); }
 }
 
 @keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 @keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 @keyframes slide-up-fade {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
 }
 
+/* Indigo pulse glow (replaces amber) */
 @keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(217, 119, 6, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(217, 119, 6, 0.5);
-  }
+  0%, 100% { box-shadow: 0 0 20px rgba(59, 58, 143, 0.30); }
+  50%      { box-shadow: 0 0 40px rgba(59, 58, 143, 0.55); }
 }
 
 @keyframes reveal-left {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
 }
 
 @keyframes text-shimmer {
-  0% {
-    background-position: -200% center;
-  }
-  100% {
-    background-position: 200% center;
-  }
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
 }
 
+/* Indigo text focus glow */
 @keyframes text-focus-glow {
-  0% {
-    opacity: 0;
-    text-shadow: 0 0 0 rgba(217, 119, 6, 0);
-  }
-  50% {
-    opacity: 0.7;
-    text-shadow: 0 0 20px rgba(217, 119, 6, 0.3), 0 0 40px rgba(217, 119, 6, 0.1);
-  }
-  100% {
-    opacity: 1;
-    text-shadow: 0 0 10px rgba(217, 119, 6, 0.1);
-  }
+  0%   { opacity: 0; text-shadow: 0 0 0 rgba(59, 58, 143, 0); }
+  50%  { opacity: 0.7; text-shadow: 0 0 20px rgba(59, 58, 143, 0.30), 0 0 40px rgba(59, 58, 143, 0.10); }
+  100% { opacity: 1; text-shadow: 0 0 10px rgba(59, 58, 143, 0.10); }
 }
 
 .animate-text-focus {
   animation: text-focus-glow 1.5s ease-out forwards;
 }
 
+/* Indigo→brass border dance */
 @keyframes border-dance {
-  0%, 100% {
-    border-color: rgba(217, 119, 6, 0.3);
+  0%, 100% { border-color: rgba(59, 58, 143, 0.30); }
+  50%      { border-color: rgba(200, 162, 74, 0.80); }
+}
+
+/* NEW — Vesper light: slow drifting candlelight wash */
+@keyframes vesper-drift {
+  0% {
+    transform: translate3d(-8%, -4%, 0) scale(1);
+    opacity: 0.55;
   }
   50% {
-    border-color: rgba(217, 119, 6, 0.8);
+    transform: translate3d(6%, 5%, 0) scale(1.08);
+    opacity: 0.85;
   }
+  100% {
+    transform: translate3d(-8%, -4%, 0) scale(1);
+    opacity: 0.55;
+  }
+}
+
+/* NEW — Stencil reveal for scroll-into-view headlines */
+@keyframes stencil-reveal {
+  0%   { clip-path: inset(0 100% 0 0); opacity: 0; }
+  20%  { opacity: 1; }
+  100% { clip-path: inset(0 0 0 0); opacity: 1; }
+}
+
+/* NEW — Marquee for announcement ticker */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 /* Animation utility classes */
@@ -270,6 +386,23 @@ html {
   animation: reveal-left 0.6s ease-out forwards;
 }
 
+.animate-vesper-drift {
+  animation: vesper-drift 14s ease-in-out infinite;
+}
+
+.animate-stencil-reveal {
+  animation: stencil-reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee:hover,
+.marquee-paused {
+  animation-play-state: paused;
+}
+
 /* Staggered animation delays */
 .delay-100 { animation-delay: 100ms; }
 .delay-200 { animation-delay: 200ms; }
@@ -283,14 +416,8 @@ html {
 }
 
 @keyframes slide-in-right {
-  from {
-    transform: translateX(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+  from { transform: translateX(20px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
 }
 
 .animate-slide-in-right {
@@ -310,7 +437,7 @@ html {
 .stagger-children > *:nth-child(5) { animation-delay: 400ms; }
 .stagger-children > *:nth-child(6) { animation-delay: 500ms; }
 
-/* Shimmer effect for loading */
+/* Skeleton shimmer */
 .shimmer {
   background: linear-gradient(
     90deg,
@@ -322,12 +449,12 @@ html {
   animation: shimmer 1.5s infinite;
 }
 
-/* Text shimmer effect */
+/* Brass text shimmer (replaces amber) */
 .text-shimmer {
   background: linear-gradient(
     90deg,
     currentColor 0%,
-    rgba(217, 119, 6, 1) 50%,
+    rgba(200, 162, 74, 1) 50%,
     currentColor 100%
   );
   background-size: 200% auto;
@@ -338,8 +465,8 @@ html {
 }
 
 /* ============================================
-    INTERACTIVE HOVER STATES
-    ============================================ */
+   INTERACTIVE HOVER STATES
+   ============================================ */
 
 .hover-lift {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -355,7 +482,11 @@ html {
 }
 
 .hover-glow:hover {
-  box-shadow: var(--glow-amber);
+  box-shadow: var(--glow-primary);
+}
+
+.hover-glow-gold:hover {
+  box-shadow: var(--glow-gold);
 }
 
 .hover-scale {
@@ -370,7 +501,7 @@ html {
   transform: scale(0.98);
 }
 
-/* Link underline animation */
+/* Link underline — indigo→brass draw */
 .link-underline {
   position: relative;
   text-decoration: none;
@@ -383,7 +514,7 @@ html {
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, #d97706, #f59e0b);
+  background: linear-gradient(90deg, var(--primary), var(--accent-warm));
   transition: width 0.3s ease;
 }
 
@@ -391,19 +522,19 @@ html {
   width: 100%;
 }
 
-/* Card hover effects */
+/* Card hover — indigo ring + lift */
 .card-hover {
   transition: all 0.3s ease;
   border: 1px solid transparent;
 }
 
 .card-hover:hover {
-  border-color: rgba(217, 119, 6, 0.3);
-  box-shadow: 0 8px 30px rgba(217, 119, 6, 0.15);
+  border-color: rgba(59, 58, 143, 0.35);
+  box-shadow: 0 8px 30px rgba(59, 58, 143, 0.15);
   transform: translateY(-2px);
 }
 
-/* Button press effect */
+/* Button press */
 .btn-press {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -412,20 +543,20 @@ html {
   transform: scale(0.96);
 }
 
-/* Icon hover animation */
+/* Icon hover — indigo */
 .icon-hover {
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .icon-hover:hover {
   transform: scale(1.1);
-  color: #d97706;
+  color: var(--primary);
 }
 
-/* Gradient border effect */
+/* Gradient border — indigo→brass */
 .gradient-border {
   position: relative;
-  background: white;
+  background: var(--surface);
 }
 
 .gradient-border::before {
@@ -433,7 +564,7 @@ html {
   position: absolute;
   inset: 0;
   padding: 2px;
-  background: linear-gradient(135deg, #d97706, #f59e0b, #d97706);
+  background: linear-gradient(135deg, var(--primary), var(--accent-warm), var(--primary));
   border-radius: inherit;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
@@ -453,8 +584,8 @@ a[href^="mailto:"] {
 }
 
 /* ============================================
-    FORM ELEMENTS
-    ============================================ */
+   FORM ELEMENTS
+   ============================================ */
 
 input:focus,
 textarea:focus,
@@ -463,26 +594,24 @@ select:focus {
 }
 
 /* ============================================
-    TEXT SELECTION
-    ============================================ */
+   TEXT SELECTION — Vesper indigo highlight
+   ============================================ */
 
 ::selection {
-  background: rgba(245, 158, 11, 0.3);
+  background: rgba(59, 58, 143, 0.28);
   color: inherit;
 }
 
 /* ============================================
-    TEXT OVERFLOW & WRAPPING UTILITIES
-    ============================================ */
+   TEXT OVERFLOW & WRAPPING UTILITIES
+   ============================================ */
 
-/* Single line with ellipsis */
 .truncate {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* Multi-line with clamp */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -504,14 +633,12 @@ select:focus {
   overflow: hidden;
 }
 
-/* Allow word wrapping with break */
 .wrap {
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
 }
 
-/* Prevent flex/grid items from overflowing */
 .flex-shrink-0 {
   flex-shrink: 0;
 }
@@ -521,25 +648,17 @@ select:focus {
   min-width: 0;
 }
 
-/* Minimum size for overflow handling */
-.min-w-0 {
-  min-width: 0;
-}
-
-.min-h-0 {
-  min-height: 0;
-}
+.min-w-0 { min-width: 0; }
+.min-h-0 { min-height: 0; }
 
 /* ============================================
-    RTL SUPPORT (LOGICAL PROPERTIES)
-    ============================================ */
+   RTL SUPPORT (LOGICAL PROPERTIES)
+   ============================================ */
 
-/* Base RTL support */
 [dir="rtl"] {
   direction: rtl;
 }
 
-/* Logical margin properties */
 .ms-1 { margin-inline-start: 0.25rem; }
 .ms-2 { margin-inline-start: 0.5rem; }
 .ms-3 { margin-inline-start: 0.75rem; }
@@ -550,7 +669,6 @@ select:focus {
 .me-3 { margin-inline-end: 0.75rem; }
 .me-4 { margin-inline-end: 1rem; }
 
-/* Logical padding properties */
 .ps-1 { padding-inline-start: 0.25rem; }
 .ps-2 { padding-inline-start: 0.5rem; }
 .ps-3 { padding-inline-start: 0.75rem; }
@@ -561,95 +679,70 @@ select:focus {
 .pe-3 { padding-inline-end: 0.75rem; }
 .pe-4 { padding-inline-end: 1rem; }
 
-/* Logical border radius */
-.rounded-s { border-start-start-radius: 0.25rem; border-end-start-radius: 0.25rem; }
-.rounded-e { border-start-end-radius: 0.25rem; border-end-end-radius: 0.25rem; }
+.rounded-s  { border-start-start-radius: 0.25rem; border-end-start-radius: 0.25rem; }
+.rounded-e  { border-start-end-radius: 0.25rem; border-end-end-radius: 0.25rem; }
 .rounded-ss { border-start-start-radius: 0.25rem; }
 .rounded-se { border-start-end-radius: 0.25rem; }
 .rounded-es { border-end-start-radius: 0.25rem; }
 .rounded-ee { border-end-end-radius: 0.25rem; }
 
 /* ============================================
-    CUSTOM SCROLLBAR
-    ============================================ */
+   CUSTOM SCROLLBAR — Vesper neutrals
+   ============================================ */
 
 ::-webkit-scrollbar {
   width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f5f5f4;
+  background: #F6F1E7;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d6d3d1;
+  background: #C9C1B0;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a8a29e;
+  background: #9C95A9;
 }
 
 @media (prefers-color-scheme: dark) {
   ::-webkit-scrollbar-track {
-    background: #292524;
+    background: #181729;
   }
-  
+
   ::-webkit-scrollbar-thumb {
-    background: #44403c;
+    background: #3B3950;
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
-    background: #57534e;
+    background: #524F6B;
   }
 }
 
 /* ============================================
    I18N TEXT EXPANSION PADDING
-   Accommodates 30-40% text expansion for translations
    ============================================ */
 
-/* Minimum padding for i18n text containers */
-.i18n-pad {
-  padding: 1rem;
-}
-
-/* Extra horizontal padding for longer translations */
-.i18n-pad-x {
-  padding-inline: 1rem;
-}
-
-/* Button padding that accommodates translation expansion */
-.i18n-btn {
-  padding: 0.625rem 1.25rem;
-}
+.i18n-pad   { padding: 1rem; }
+.i18n-pad-x { padding-inline: 1rem; }
+.i18n-btn   { padding: 0.625rem 1.25rem; }
 
 @media (min-width: 640px) {
-  .i18n-btn {
-    padding: 0.75rem 1.5rem;
-  }
+  .i18n-btn { padding: 0.75rem 1.5rem; }
 }
 
-/* Card padding for translation expansion */
-.i18n-card {
-  padding: 1.25rem;
-}
+.i18n-card { padding: 1.25rem; }
 
 @media (min-width: 640px) {
-  .i18n-card {
-    padding: 1.5rem;
-  }
+  .i18n-card { padding: 1.5rem; }
 }
 
-/* Input padding for translation expansion */
-.i18n-input {
-  padding: 0.75rem 1rem;
-}
+.i18n-input { padding: 0.75rem 1rem; }
 
 @media (min-width: 640px) {
-  .i18n-input {
-    padding: 0.875rem 1.25rem;
-  }
+  .i18n-input { padding: 0.875rem 1.25rem; }
 }
 
 /* ============================================
@@ -681,7 +774,6 @@ select:focus {
 
 /* ============================================
    SAFE IMAGE CONTAINER
-   Prevents layout shift and overflow
    ============================================ */
 
 .img-container {
@@ -705,6 +797,20 @@ select:focus {
   object-fit: cover;
 }
 
+/* Indigo color-grade for hero photography (Vesper rule #6) */
+.img-grade-vesper {
+  position: relative;
+}
+
+.img-grade-vesper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(59, 58, 143, 0.12);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
 /* ============================================
    NETWORK STATUS INDICATORS
    ============================================ */
@@ -719,7 +825,6 @@ select:focus {
 
 /* ============================================
    LONG TEXT PREVENTION
-   Prevents extremely long text from breaking layout
    ============================================ */
 
 .prevent-overflow {
@@ -738,7 +843,6 @@ select:focus {
 
 /* ============================================
    HORIZONTAL SCROLL UTILITIES
-   Hide scrollbar while maintaining functionality
    ============================================ */
 
 .scrollbar-hide {

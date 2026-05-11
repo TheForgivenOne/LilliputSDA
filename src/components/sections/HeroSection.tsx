@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import Button from "@/components/ui/Button";
+import { VesperLight } from "@/components/motion/VesperLight";
 
 interface HeroSectionProps {
   title: string;
@@ -63,9 +64,11 @@ export function HeroSection({
       </div>
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-[var(--primary)]/15 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[var(--accent-warm)]/12 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
+
+      <VesperLight intensity="soft" />
 
       <div className="relative flex-1 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
         <div className="max-w-3xl">

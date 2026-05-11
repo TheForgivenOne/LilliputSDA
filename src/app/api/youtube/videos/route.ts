@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit, youtubeLimiter } from "@/lib/rate-limit";
+import type { VideoStatus } from "@/types";
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const CHANNEL_ID = "UC5PpTmwN_ZUyM1xgwQR-_8w";
@@ -14,6 +15,8 @@ interface YouTubeVideo {
   thumbnailUrl: string;
   duration: string;
   viewCount: string;
+  status: VideoStatus;
+  scheduledStartTime?: string;
 }
 
 interface YouTubeSearchItem {
@@ -31,6 +34,7 @@ interface YouTubeSearchItem {
       medium?: { url?: string };
       default?: { url?: string };
     };
+    liveBroadcastContent?: string;
   };
 }
 
@@ -47,12 +51,20 @@ interface YouTubeVideoItem {
       medium?: { url?: string };
       default?: { url?: string };
     };
+    liveBroadcastContent?: string;
   };
   contentDetails?: {
     duration?: string;
   };
   statistics?: {
     viewCount?: string;
+  };
+  liveStreamingDetails?: {
+    actualStartTime?: string;
+    actualEndTime?: string;
+    scheduledStartTime?: string;
+    scheduledEndTime?: string;
+    concurrentViewers?: string;
   };
 }
 
@@ -128,6 +140,79 @@ async function fetchWithTimeout(url: string, timeout: number = FETCH_TIMEOUT): P
   }
 }
 
+async function fetchSearchResults(url: string): Promise<YouTubeSearchItem[]> {
+  let response: Response;
+  try {
+    response = await fetchWithTimeout(url);
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new Error("TIMEOUT");
+    }
+    throw error;
+  }
+
+  if (!response.ok) {
+    if (response.status === 403) throw new Error("QUOTA_EXCEEDED");
+    if (response.status === 401) throw new Error("INVALID_KEY");
+    throw new Error(`YouTube API error: ${response.status}`);
+  }
+
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error("INVALID_RESPONSE");
+  }
+
+  return data.items || [];
+}
+
+function determineStatus(
+  liveBroadcastContent: string | undefined,
+  liveStreamingDetails: YouTubeVideoItem["liveStreamingDetails"]
+): VideoStatus {
+  if (liveStreamingDetails?.actualEndTime) return "past";
+  if (liveStreamingDetails?.actualStartTime && !liveStreamingDetails.actualEndTime) return "live";
+  if (liveStreamingDetails?.scheduledStartTime && !liveStreamingDetails.actualStartTime) return "upcoming";
+
+  if (liveBroadcastContent === "live") return "live";
+  if (liveBroadcastContent === "upcoming") return "upcoming";
+  return "past";
+}
+
+function mapVideo(
+  item: YouTubeSearchItem,
+  details: YouTubeVideoItem | undefined
+): YouTubeVideo {
+  const videoId = item.id.videoId;
+  const thumbnails = item.snippet?.thumbnails || {};
+  const thumbnailUrl = thumbnails.maxres?.url || 
+                        thumbnails.standard?.url || 
+                        thumbnails.high?.url || 
+                        thumbnails.medium?.url || 
+                        getYouTubeThumbnailFallback(videoId, "high");
+
+  const title = decodeHtmlEntities(item.snippet?.title) || "Untitled Video";
+  const description = decodeHtmlEntities(item.snippet?.description) || "";
+
+  const status = determineStatus(
+    item.snippet?.liveBroadcastContent,
+    details?.liveStreamingDetails
+  );
+
+  return {
+    id: videoId,
+    title: title.substring(0, 200),
+    description: description.substring(0, 5000),
+    publishedAt: item.snippet?.publishedAt || new Date().toISOString(),
+    thumbnailUrl,
+    duration: parseYouTubeDuration(details?.contentDetails?.duration),
+    viewCount: sanitizeNumber(details?.statistics?.viewCount),
+    status,
+    scheduledStartTime: details?.liveStreamingDetails?.scheduledStartTime || undefined,
+  };
+}
+
 export async function GET(request: NextRequest) {
   const ip = getClientIP(request);
   const { success } = await checkRateLimit(youtubeLimiter, ip);
@@ -159,67 +244,75 @@ export async function GET(request: NextRequest) {
       maxResults = parsed;
     }
 
-    const searchUrl = `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&type=video&order=date&maxResults=${maxResults}`;
-    
-    let searchResponse: Response;
+    const baseSearchUrl = `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${CHANNEL_ID}&part=snippet&type=video`;
+    const upcomingSearchUrl = `${baseSearchUrl}&eventType=upcoming&maxResults=5`;
+    const regularSearchUrl = `${baseSearchUrl}&order=date&maxResults=${maxResults}`;
+
+    let regularItems: YouTubeSearchItem[] = [];
+    let upcomingItems: YouTubeSearchItem[] = [];
+
     try {
-      searchResponse = await fetchWithTimeout(searchUrl);
-    } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") {
+      [regularItems, upcomingItems] = await Promise.all([
+        fetchSearchResults(regularSearchUrl),
+        fetchSearchResults(upcomingSearchUrl),
+      ]);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "";
+      if (message === "TIMEOUT") {
         return NextResponse.json(
           { error: "Request timed out", code: "TIMEOUT" },
           { status: 504 }
         );
       }
-      throw error;
-    }
-    
-    if (!searchResponse.ok) {
-      console.error("YouTube Search API error:", searchResponse.status);
-      
-      if (searchResponse.status === 403) {
+      if (message === "QUOTA_EXCEEDED") {
         return NextResponse.json(
           { error: "YouTube API quota exceeded", code: "QUOTA_EXCEEDED" },
           { status: 403 }
         );
       }
-      if (searchResponse.status === 401) {
+      if (message === "INVALID_KEY") {
         return NextResponse.json(
           { error: "YouTube API key is invalid", code: "INVALID_KEY" },
           { status: 401 }
         );
       }
-      return NextResponse.json(
-        { error: `YouTube API error: ${searchResponse.status}`, code: "API_ERROR" },
-        { status: searchResponse.status }
-      );
+      if (message.startsWith("YouTube API error:")) {
+        const statusCode = parseInt(message.split(":").pop()?.trim() || "500", 10);
+        return NextResponse.json(
+          { error: message, code: "API_ERROR" },
+          { status: statusCode }
+        );
+      }
+      throw err;
     }
 
-    let searchData;
-    try {
-      searchData = await searchResponse.json();
-    } catch {
-      return NextResponse.json(
-        { error: "Invalid response from YouTube API", code: "INVALID_RESPONSE" },
-        { status: 502 }
-      );
+    const seenIds = new Set<string>();
+    const allItems: { item: YouTubeSearchItem; priority: number }[] = [];
+
+    for (const item of regularItems) {
+      const id = item.id?.videoId;
+      if (id && id.length === 11 && !seenIds.has(id)) {
+        seenIds.add(id);
+        allItems.push({ item, priority: 0 });
+      }
     }
-    
-    if (!searchData.items || searchData.items.length === 0) {
+
+    for (const item of upcomingItems) {
+      const id = item.id?.videoId;
+      if (id && id.length === 11 && !seenIds.has(id)) {
+        seenIds.add(id);
+        allItems.push({ item, priority: 1 });
+      }
+    }
+
+    if (allItems.length === 0) {
       return NextResponse.json({ videos: [], count: 0 });
     }
-    
-    const videoIds = (searchData.items as YouTubeSearchItem[])
-      .map((item) => item.id?.videoId)
-      .filter((id: string | undefined): id is string => !!id && id.length === 11)
-      .join(",");
-    
-    if (!videoIds) {
-      return NextResponse.json({ videos: [], count: 0 });
-    }
-    
-    const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoIds}&part=snippet,contentDetails,statistics`;
-    
+
+    const videoIds = allItems.map((e) => e.item.id.videoId).join(",");
+
+    const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoIds}&part=snippet,contentDetails,statistics,liveStreamingDetails`;
+
     let detailsResponse: Response;
     try {
       detailsResponse = await fetchWithTimeout(detailsUrl);
@@ -232,7 +325,7 @@ export async function GET(request: NextRequest) {
       }
       throw error;
     }
-    
+
     if (!detailsResponse.ok) {
       console.error("YouTube Videos API error:", detailsResponse.status);
       return NextResponse.json(
@@ -240,7 +333,7 @@ export async function GET(request: NextRequest) {
         { status: detailsResponse.status }
       );
     }
-    
+
     let detailsData;
     try {
       detailsData = await detailsResponse.json();
@@ -250,7 +343,7 @@ export async function GET(request: NextRequest) {
         { status: 502 }
       );
     }
-    
+
     const videoDetails: Record<string, YouTubeVideoItem> = {};
     (detailsData.items as YouTubeVideoItem[])?.forEach((item) => {
       if (item.id) {
@@ -258,36 +351,32 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    const videos: YouTubeVideo[] = (searchData.items as YouTubeSearchItem[])
-      .filter((item) => item.id?.videoId)
-      .map((item) => {
-        const videoId = item.id.videoId;
-        const details = videoDetails[videoId] || {};
-        
-        const thumbnails = item.snippet?.thumbnails || {};
-        const thumbnailUrl = thumbnails.maxres?.url || 
-                            thumbnails.standard?.url || 
-                            thumbnails.high?.url || 
-                            thumbnails.medium?.url || 
-                            getYouTubeThumbnailFallback(videoId, "high");
+    const videos: YouTubeVideo[] = allItems.map(({ item }) => {
+      const videoId = item.id.videoId;
+      return mapVideo(item, videoDetails[videoId]);
+    });
 
-        const title = decodeHtmlEntities(item.snippet?.title) || "Untitled Video";
-        const description = decodeHtmlEntities(item.snippet?.description) || "";
-        
-        return {
-          id: videoId,
-          title: title.substring(0, 200),
-          description: description.substring(0, 5000),
-          publishedAt: item.snippet?.publishedAt || new Date().toISOString(),
-          thumbnailUrl,
-          duration: parseYouTubeDuration(details.contentDetails?.duration),
-          viewCount: sanitizeNumber(details.statistics?.viewCount),
-        };
-      });
+    videos.sort((a, b) => {
+      if (a.status === "live" && b.status !== "live") return -1;
+      if (a.status !== "live" && b.status === "live") return 1;
+      if (a.status === "upcoming" && b.status === "upcoming") {
+        if (a.scheduledStartTime && b.scheduledStartTime) {
+          return new Date(a.scheduledStartTime).getTime() - new Date(b.scheduledStartTime).getTime();
+        }
+        return 0;
+      }
+      if (a.status === "upcoming") return -1;
+      if (b.status === "upcoming") return 1;
+      return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+    });
+
+    const limitedVideos = videos.slice(0, maxResults);
 
     return NextResponse.json({ 
-      videos,
-      count: videos.length
+      videos: limitedVideos,
+      count: limitedVideos.length,
+      liveCount: videos.filter((v) => v.status === "live").length,
+      upcomingCount: videos.filter((v) => v.status === "upcoming").length,
     });
 
   } catch (error) {
@@ -302,6 +391,7 @@ export async function GET(request: NextRequest) {
         thumbnailUrl: getYouTubeThumbnailFallback("dQw4w9WgXcQ", "high"),
         duration: "3:45",
         viewCount: "0",
+        status: "past",
       },
       {
         id: "example1",
@@ -311,6 +401,7 @@ export async function GET(request: NextRequest) {
         thumbnailUrl: getYouTubeThumbnailFallback("example1", "high"),
         duration: "45:00",
         viewCount: "0",
+        status: "past",
       },
       {
         id: "example2",
@@ -320,6 +411,7 @@ export async function GET(request: NextRequest) {
         thumbnailUrl: getYouTubeThumbnailFallback("example2", "high"),
         duration: "12:30",
         viewCount: "0",
+        status: "past",
       },
     ];
     
@@ -329,6 +421,8 @@ export async function GET(request: NextRequest) {
         code: "FALLBACK", 
         videos: fallbackVideos,
         count: fallbackVideos.length,
+        liveCount: 0,
+        upcomingCount: 0,
       },
       { status: 200 }
     );

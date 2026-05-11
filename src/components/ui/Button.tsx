@@ -4,7 +4,7 @@ import { ReactNode, ButtonHTMLAttributes, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "terracotta";
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "wine" | "gold";
   size?: "sm" | "md" | "lg";
   children: ReactNode;
   isLoading?: boolean;
@@ -35,19 +35,23 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles =
       "inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group";
 
+    // Vesper variants — indigo (primary), brass (gold), mulberry (wine), slate (secondary).
+    // Built on semantic tokens from globals.css / tokens.css.
     const variants = {
       primary:
-        "bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600 focus:ring-amber-500 shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
-      terracotta:
-        "bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 focus:ring-orange-500 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
+        "bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] focus:ring-[var(--primary)] shadow-lg shadow-[rgba(59,58,143,0.30)] hover:shadow-[rgba(59,58,143,0.45)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
+      gold:
+        "bg-[var(--accent-warm)] text-[#1B1A2E] hover:bg-[#B68D40] focus:ring-[var(--accent-warm)] shadow-lg shadow-[rgba(200,162,74,0.28)] hover:shadow-[rgba(200,162,74,0.45)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
+      wine:
+        "bg-[var(--accent-wine)] text-white hover:bg-[#561F30] focus:ring-[var(--accent-wine)] shadow-lg shadow-[rgba(110,42,62,0.30)] hover:shadow-[rgba(110,42,62,0.45)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
       secondary:
-        "bg-gradient-to-r from-stone-700 to-stone-800 text-white hover:from-stone-800 hover:to-stone-900 focus:ring-stone-500 shadow-lg shadow-stone-500/25 hover:shadow-stone-500/40 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
+        "bg-stone-800 text-white hover:bg-stone-900 focus:ring-stone-500 shadow-lg shadow-stone-900/25 hover:shadow-stone-900/40 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
       outline:
-        "border-2 border-amber-600 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 hover:border-amber-700 focus:ring-amber-500 hover:-translate-y-0.5 active:translate-y-0",
+        "border-2 border-[var(--primary)] text-[var(--primary)] dark:text-[var(--accent-lilac)] hover:bg-[var(--primary)] hover:text-white focus:ring-[var(--primary)] hover:-translate-y-0.5 active:translate-y-0",
       ghost:
         "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-900 dark:hover:text-stone-100 focus:ring-stone-500",
       danger:
-        "bg-gradient-to-r from-rose-600 to-rose-700 text-white hover:from-rose-700 hover:to-rose-800 focus:ring-rose-500 shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
+        "bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-500 shadow-lg shadow-rose-900/30 hover:shadow-rose-900/45 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
     };
 
     const sizes = {

@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import { MinistryDetailCard } from "@/components/ui/Card";
 import { CHURCH_IMAGES } from "@/lib/utils";
-import { Users, Music, Heart, BookOpen, Star, Stethoscope, Hand } from "lucide-react";
+import { Users, Music, Heart, BookOpen, Star, Stethoscope, Hand, SlidersHorizontal, X } from "lucide-react";
 import type { Ministry } from "@/types";
 import { PageHero } from "@/components/sections/PageHero";
 import { CategoryFilter } from "@/components/ui/CategoryFilter";
+import { FilterDrawer } from "@/components/ui/FilterDrawer";
 
 const defaultMinistries = [
   {
@@ -142,6 +143,9 @@ export default function MinistriesPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [ministries, setMinistries] = useState<Ministry[]>([]);
   const [ministriesLoading, setMinistriesLoading] = useState(true);
+  const [filterOpen, setFilterOpen] = useState(false);
+
+  const activeCategory = ministryCategories.find((c) => c.id === selectedCategory);
 
   useEffect(() => {
     async function fetchMinistries() {
@@ -159,34 +163,72 @@ export default function MinistriesPage() {
   }, []);
 
   const displayMinistries = ministries.length > 0 ? ministries : defaultMinistries;
-  
+
   const filteredMinistries = displayMinistries.filter((ministry: Ministry) =>
     selectedCategory === "all" ? true : ministry.category === selectedCategory
   );
+  const filteredCount = filteredMinistries.length;
 
   return (
     <div className="min-h-screen">
       <PageHero
-        badge={<span className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-amber-200 font-semibold text-sm backdrop-blur-sm"><span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />Get Involved</span>}
+        badge={<span className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-white/90 font-semibold text-sm backdrop-blur-sm"><span className="w-2 h-2 bg-[var(--accent-warm)] rounded-full animate-pulse" />Get Involved</span>}
         title="Our Ministries & Departments"
         description="Discover your place in our church family. We have departments for every age and interest, all focused on growing together in Christ."
         theme="amber"
       />
 
-      <section className="sticky top-16 lg:top-20 z-30 py-4 bg-white/95 dark:bg-stone-900/95 backdrop-blur-xl border-b border-stone-200 dark:border-stone-800">
+      {/* Filter strip — mobile: trigger + active chip / tablet+: inline pill row */}
+      <section className="sticky top-16 lg:top-20 z-30 py-3 bg-[var(--background)]/90 backdrop-blur-md border-b border-[var(--border-subtle)] dark:border-stone-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <CategoryFilter
-            categories={ministryCategories}
-            selected={selectedCategory}
-            onSelect={setSelectedCategory}
-          />
+          {/* Mobile */}
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setFilterOpen(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--surface)] border border-[var(--border-subtle)] text-stone-700 dark:text-stone-200 font-medium text-sm shadow-sm"
+            >
+              <SlidersHorizontal className="w-4 h-4" />
+              Filters
+            </button>
+            {selectedCategory !== "all" && activeCategory && (
+              <button
+                type="button"
+                onClick={() => setSelectedCategory("all")}
+                className="inline-flex items-center gap-1.5 pl-3 pr-2 py-1.5 rounded-full bg-[var(--primary)] text-white text-sm font-medium shadow-md shadow-[rgba(59,58,143,0.25)]"
+              >
+                {activeCategory.label}
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+            <span className="ml-auto text-sm text-stone-500 dark:text-stone-400">
+              {ministriesLoading ? "…" : `${filteredCount} results`}
+            </span>
+          </div>
+          {/* Tablet & desktop */}
+          <div className="hidden md:block">
+            <CategoryFilter
+              categories={ministryCategories}
+              selected={selectedCategory}
+              onSelect={setSelectedCategory}
+            />
+          </div>
         </div>
       </section>
+
+      <FilterDrawer
+        categories={ministryCategories}
+        selected={selectedCategory}
+        onSelect={setSelectedCategory}
+        open={filterOpen}
+        onClose={() => setFilterOpen(false)}
+        itemNoun="ministries"
+      />
 
       <section className="py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {ministriesLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm">
                   <div className="aspect-video bg-stone-200 dark:bg-stone-700 animate-pulse" />
@@ -199,7 +241,7 @@ export default function MinistriesPage() {
               ))}
             </div>
           ) : filteredMinistries.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredMinistries.map((ministry: Ministry) => (
                 <MinistryDetailCard
                   key={ministry.id || ministry.name}
@@ -240,7 +282,7 @@ export default function MinistriesPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="mailto:lhamilton@westjamaica.org"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[var(--primary)] text-white rounded-2xl font-semibold shadow-lg shadow-[rgba(59,58,143,0.30)] hover:bg-[var(--primary-hover)] hover:shadow-[rgba(59,58,143,0.45)] hover:-translate-y-0.5 transition-all"
             >
               Contact a Ministry Leader
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,8 +290,8 @@ export default function MinistriesPage() {
               </svg>
             </a>
             <a
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-stone-300 dark:border-stone-600 text-stone-700 dark:text-stone-300 rounded-2xl font-semibold hover:border-amber-500 hover:text-amber-600 dark:hover:border-amber-500 dark:hover:text-amber-400 transition-all"
+              href="/contact?topic=volunteer#form"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-stone-300 dark:border-stone-600 text-stone-700 dark:text-stone-300 rounded-2xl font-semibold hover:border-[var(--primary)] hover:text-[var(--primary)] dark:hover:border-[var(--accent-lilac)] dark:hover:text-[var(--accent-lilac)] transition-all"
             >
               General Inquiry
             </a>

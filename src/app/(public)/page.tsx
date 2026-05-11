@@ -11,6 +11,7 @@ import { QuickMinistryCard } from "@/components/cards/QuickMinistryCard";
 import { CTASection } from "@/components/sections/CTASection";
 import { SermonList, VideoModal } from "@/components/media";
 import { TestimonialCard } from "@/components/cards/TestimonialCard";
+import { AnchorPillNav } from "@/components/layout/AnchorPillNav";
 
 import { EventsList } from "@/components/sections/EventsList";
 import { AnnouncementsList } from "@/components/sections/AnnouncementsList";
@@ -40,15 +41,15 @@ export default function Home() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [testimonialsLoading, setTestimonialsLoading] = useState(true);
   const [siteContent, setSiteContent] = useState<SiteContent[]>([]);
-  
+
   const [sermonVideos, setSermonVideos] = useState<YouTubeVideo[]>([]);
   const [videosLoading, setVideosLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null);
 
-  const heroTitle = siteContent.find(c => c.key === "hero_title")?.content;
-  const heroSubtitle = siteContent.find(c => c.key === "hero_subtitle")?.content;
-  const heroDescription = siteContent.find(c => c.key === "hero_description")?.content;
-  const heroImage = siteContent.find(c => c.key === "hero_background")?.imageUrl;
+  const heroTitle = siteContent.find((c) => c.key === "hero_title")?.content;
+  const heroSubtitle = siteContent.find((c) => c.key === "hero_subtitle")?.content;
+  const heroDescription = siteContent.find((c) => c.key === "hero_description")?.content;
+  const heroImage = siteContent.find((c) => c.key === "hero_background")?.imageUrl;
 
   useEffect(() => {
     async function fetchData() {
@@ -60,23 +61,23 @@ export default function Home() {
           fetch("/api/testimonials"),
           fetch("/api/site-content"),
         ]);
-        
+
         const eventsData = await eventsRes.json();
         const announcementsData = await announcementsRes.json();
         const videosData = await videosRes.json();
         const testimonialsData = await testimonialsRes.json();
         const contentData = await contentRes.json();
-        
+
         if (Array.isArray(eventsData)) setEvents(eventsData);
         else if (!eventsRes.ok) setEventsError(true);
-        
+
         if (Array.isArray(announcementsData)) setAnnouncements(announcementsData);
         else if (!announcementsRes.ok) setAnnouncementsError(true);
-        
+
         if (videosData.videos) setSermonVideos(videosData.videos);
-        
+
         if (Array.isArray(testimonialsData)) setTestimonials(testimonialsData);
-        
+
         if (Array.isArray(contentData)) setSiteContent(contentData);
       } catch {
         setEventsError(true);
@@ -90,35 +91,77 @@ export default function Home() {
     }
     fetchData();
   }, []);
-  
-  const quickInfoContent = useMemo(() => (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <QuickInfo
-        icon={Clock}
-        label="Sabbath Service"
-        value="Saturdays at 11:00 AM"
-        href="/visit"
-      />
-      <QuickInfo icon={MapPin} label="Location" value="Lilliput, Montego Bay" href="/visit" />
-      <QuickInfo icon={Play} label="Livestream" value="Watch Online" href="/media" />
-    </div>
-  ), []);
+
+  const quickInfoContent = useMemo(
+    () => (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <QuickInfo
+          icon={Clock}
+          label="Sabbath Service"
+          value="Saturdays at 11:00 AM"
+          href="/visit"
+        />
+        <QuickInfo icon={MapPin} label="Location" value="Lilliput, Montego Bay" href="/visit" />
+        <QuickInfo icon={Play} label="Livestream" value="Watch Online" href="/media" />
+      </div>
+    ),
+    [],
+  );
 
   const imageSrc = "/images/history/current_church_building_2016.jpg";
 
-  const ministries = useMemo(() => [
-    { name: "Youth Ministries", imageUrl: CHURCH_IMAGES.ministries.youth.worship, bgColor: "bg-gradient-to-br from-emerald-500 to-emerald-700", href: "/ministries" },
-    { name: "Women's Ministry", imageUrl: CHURCH_IMAGES.ministries.womens.main, bgColor: "bg-gradient-to-br from-rose-300 to-rose-500", href: "/ministries" },
-    { name: "Men's Ministry", imageUrl: CHURCH_IMAGES.ministries.mens.main, bgColor: "bg-gradient-to-br from-stone-500 to-stone-700", href: "/ministries" },
-    { name: "Music Ministry", imageUrl: CHURCH_IMAGES.ministries.music.worship, bgColor: "bg-gradient-to-br from-amber-500 to-amber-700", href: "/ministries" },
-  ], []);
+  const ministries = useMemo(
+    () => [
+      {
+        name: "Youth Ministries",
+        imageUrl: CHURCH_IMAGES.ministries.youth.worship,
+        bgColor: "bg-gradient-to-br from-[var(--primary)] to-[var(--primary-hover)]",
+        href: "/ministries",
+      },
+      {
+        name: "Women's Ministry",
+        imageUrl: CHURCH_IMAGES.ministries.womens.main,
+        bgColor: "bg-gradient-to-br from-[var(--accent-wine)] to-[#561F30]",
+        href: "/ministries",
+      },
+      {
+        name: "Men's Ministry",
+        imageUrl: CHURCH_IMAGES.ministries.mens.main,
+        bgColor: "bg-gradient-to-br from-stone-600 to-stone-800",
+        href: "/ministries",
+      },
+      {
+        name: "Music Ministry",
+        imageUrl: CHURCH_IMAGES.ministries.music.worship,
+        bgColor: "bg-gradient-to-br from-[var(--accent-warm)] to-[#7A5D2A]",
+        href: "/ministries",
+      },
+    ],
+    [],
+  );
+
+  // Section nav — IDs must match the section element IDs below.
+  const anchorItems = useMemo(
+    () => [
+      { id: "about", label: "About" },
+      { id: "sermons", label: "Sermons" },
+      { id: "this-week", label: "This Week" },
+      { id: "ministries", label: "Ministries" },
+      { id: "testimonies", label: "Voices" },
+      { id: "visit", label: "Visit" },
+    ],
+    [],
+  );
 
   return (
     <div className="min-h-screen">
       <HeroSection
         title={heroTitle || "Welcome to"}
         subtitle={heroSubtitle || "Lilliput SDA Church"}
-        description={heroDescription || "A warm, welcoming community in the heart of St. James, Jamaica. Join us as we grow together in faith, love, and service."}
+        description={
+          heroDescription ||
+          "A warm, welcoming community in the heart of St. James, Jamaica. Join us as we grow together in faith, love, and service."
+        }
         badge="Growing together in faith since 1974"
         badgeHref="/about"
         backgroundImage={heroImage || CHURCH_IMAGES.hero.churchBuilding}
@@ -127,18 +170,22 @@ export default function Home() {
         quickInfo={quickInfoContent}
       />
 
-      <AboutSplit
-        label="About Our Church"
-        title="A Place to Belong, Believe, and Become"
-        description="Founded in 1974, Lilliput SDA Church has been a beacon of hope and faith in the St. James community for over 50 years. Today we are a vibrant congregation of 463 members dedicated to sharing God's love through worship, fellowship, and service."
-        additionalText="Whether you're a lifelong Adventist or just beginning your spiritual journey, there's a place for you here. Come experience the warmth of our church family."
-        imageSrc={imageSrc}
-        imageAlt="Church congregation"
-        stats={{ value: "463", label: "Active Members", position: "bottom-left" }}
-        action={{ label: "Learn Our Story", href: "/about" }}
-      />
+      <AnchorPillNav items={anchorItems} offset={64} />
 
-      <section className="py-20 lg:py-28 bg-white dark:bg-stone-900">
+      <section id="about">
+        <AboutSplit
+          label="About Our Church"
+          title="A Place to Belong, Believe, and Become"
+          description="Founded in 1974, Lilliput SDA Church has been a beacon of hope and faith in the St. James community for over 50 years. Today we are a vibrant congregation of 463 members dedicated to sharing God's love through worship, fellowship, and service."
+          additionalText="Whether you're a lifelong Adventist or just beginning your spiritual journey, there's a place for you here. Come experience the warmth of our church family."
+          imageSrc={imageSrc}
+          imageAlt="Church congregation"
+          stats={{ value: "463", label: "Active Members", position: "bottom-left" }}
+          action={{ label: "Learn Our Story", href: "/about" }}
+        />
+      </section>
+
+      <section id="sermons" className="py-20 lg:py-28 bg-white dark:bg-stone-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             label="Latest Message"
@@ -155,13 +202,73 @@ export default function Home() {
         </div>
       </section>
 
-      {testimonials.length > 0 && (
-        <section className="py-20 lg:py-28 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-50 dark:from-amber-900/10 dark:via-orange-900/10 dark:to-amber-900/10">
+      {/* THIS WEEK — Events + Announcements merged into one section.
+          Desktop: 2-col with events 2/3, announcements 1/3.
+          Mobile: stacked. Hidden if both are empty. */}
+      {(eventsLoading ||
+        events.length > 0 ||
+        announcementsLoading ||
+        announcements.length > 0) && (
+        <section id="this-week" className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeader
-              label="Voices of Faith"
-              title="Member Testimonies"
+              label="What's Happening"
+              title="This Week at Lilliput"
+              href="/events"
+              linkText="Full Calendar"
             />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
+              <div className="lg:col-span-2">
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--primary)] dark:text-[var(--accent-lilac)] mb-4">
+                  Upcoming Events
+                </h3>
+                <EventsList
+                  events={events}
+                  isLoading={eventsLoading}
+                  isError={eventsError}
+                />
+              </div>
+              <aside className="lg:col-span-1">
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--primary)] dark:text-[var(--accent-lilac)] mb-4">
+                  Announcements
+                </h3>
+                <AnnouncementsList
+                  announcements={announcements}
+                  isLoading={announcementsLoading}
+                  isError={announcementsError}
+                />
+              </aside>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section id="ministries" className="py-20 lg:py-28 bg-white dark:bg-stone-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <SectionHeader
+              label="Get Involved"
+              title="Our Ministries"
+              className="justify-center text-center"
+              align="center"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+            {ministries.map((ministry) => (
+              <QuickMinistryCard key={ministry.name} {...ministry} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {testimonials.length > 0 && (
+        <section
+          id="testimonies"
+          className="py-20 lg:py-28 bg-gradient-to-br from-[var(--primary)]/5 via-[var(--accent-warm)]/5 to-[var(--accent-wine)]/5 dark:from-[var(--primary)]/10 dark:via-[var(--accent-warm)]/10 dark:to-[var(--accent-wine)]/10"
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <SectionHeader label="Voices of Faith" title="Member Testimonies" />
             {testimonialsLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[1, 2, 3].map((i) => (
@@ -188,81 +295,25 @@ export default function Home() {
         </section>
       )}
 
-      {!eventsLoading && events.length === 0 ? null : (
-        <section className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectionHeader
-              label="What's Happening"
-              title="Upcoming Events"
-              href="/events"
-              linkText="View Calendar"
-            />
-            <EventsList
-              events={events}
-              isLoading={eventsLoading}
-              isError={eventsError}
-            />
-          </div>
-        </section>
-      )}
-
-      {!announcementsLoading && announcements.length === 0 ? null : (
-        <section className="py-20 lg:py-28 bg-white dark:bg-stone-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectionHeader
-              label="Church News"
-              title="Latest Announcements"
-              href="/events"
-              linkText="View All"
-            />
-            <AnnouncementsList
-              announcements={announcements}
-              isLoading={announcementsLoading}
-              isError={announcementsError}
-            />
-          </div>
-        </section>
-      )}
-
-      <section className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <SectionHeader
-              label="Get Involved"
-              title="Our Ministries"
-              className="justify-center text-center"
-              align="center"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
-            {ministries.map((ministry) => (
-              <QuickMinistryCard key={ministry.name} {...ministry} />
-            ))}
-          </div>
-        </div>
+      <section id="visit">
+        <CTASection
+          title="Ready to Visit?"
+          description="We'd love to welcome you to Lilliput SDA Church. Whether you're looking for a church home or just visiting, you're welcome here."
+          primaryAction={{
+            label: "Plan a Visit",
+            href: "/visit",
+            variant: "primary",
+          }}
+          secondaryAction={{
+            label: "Contact Us",
+            href: "/contact",
+            variant: "outline",
+          }}
+          backgroundColor="amber"
+        />
       </section>
 
-      <CTASection
-        title="Ready to Visit?"
-        description="We'd love to welcome you to Lilliput SDA Church. Whether you're looking for a church home or just visiting, you're welcome here."
-        primaryAction={{
-          label: "Service Times",
-          href: "/events",
-          variant: "primary",
-        }}
-        secondaryAction={{
-          label: "Contact Us",
-          href: "/contact",
-          variant: "outline",
-        }}
-        backgroundColor="amber"
-      />
-
-      <VideoModal
-        video={selectedVideo}
-        onClose={() => setSelectedVideo(null)}
-      />
+      <VideoModal video={selectedVideo} onClose={() => setSelectedVideo(null)} />
     </div>
   );
 }

@@ -1,165 +1,204 @@
-/* Design Tokens for Lilliput SDA Church
- * Amplified: Warm Heritage aesthetic with rich colors and distinctive typography
+/* Design Tokens for Lilliput SDA Church — "Vesper"
+ * Liturgical jewel-tones: deep indigo + antique brass + mulberry over warm parchment.
+ * Politically neutral (no orange, no green). Reverent, modern, distinctive.
  */
 
 :root {
-  /* Primary Colors - Rich Amber (intensified) */
-  --color-primary-50: #fffbeb;
-  --color-primary-100: #fef3c7;
-  --color-primary-200: #fde68a;
-  --color-primary-300: #fcd34d;
-  --color-primary-400: #fbbf24;
-  --color-primary-500: #f59e0b;
-  --color-primary-600: #d97706;
-  --color-primary-700: #b45309;
-  --color-primary-800: #92400e;
-  --color-primary-900: #78350f;
+  /* Primary — Vesper Indigo (replaces Amber).
+   * Sacred, celestial. Used for CTAs, links, navigation chrome, focus rings. */
+  --color-primary-50:  #F4F2FB;
+  --color-primary-100: #E5E2F4;
+  --color-primary-200: #C8C3E8;
+  --color-primary-300: #A39CD8;
+  --color-primary-400: #7C76C4;
+  --color-primary-500: #5B4FA0;
+  --color-primary-600: #3B3A8F;
+  --color-primary-700: #2D2C73;
+  --color-primary-800: #232358;
+  --color-primary-900: #181842;
 
-  /* Secondary Colors - Warm Stone with amber tint */
-  --color-secondary-50: #fafaf9;
-  --color-secondary-100: #f5f5f4;
-  --color-secondary-200: #e7e5e4;
-  --color-secondary-300: #d6d3d1;
-  --color-secondary-400: #a8a29e;
-  --color-secondary-500: #78716c;
-  --color-secondary-600: #57534e;
-  --color-secondary-700: #44403c;
-  --color-secondary-800: #292524;
-  --color-secondary-900: #1c1917;
+  /* Secondary — Cool Slate-Mauve (replaces Warm Stone).
+   * Page neutrals, dividers, body text muting. */
+  --color-secondary-50:  #FDFBF5;
+  --color-secondary-100: #F6F1E7;
+  --color-secondary-200: #E5DDCB;
+  --color-secondary-300: #C9C1B0;
+  --color-secondary-400: #9C95A9;
+  --color-secondary-500: #6F6883;
+  --color-secondary-600: #524F6B;
+  --color-secondary-700: #3B3950;
+  --color-secondary-800: #25243A;
+  --color-secondary-900: #1B1A2E;
 
-  /* Accent Colors - Warm Terracotta (bold accent) */
-  --color-accent-50: #fff5f3;
-  --color-accent-100: #ffe4df;
-  --color-accent-200: #ffc7bb;
-  --color-accent-300: #ff9a8a;
-  --color-accent-400: #ff6d5a;
-  --color-accent-500: #e5452a;
-  --color-accent-600: #c4321f;
-  --color-accent-700: #a12a1c;
-  --color-accent-800: #83291c;
-  --color-accent-900: #6d291c;
+  /* Accent — Antique Brass (replaces Terracotta).
+   * Yellow-gold (H≈45°), explicitly NOT orange. Underlines, dividers, decorative. */
+  --color-accent-50:  #FBF6E8;
+  --color-accent-100: #F4E8C4;
+  --color-accent-200: #E8D38B;
+  --color-accent-300: #DDB761;
+  --color-accent-400: #C8A24A;
+  --color-accent-500: #B68D40;
+  --color-accent-600: #997535;
+  --color-accent-700: #7A5D2A;
+  --color-accent-800: #5C4621;
+  --color-accent-900: #3F3017;
 
-  /* Nature Colors - Olive Stone (warm earthy greens) */
-  --color-olive-50: #f0f5ed;
-  --color-olive-100: #dce6d5;
-  --color-olive-200: #b8cdae;
-  --color-olive-300: #94b487;
-  --color-olive-400: #6b7c5e;
-  --color-olive-500: #5a6b4e;
-  --color-olive-600: #485640;
-  --color-olive-700: #3a4534;
-  --color-olive-800: #2d3528;
-  --color-olive-900: #1f241c;
+  /* Wine — Mulberry (replaces Olive).
+   * Reserved for: live/urgent badges, destructive Button, warmth without flag-red. */
+  --color-wine-50:  #FBF2F4;
+  --color-wine-100: #F4DCE2;
+  --color-wine-200: #E5B5C0;
+  --color-wine-300: #CD8395;
+  --color-wine-400: #B05A72;
+  --color-wine-500: #8A3E55;
+  --color-wine-600: #6E2A3E;
+  --color-wine-700: #561F30;
+  --color-wine-800: #3E1722;
+  --color-wine-900: #2A0F18;
 
-  /* Semantic Colors */
-  --color-success-50: #f0fdf4;
-  --color-success-100: #dcfce7;
-  --color-success-500: #22c55e;
-  --color-success-600: #16a34a;
-  --color-success-700: #15803d;
+  /* Legacy alias: --color-olive-* remains for one release so any holdover refs render in wine. */
+  --color-olive-50:  var(--color-wine-50);
+  --color-olive-100: var(--color-wine-100);
+  --color-olive-200: var(--color-wine-200);
+  --color-olive-300: var(--color-wine-300);
+  --color-olive-400: var(--color-wine-400);
+  --color-olive-500: var(--color-wine-500);
+  --color-olive-600: var(--color-wine-600);
+  --color-olive-700: var(--color-wine-700);
+  --color-olive-800: var(--color-wine-800);
+  --color-olive-900: var(--color-wine-900);
 
-  --color-error-50: #fff1f2;
-  --color-error-100: #ffe4e6;
-  --color-error-500: #f43f5e;
-  --color-error-600: #e11d48;
-  --color-error-700: #be123c;
+  /* Lilac — Heaven highlight. Subtle washes, empty-state illustrations. Never text. */
+  --color-lilac-100: #ECE5F7;
+  --color-lilac-200: #D7C9EE;
+  --color-lilac-300: #B8A8D4;
+  --color-lilac-400: #9783BD;
 
-  --color-warning-50: #fffbeb;
-  --color-warning-100: #fef3c7;
-  --color-warning-500: #f59e0b;
-  --color-warning-600: #d97706;
-  --color-warning-700: #b45309;
+  /* Semantic */
+  --color-success-50:  #ECF5F2;
+  --color-success-100: #D2EBE3;
+  --color-success-500: #3F7A6E;
+  --color-success-600: #2E6256;
+  --color-success-700: #214A42;
 
-  --color-info-50: #f0f9ff;
-  --color-info-100: #e0f2fe;
-  --color-info-500: #0ea5e9;
-  --color-info-600: #0284c7;
-  --color-info-700: #0369a1;
+  --color-error-50:  #FBEEF0;
+  --color-error-100: #F4D2D8;
+  --color-error-500: #A23545;
+  --color-error-600: #862936;
+  --color-error-700: #66202B;
 
-  /* Spacing Scale - Expanded for drama */
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
+  --color-warning-50:  #FBF6E8;
+  --color-warning-100: #F4E8C4;
+  --color-warning-500: #C8A24A;
+  --color-warning-600: #997535;
+  --color-warning-700: #7A5D2A;
+
+  --color-info-50:  #EEEEF8;
+  --color-info-100: #D6D5EC;
+  --color-info-500: #5B4FA0;
+  --color-info-600: #3B3A8F;
+  --color-info-700: #2D2C73;
+
+  /* Spacing Scale */
+  --space-xs:  0.25rem;
+  --space-sm:  0.5rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
   --space-2xl: 3rem;
   --space-3xl: 4rem;
   --space-4xl: 6rem;
   --space-5xl: 8rem;
 
-  /* Typography Scale - Dramatic contrast */
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
+  /* Typography Scale */
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
   --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
-  --text-5xl: 3rem;
-  --text-6xl: 3.75rem;
-  --text-7xl: 4.5rem;
-  --text-8xl: 6rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  1.875rem;
+  --text-4xl:  2.25rem;
+  --text-5xl:  3rem;
+  --text-6xl:  3.75rem;
+  --text-7xl:  4.5rem;
+  --text-8xl:  6rem;
 
-  /* Font Weights */
-  --font-normal: 400;
-  --font-medium: 500;
-  --font-semibold: 600;
-  --font-bold: 700;
-  --font-extrabold: 800;
-  --font-black: 900;
+  --font-normal:     400;
+  --font-medium:     500;
+  --font-semibold:   600;
+  --font-bold:       700;
+  --font-extrabold:  800;
+  --font-black:      900;
 
-  /* Line Heights */
-  --leading-tight: 1.1;
-  --leading-snug: 1.25;
-  --leading-normal: 1.5;
+  --leading-tight:   1.1;
+  --leading-snug:    1.25;
+  --leading-normal:  1.5;
   --leading-relaxed: 1.625;
-  --leading-loose: 2;
+  --leading-loose:   2;
 
   /* Border Radius */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-2xl: 1.5rem;
-  --radius-3xl: 2rem;
+  --radius-sm:   0.25rem;
+  --radius-md:   0.5rem;
+  --radius-lg:   0.75rem;
+  --radius-xl:   1rem;
+  --radius-2xl:  1.5rem;
+  --radius-3xl:  2rem;
   --radius-full: 9999px;
 
-  /* Shadows - Dramatic elevation */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  /* Shadows — neutral elevation */
+  --shadow-sm:    0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md:    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg:    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl:    0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.08);
+  --shadow-2xl:   0 25px 50px -12px rgb(0 0 0 / 0.22);
   --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
-  
-  /* Dramatic colored shadows for emphasis */
-  --shadow-amber: 0 10px 40px -10px rgba(245, 158, 11, 0.4);
-  --shadow-terracotta: 0 10px 40px -10px rgba(228, 69, 42, 0.35);
+
+  /* Colored glows — Vesper palette */
+  --shadow-primary:    0 10px 40px -10px rgba(59, 58, 143, 0.38);
+  --shadow-gold:       0 10px 40px -10px rgba(200, 162, 74, 0.30);
+  --shadow-wine:       0 10px 40px -10px rgba(110, 42, 62, 0.30);
+  /* Legacy aliases — keep existing class refs from breaking */
+  --shadow-amber:      var(--shadow-primary);
+  --shadow-terracotta: var(--shadow-wine);
 
   /* Transitions */
-  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base:   200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow:   300ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-smooth: 400ms cubic-bezier(0.4, 0, 0.2, 1);
-  
-  /* Dramatic easing for emphasis */
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Z-Index Scale */
-  --z-base: 0;
+  --z-base:     0;
   --z-dropdown: 100;
-  --z-sticky: 200;
-  --z-modal: 300;
-  --z-popover: 400;
-  --z-tooltip: 500;
+  --z-sticky:   200;
+  --z-modal:    300;
+  --z-popover:  400;
+  --z-tooltip:  500;
 }
 
-/* Dark Mode Overrides */
+/* Dark Mode — Night-sky indigo */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Dark mode maintains richness */
+    /* Primary lifts so it pops on dark indigo bg */
+    --color-primary-400: #9892D8;
+    --color-primary-500: #7C7AE0;
+    --color-primary-600: #6661D5;
+
+    /* Accent gold brightens */
+    --color-accent-400: #DDB761;
+    --color-accent-500: #C8A24A;
+
+    /* Wine lifts */
+    --color-wine-400: #C97894;
+    --color-wine-500: #B86A82;
+
+    /* Shadow strength bumps for dark */
+    --shadow-primary: 0 10px 40px -10px rgba(124, 122, 224, 0.32);
+    --shadow-gold:    0 10px 40px -10px rgba(221, 183, 97, 0.25);
   }
 }
