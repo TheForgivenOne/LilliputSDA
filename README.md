@@ -86,13 +86,13 @@ YOUTUBE_API_KEY=
 
 ## Deployment
 
-The site is configured for deployment on Vercel. Connect your GitHub repository to Vercel for automatic deployments on push to production.
+The site is configured for deployment on Vercel. Connect your GitHub repository to Vercel for automatic deployments on push to main.
 
 ```bash
-# Build for production
+# Build for main
 npm run build
 
-# Start production server
+# Start main server
 npm start
 ```
 

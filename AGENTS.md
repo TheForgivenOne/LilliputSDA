@@ -21,7 +21,7 @@ npm run dev           # Start Next.js dev server (port 3000)
 ### Build & Lint
 ```bash
 npm run build        # Production build (prisma generate + next build)
-npm run start        # Start production server
+npm run start        # Start main server
 npm run lint         # Run ESLint
 npm run typecheck   # TypeScript type checking (tsc --noEmit)
 ```
@@ -110,35 +110,35 @@ tests/
 ## Git Branching Strategy
 
 ### Branch Types
-- **`production`** - Production-ready code (protected)
+- **`main`** - Production-ready code (protected)
 - **`develop`** - Integration branch for features
 - **`feature/<name>`** - New features (branch from `develop`)
 - **`bugfix/<name>`** - Bug fixes (branch from `develop`)
 - **`release/<version>`** - Release preparation
-- **`hotfix/<name>`** - Critical production fixes (branch from `production`)
+- **`hotfix/<name>`** - Critical main fixes (branch from `main`)
 
 ### Workflow
 1. Create feature branch from `develop`: `git checkout -b feature/my-feature develop`
 2. Work on feature, commit regularly
 3. Push and create PR to merge into `develop`
-4. When ready for release, merge `develop` into `production`
+4. When ready for release, merge `develop` into `main`
 
 ### Syncing Branches
-To keep branches up to date with `production`:
+To keep branches up to date with `main`:
 ```bash
 git checkout develop
-git merge production
+git merge main
 ```
 Or rebase for cleaner history:
 ```bash
 git checkout develop
-git rebase production
+git rebase main
 ```
 
 ### Key Rules
-- Never commit directly to `production` - use PRs
+- Never commit directly to `main` - use PRs
 - Delete merged feature branches
-- Sync branches with `production` regularly to avoid big merges
+- Sync branches with `main` regularly to avoid big merges
 
 ### Branch Selection
 When given a task, identify the appropriate branch type from the conventions above. If unclear, ask the user which branch to use before making changes.

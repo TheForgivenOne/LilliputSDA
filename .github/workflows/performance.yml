@@ -2,9 +2,9 @@ name: Performance
 
 on:
   push:
-    branches: [production, develop]
+    branches: [main, develop]
   pull_request:
-    branches: [production, develop]
+    branches: [main, develop]
 
 jobs:
   bundle-analysis:

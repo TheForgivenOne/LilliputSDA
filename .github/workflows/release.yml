@@ -2,9 +2,9 @@ name: Release
 
 on:
   push:
-    branches: [production]
+    branches: [main]
   pull_request:
-    branches: [production]
+    branches: [main]
 
 permissions:
   contents: write
