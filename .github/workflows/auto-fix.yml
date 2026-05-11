@@ -1,0 +1,40 @@
+name: Auto Fix
+
+on:
+  workflow_run:
+    workflows:
+      - CI
+      - Cross-Browser Tests
+      - Dependabot Updates
+    types:
+      - completed
+
+permissions:
+  issues: write
+
+jobs:
+  create-issue:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create issue for failed workflow
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const workflow = context.payload.workflow_run;
+            const repo = context.repo;
+
+            const issue = await github.rest.issues.create({
+              owner: repo.owner,
+              repo: repo.repo,
+              title: `🚨 Fix failing workflow: ${workflow.name}`,
+              body: `Workflow **${workflow.name}** failed on branch \`${workflow.head_branch}\`.
+
+            [View run](${workflow.html_url})
+
+            Triggered by: ${workflow.event}
+            Commit: ${workflow.head_commit.message}`,
+              labels: ['jules-fix']
+            });
+
+            console.log(`Created issue #${issue.data.number}`);
