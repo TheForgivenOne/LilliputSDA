@@ -20,7 +20,7 @@ import { PageHero } from "@/components/sections/PageHero";
 
 const scheduleItems = [
   {
-    time: "9:30 AM",
+    time: "9:00 AM",
     title: "Sabbath School",
     description: "Bible study & fellowship",
     icon: Clock,
@@ -32,15 +32,9 @@ const scheduleItems = [
     icon: Calendar,
   },
   {
-    time: "1:00 PM",
-    title: "Lunch Break",
-    description: "Fellowship & refreshments",
-    icon: Coffee,
-  },
-  {
-    time: "2:30 PM",
-    title: "Afternoon Program",
-    description: "Praise, prayer & fellowship",
+    time: "1:30 PM",
+    title: "Closing",
+    description: "Blessing & fellowship",
     icon: Users,
   },
 ];
@@ -66,9 +60,9 @@ const whatToExpectItems = [
   },
   {
     icon: Coffee,
-    title: "Fellowship Meal",
+    title: "Fellowship Time",
     description:
-      "After service, we share a potluck lunch together. Everyone is invited to join!",
+      "After service, we gather for fellowship. Feel free to stay and connect with the community!",
   },
   {
     icon: Users,
@@ -149,8 +143,8 @@ export default function VisitPage() {
 
                 <InfoItem icon={Car} title="Landmarks">
                   <p className="text-stone-600 dark:text-stone-400">
-                    Near Lilliput Primary School<br />
-                    Near the Lilliput community
+                    Near Sangster International Airport<br />
+                    Along the North Coast Highway
                   </p>
                 </InfoItem>
               </div>
@@ -205,7 +199,7 @@ export default function VisitPage() {
                 },
                 {
                   title: "How long is the service?",
-                  content: "Our morning service runs about 1.5 hours with fellowship time after.",
+                  content: "Our morning service runs about 3 hours with fellowship time after.",
                 },
               ].map((info) => (
                 <div
