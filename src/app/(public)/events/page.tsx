@@ -127,8 +127,8 @@ export default function EventsPage() {
                   
                   {eventsError ? (
                     <DataLoadError
-                      title="Unable to Load Events"
-                      message="We're having trouble loading events. Please check your connection."
+                      title="Couldn't load events"
+                      message="Something went wrong while loading events. Check your connection and try again."
                       variant="card"
                     />
                   ) : eventsLoading ? (
@@ -167,8 +167,8 @@ export default function EventsPage() {
 
                 <div className="space-y-6">
                   <EventsSidebar />
+                  <div className="bg-brass p-6 rounded-2xl text-white shadow-brass">
                   
-                  <div className="bg-gradient-to-br from-amber-500 to-orange-500 p-6 rounded-2xl text-white shadow-lg shadow-amber-500/25">
                     <h3 className="text-lg font-bold mb-2 font-[family-name:var(--font-playfair)]">Stay Updated</h3>
                     <p className="text-amber-100 text-sm mb-4">
                       Follow us on social media for the latest events and announcements.
@@ -222,8 +222,8 @@ export default function EventsPage() {
                   {announcementsError ? (
                     <div className="space-y-6">
                       <DataLoadError
-                        title="Unable to Load Announcements"
-                        message="We're having trouble loading announcements. Please check your connection."
+                        title="Couldn't load announcements"
+                        message="Something went wrong while loading announcements. Check your connection and try again."
                         variant="card"
                       />
                       <div className="text-center py-8 bg-white dark:bg-stone-800 rounded-2xl">
@@ -236,7 +236,7 @@ export default function EventsPage() {
                   ) : announcementsLoading ? (
                     <div className="space-y-6">
                       {[1, 2, 3].map((i) => (
-                        <div key={i} className="bg-white dark:bg-stone-800 rounded-2xl p-6 shadow-sm border-l-4 border-amber-500">
+                        <div key={i} className="bg-amber-50/50 dark:bg-amber-900/10 rounded-2xl p-6 shadow-sm">
                           <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-2/3 mb-3" />
                           <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse mb-2" />
                           <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-4/5" />

@@ -58,8 +58,8 @@ export function Footer() {
   return (
     <footer className="bg-stone-100 dark:bg-stone-900 text-stone-600 dark:text-stone-300 relative overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-amber-500/5 dark:bg-amber-500/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-2xl will-change-opacity" />
-      <div className="absolute bottom-0 right-0 w-48 h-48 bg-orange-500/5 dark:bg-orange-500/5 rounded-full translate-x-1/3 translate-y-1/3 blur-2xl will-change-opacity" />
+      <div className="absolute top-0 left-0 w-64 h-64 bg-amber-500/5 dark:bg-amber-500/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-2xl will-change-opacity max-md:w-32 max-md:h-32" />
+      <div className="absolute bottom-0 right-0 w-48 h-48 bg-orange-500/5 dark:bg-orange-500/5 rounded-full translate-x-1/3 translate-y-1/3 blur-2xl will-change-opacity max-md:w-24 max-md:h-24" />
       
       {/* Main Footer */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
@@ -173,7 +173,7 @@ export function Footer() {
             </div>
             <div className="flex flex-wrap gap-6 text-base">
               <div>
-                <span className="text-stone-400 dark:text-stone-500">Sabbath School:</span>{" "}
+                <span className="text-stone-400 dark:text-stone-500">Sabbath School <span className="text-stone-500 dark:text-stone-600 font-normal">(Bible Study)</span>:</span>{" "}
                 <span className="text-stone-900 dark:text-white font-semibold">9:30 AM</span>
               </div>
               <div>
@@ -181,7 +181,7 @@ export function Footer() {
                 <span className="text-stone-900 dark:text-white font-semibold">11:00 AM</span>
               </div>
               <div>
-                <span className="text-stone-400 dark:text-stone-500">AY Society:</span>{" "}
+                <span className="text-stone-400 dark:text-stone-500">AY Society <span className="text-stone-500 dark:text-stone-600 font-normal">(Youth Fellowship)</span>:</span>{" "}
                 <span className="text-stone-900 dark:text-white font-semibold">Sat 4:30 PM</span>
               </div>
             </div>
@@ -207,7 +207,7 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative p-2.5 rounded-xl text-stone-400 dark:text-stone-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-stone-200 dark:hover:bg-stone-800 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:focus-visible:ring-offset-stone-900 focus-visible:text-amber-600 dark:focus-visible:text-amber-400"
+                  className="group relative p-3 rounded-xl text-stone-400 dark:text-stone-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-stone-200 dark:hover:bg-stone-800 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-100 dark:focus-visible:ring-offset-stone-900 focus-visible:text-amber-600 dark:focus-visible:text-amber-400"
                   aria-label={`${social.label} (opens in new tab)`}
                 >
                   {social.icon}

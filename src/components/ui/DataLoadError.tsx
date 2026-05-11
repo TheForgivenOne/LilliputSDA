@@ -12,8 +12,8 @@ interface DataLoadErrorProps {
 }
 
 export function DataLoadError({
-  title = "Unable to Load Content",
-  message = "We're having trouble loading this content. Please check your connection and try again.",
+  title = "Couldn't load content",
+  message = "Something went wrong while loading this content. Check your connection and try again.",
   onRetry,
   showRetry = true,
   variant = "card",

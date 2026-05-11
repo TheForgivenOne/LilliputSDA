@@ -44,7 +44,7 @@ export function BeliefGrid({ beliefs, visibleCount, onShowMore }: BeliefGridProp
         <div className="text-center mt-10">
           <button
             onClick={onShowMore}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:-translate-y-0.5 transition-all"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-brass text-white rounded-2xl font-semibold shadow-brass transition-all"
           >
             {isShowingAll ? "Show Less" : `Show All ${beliefs.length} Beliefs`}
           </button>

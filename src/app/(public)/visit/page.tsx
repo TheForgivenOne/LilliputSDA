@@ -124,7 +124,7 @@ export default function VisitPage() {
               <h2 className="text-3xl lg:text-4xl font-black text-stone-900 dark:text-stone-100 mb-6 font-[family-name:var(--font-playfair)]">
                 Visit Us This Sabbath
               </h2>
-              <div className="rounded-3xl overflow-hidden shadow-xl shadow-[rgba(59,58,143,0.10)] mb-6">
+              <div className="rounded-3xl overflow-hidden shadow-xl shadow-[rgba(234,179,8,0.10)] mb-6">
                 <MapEmbed aspectRatio="standard" showRing />
               </div>
               <address className="not-italic flex items-start gap-3 text-stone-700 dark:text-stone-300 mb-6">
@@ -141,7 +141,7 @@ export default function VisitPage() {
                 href="https://maps.google.com/?q=Lilliput+District+Montego+Bay+Jamaica"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--primary)] text-white rounded-xl font-semibold shadow-md shadow-[rgba(59,58,143,0.30)] hover:bg-[var(--primary-hover)] hover:-translate-y-0.5 transition-all group"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--primary)] text-white rounded-xl font-semibold shadow-md shadow-[rgba(234,179,8,0.30)] hover:bg-[var(--primary-hover)] hover:-translate-y-0.5 transition-all group"
               >
                 <MapPin className="w-5 h-5" />
                 Get Directions
@@ -202,7 +202,7 @@ export default function VisitPage() {
       {/* CTA stripe */}
       <section className="py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative bg-gradient-to-br from-[var(--primary-hover)] via-[var(--primary)] to-[#5B4FA0] rounded-3xl overflow-hidden shadow-2xl">
+          <div className="relative bg-gradient-to-br from-[var(--primary-hover)] via-[var(--primary)] to-[#CA8A04] rounded-3xl overflow-hidden shadow-2xl">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <div className="absolute -top-40 -right-40 w-96 h-96 bg-[var(--accent-warm)]/15 rounded-full blur-3xl" />
               <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-white/5 rounded-full blur-3xl" />

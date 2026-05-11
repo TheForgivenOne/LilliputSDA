@@ -139,7 +139,7 @@ export function Timeline({
           >
             <button
               onClick={onShowMore}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full font-medium shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-brass text-white rounded-full font-medium shadow-brass transition-all"
             >
               {showingAll ? (
                 <>

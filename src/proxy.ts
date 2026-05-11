@@ -55,27 +55,27 @@ export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Debug logging
-  console.log("[Middleware]", pathname);
+  console.debug("[Middleware]", pathname);
 
   if (isProtectedRoute(pathname)) {
-    console.log("[Middleware] Protected route, checking auth...");
+    console.debug("[Middleware] Protected route, checking auth...");
     const session = await auth();
-    console.log("[Middleware] Session:", session?.user ? "exists" : "none");
+    console.debug("[Middleware] Session:", session?.user ? "exists" : "none");
 
     if (!session?.user) {
-      console.log("[Middleware] No session, redirecting to sign-in");
+      console.debug("[Middleware] No session, redirecting to sign-in");
       const signInUrl = new URL("/sign-in", request.url);
       signInUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(signInUrl);
     }
 
-    console.log("[Middleware] Session found, allowing access");
+    console.debug("[Middleware] Session found, allowing access");
     return NextResponse.next();
   }
 
   if (!isPublicRoute(pathname)) {
     if (pathname !== "/") {
-      console.log("[Middleware] Not public, redirecting to home");
+      console.debug("[Middleware] Not public, redirecting to home");
       return NextResponse.redirect(new URL("/", request.url));
     }
   }

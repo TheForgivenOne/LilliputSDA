@@ -1,21 +1,20 @@
 /* Design Tokens for Lilliput SDA Church — "Vesper"
- * Liturgical jewel-tones: deep indigo + antique brass + mulberry over warm parchment.
- * Politically neutral (no orange, no green). Reverent, modern, distinctive.
+ * Liturgical jewel-tones: antique brass + deep indigo + mulberry over warm parchment.
  */
 
 :root {
-  /* Primary — Vesper Indigo (replaces Amber).
-   * Sacred, celestial. Used for CTAs, links, navigation chrome, focus rings. */
-  --color-primary-50:  #F4F2FB;
-  --color-primary-100: #E5E2F4;
-  --color-primary-200: #C8C3E8;
-  --color-primary-300: #A39CD8;
-  --color-primary-400: #7C76C4;
-  --color-primary-500: #5B4FA0;
-  --color-primary-600: #3B3A8F;
-  --color-primary-700: #2D2C73;
-  --color-primary-800: #232358;
-  --color-primary-900: #181842;
+  /* Primary — Yellow.
+   * Warm, radiant. Used for CTAs, links, navigation chrome, focus rings. */
+  --color-primary-50:  #FFFBEB;
+  --color-primary-100: #FEF3C7;
+  --color-primary-200: #FDE68A;
+  --color-primary-300: #FCD34D;
+  --color-primary-400: #FBBF24;
+  --color-primary-500: #EAB308;
+  --color-primary-600: #CA8A04;
+  --color-primary-700: #A16207;
+  --color-primary-800: #854D0E;
+  --color-primary-900: #713F12;
 
   /* Secondary — Cool Slate-Mauve (replaces Warm Stone).
    * Page neutrals, dividers, body text muting. */
@@ -30,18 +29,18 @@
   --color-secondary-800: #25243A;
   --color-secondary-900: #1B1A2E;
 
-  /* Accent — Antique Brass (replaces Terracotta).
-   * Yellow-gold (H≈45°), explicitly NOT orange. Underlines, dividers, decorative. */
-  --color-accent-50:  #FBF6E8;
-  --color-accent-100: #F4E8C4;
-  --color-accent-200: #E8D38B;
-  --color-accent-300: #DDB761;
-  --color-accent-400: #C8A24A;
-  --color-accent-500: #B68D40;
-  --color-accent-600: #997535;
-  --color-accent-700: #7A5D2A;
-  --color-accent-800: #5C4621;
-  --color-accent-900: #3F3017;
+  /* Accent — Dark Yellow.
+   * Warm accent for decorative elements, underlines, dividers. */
+  --color-accent-50:  #FFFBEB;
+  --color-accent-100: #FEF3C7;
+  --color-accent-200: #FDE68A;
+  --color-accent-300: #FCD34D;
+  --color-accent-400: #FBBF24;
+  --color-accent-500: #EAB308;
+  --color-accent-600: #CA8A04;
+  --color-accent-700: #A16207;
+  --color-accent-800: #854D0E;
+  --color-accent-900: #713F12;
 
   /* Wine — Mulberry (replaces Olive).
    * Reserved for: live/urgent badges, destructive Button, warmth without flag-red. */
@@ -87,11 +86,11 @@
   --color-error-600: #862936;
   --color-error-700: #66202B;
 
-  --color-warning-50:  #FBF6E8;
-  --color-warning-100: #F4E8C4;
-  --color-warning-500: #C8A24A;
-  --color-warning-600: #997535;
-  --color-warning-700: #7A5D2A;
+  --color-warning-50:  #FFFBEB;
+  --color-warning-100: #FEF3C7;
+  --color-warning-500: #EAB308;
+  --color-warning-600: #CA8A04;
+  --color-warning-700: #A16207;
 
   --color-info-50:  #EEEEF8;
   --color-info-100: #D6D5EC;
@@ -155,8 +154,8 @@
   --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
 
   /* Colored glows — Vesper palette */
-  --shadow-primary:    0 10px 40px -10px rgba(59, 58, 143, 0.38);
-  --shadow-gold:       0 10px 40px -10px rgba(200, 162, 74, 0.30);
+  --shadow-primary:    0 10px 40px -10px rgba(234, 179, 8, 0.38);
+  --shadow-gold:       0 10px 40px -10px rgba(59, 58, 143, 0.30);
   --shadow-wine:       0 10px 40px -10px rgba(110, 42, 62, 0.30);
   /* Legacy aliases — keep existing class refs from breaking */
   --shadow-amber:      var(--shadow-primary);
@@ -181,24 +180,25 @@
   --z-tooltip:  500;
 }
 
-/* Dark Mode — Night-sky indigo */
+  /* Dark Mode — Night-sky indigo */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Primary lifts so it pops on dark indigo bg */
-    --color-primary-400: #9892D8;
-    --color-primary-500: #7C7AE0;
-    --color-primary-600: #6661D5;
+    /* Primary yellow brightens */
+    --color-primary-400: #FCD34D;
+    --color-primary-500: #EAB308;
+    --color-primary-600: #CA8A04;
 
-    /* Accent gold brightens */
-    --color-accent-400: #DDB761;
-    --color-accent-500: #C8A24A;
+    /* Accent yellow lifts */
+    --color-accent-400: #FBBF24;
+    --color-accent-500: #EAB308;
+    --color-accent-600: #CA8A04;
 
     /* Wine lifts */
     --color-wine-400: #C97894;
     --color-wine-500: #B86A82;
 
     /* Shadow strength bumps for dark */
-    --shadow-primary: 0 10px 40px -10px rgba(124, 122, 224, 0.32);
-    --shadow-gold:    0 10px 40px -10px rgba(221, 183, 97, 0.25);
+    --shadow-primary: 0 10px 40px -10px rgba(252, 211, 77, 0.32);
+    --shadow-gold:    0 10px 40px -10px rgba(252, 211, 77, 0.25);
   }
 }

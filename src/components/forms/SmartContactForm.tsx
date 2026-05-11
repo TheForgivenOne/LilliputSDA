@@ -268,7 +268,7 @@ export function SmartContactForm({
               className={cn(
                 "flex-shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full text-sm font-medium transition-all",
                 active
-                  ? "bg-[var(--primary)] text-white shadow-md shadow-[rgba(59,58,143,0.25)]"
+                  ? "bg-[var(--primary)] text-white shadow-md shadow-[rgba(234,179,8,0.25)]"
                   : "bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-[var(--primary)]/10 border border-[var(--border-subtle)] dark:border-stone-700",
               )}
             >

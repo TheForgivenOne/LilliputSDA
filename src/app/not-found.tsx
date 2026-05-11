@@ -28,7 +28,7 @@ export default function NotFound() {
             mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          <p className="text-8xl sm:text-9xl md:text-[10rem] font-black font-[family-name:var(--font-playfair)] leading-none bg-gradient-to-b from-amber-200 via-amber-500 to-amber-700 bg-clip-text text-transparent select-none">
+          <p className="text-8xl sm:text-9xl md:text-[10rem] font-black font-[family-name:var(--font-playfair)] leading-none text-[var(--primary)] select-none">
             404
           </p>
         </div>
@@ -39,11 +39,11 @@ export default function NotFound() {
           }`}
         >
           <h1 className="text-2xl sm:text-3xl font-bold font-[family-name:var(--font-playfair)] text-white">
-            Page Not Found
+            Page not found
           </h1>
           <p className="text-stone-400 max-w-sm mx-auto leading-relaxed">
-            The page you&apos;re looking for has been moved, removed, or never
-            existed. Let us help you find your way.
+            The page you are looking for could not be found. It may have been
+            moved or may no longer be available. Let us help you find your way.
           </p>
         </div>
 

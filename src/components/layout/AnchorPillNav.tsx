@@ -96,7 +96,7 @@ export function AnchorPillNav({ items, offset = 64, className }: AnchorPillNavPr
                 className={cn(
                   "flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200",
                   active
-                    ? "bg-[var(--primary)] text-white shadow-md shadow-[rgba(59,58,143,0.25)]"
+                    ? "bg-[var(--primary)] text-white shadow-md shadow-[rgba(234,179,8,0.25)]"
                     : "bg-[var(--surface)] text-[var(--foreground)] hover:bg-[var(--primary)]/10 border border-[var(--border-subtle)]",
                 )}
               >

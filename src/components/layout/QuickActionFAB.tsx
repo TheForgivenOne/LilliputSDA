@@ -54,7 +54,7 @@ export function QuickActionFAB() {
   return (
     <div
       ref={containerRef}
-      className="fixed right-4 bottom-20 z-40 flex flex-col items-end gap-3 md:hidden"
+      className="fixed right-4 bottom-20 z-40 flex flex-col items-end gap-4 md:hidden"
     >
       {ACTIONS.map((action, i) => {
         const Inner = (
@@ -108,7 +108,7 @@ export function QuickActionFAB() {
         aria-label={open ? "Close quick actions" : "Open quick actions"}
         className={cn(
           "w-14 h-14 rounded-full flex items-center justify-center",
-          "bg-[var(--primary)] text-white shadow-xl shadow-[rgba(59,58,143,0.40)]",
+          "bg-[var(--primary)] text-white shadow-xl shadow-[rgba(234,179,8,0.40)]",
           "hover:bg-[var(--primary-hover)] active:scale-95",
           "transition-all duration-300",
           "focus:outline-none focus:ring-4 focus:ring-[var(--primary)]/40",

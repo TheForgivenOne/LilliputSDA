@@ -48,6 +48,15 @@ export function Header() {
     };
   }, [isMobileMenuOpen]);
 
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setIsMobileMenuOpen(false);
+    }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [isMobileMenuOpen]);
+
   const p = scrollProgress;
   const scaleValue = 0.95 + (p * 0.05);
 
@@ -143,14 +152,14 @@ export function Header() {
                     : "!text-white/90 hover:!text-white hover:!bg-white/10"
                 )}
               >
-                Decision Card
+                My Decision Card
               </DecisionCardTrigger>
               <Link
                 href="/visit"
                 className={cn(
                   "px-5 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 shadow-lg hover:-translate-y-0.5 hover:shadow-xl",
                   p > 0.3
-                    ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-amber-500/25 hover:shadow-amber-500/40"
+                    ? "bg-brass text-white shadow-brass hover:shadow-brass-hover"
                     : "bg-white text-amber-600 shadow-white/20 hover:shadow-white/40"
                 )}
               >
@@ -224,7 +233,7 @@ export function Header() {
                   className={cn(
                     "flex items-center px-4 py-3.5 text-sm font-semibold rounded-xl transition-all duration-200",
                     pathname === item.href
-                      ? "text-amber-600 dark:text-amber-400 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30"
+                      ? "text-amber-600 dark:text-amber-400 bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/30 dark:to-amber-800/30"
                       : "text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800"
                   )}
                   aria-current={pathname === item.href ? "page" : undefined}
@@ -241,12 +250,12 @@ export function Header() {
               size="sm"
               className="w-full justify-center !rounded-xl"
             >
-              Decision Card
+              My Decision Card
             </DecisionCardTrigger>
             <Link
               href="/visit"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center justify-center px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold text-sm shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all"
+              className="flex items-center justify-center px-4 py-3 bg-brass text-white rounded-xl font-semibold text-sm shadow-brass transition-all"
             >
               Join Us
             </Link>

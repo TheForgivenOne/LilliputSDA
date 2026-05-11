@@ -30,8 +30,8 @@ export function VesperLight({ intensity = "soft", className }: VesperLightProps)
         className="absolute inset-[-20%] animate-vesper-drift will-change-transform"
         style={{
           background: `
-            radial-gradient(ellipse 60% 50% at 22% 30%, rgba(59, 58, 143, ${indigoAlpha}) 0%, transparent 60%),
-            radial-gradient(ellipse 50% 45% at 78% 70%, rgba(200, 162, 74, ${brassAlpha}) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 50% at 22% 30%, rgba(234, 179, 8, ${brassAlpha}) 0%, transparent 60%),
+            radial-gradient(ellipse 50% 45% at 78% 70%, rgba(59, 58, 143, ${indigoAlpha}) 0%, transparent 60%),
             radial-gradient(ellipse 45% 40% at 50% 55%, rgba(110, 42, 62, ${wineAlpha}) 0%, transparent 70%)
           `,
         }}

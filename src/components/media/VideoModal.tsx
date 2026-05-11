@@ -16,14 +16,23 @@ export function VideoModal({ video, onClose }: VideoModalProps) {
 
   useEffect(() => {
     if (!video) return;
-    
+
     if (isMobileDevice()) {
       openYouTubeVideo(video.id);
       onClose();
       return;
     }
-    
+
     setShowIframe(true);
+  }, [video, onClose]);
+
+  useEffect(() => {
+    if (!video) return;
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
   }, [video, onClose]);
 
   if (!video) return null;

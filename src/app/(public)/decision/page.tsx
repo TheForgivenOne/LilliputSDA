@@ -201,7 +201,7 @@ export default function DecisionCardPage() {
   return (
     <div className="min-h-screen bg-[var(--background)]">
       {/* Compact hero — desktop pairs heading with scripture */}
-      <section className="relative bg-gradient-to-br from-[var(--primary-hover)] via-[var(--primary)] to-[#5B4FA0] px-6 py-16 sm:py-20 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[var(--primary-hover)] via-[var(--primary)] to-[#CA8A04] px-6 py-16 sm:py-20 overflow-hidden">
         <VesperLight intensity="rich" />
         <div className="relative z-10 max-w-5xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
           <motion.div
@@ -500,7 +500,7 @@ function ProgressDots({ step, onJump }: ProgressDotsProps) {
                   className={cn(
                     "flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold transition-all",
                     isCurrent
-                      ? "bg-[var(--primary)] text-white shadow-md shadow-[rgba(59,58,143,0.30)] ring-4 ring-[var(--primary)]/20"
+                      ? "bg-[var(--primary)] text-white shadow-md shadow-[rgba(234,179,8,0.30)] ring-4 ring-[var(--primary)]/20"
                       : isComplete
                       ? "bg-[var(--primary)]/15 text-[var(--primary)] dark:text-[var(--accent-lilac)]"
                       : "bg-stone-200 dark:bg-stone-700 text-stone-500 dark:text-stone-400",

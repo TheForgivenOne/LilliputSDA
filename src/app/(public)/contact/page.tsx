@@ -57,7 +57,7 @@ export default function ContactPage() {
               Located in the beautiful Lilliput area of Montego Bay, we&apos;re easy to find — and we would love to welcome you.
             </p>
           </div>
-          <div className="rounded-3xl overflow-hidden shadow-2xl shadow-[rgba(59,58,143,0.10)]">
+          <div className="rounded-3xl overflow-hidden shadow-2xl shadow-[rgba(234,179,8,0.10)]">
             <MapEmbed aspectRatio="wide" title="Lilliput SDA Church Location" />
           </div>
         </div>

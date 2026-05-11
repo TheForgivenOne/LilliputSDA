@@ -53,7 +53,7 @@ export function SectionHeader({
       {href && (
         <Link
           href={href}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:-translate-y-0.5 transition-all duration-200 group text-sm self-start sm:self-end"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-brass text-white font-semibold shadow-brass transition-all duration-200 group text-sm self-start sm:self-end"
         >
           {linkText}
           <svg

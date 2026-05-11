@@ -26,13 +26,13 @@ export function Card({ children, className, hover = true, padding = "md" }: Card
         "border border-stone-100 dark:border-stone-700",
         hover && [
           "shadow-sm transition-all duration-300",
-          "hover:shadow-xl hover:shadow-[rgba(59,58,143,0.10)]",
+          "hover:shadow-xl hover:shadow-[rgba(234,179,8,0.10)]",
           "hover:-translate-y-1 hover:border-[var(--primary)]/35 dark:hover:border-[var(--primary)]/50",
           "focus-within:ring-2 focus-within:ring-[var(--primary)] focus-within:ring-offset-2",
           "relative",
           "before:content-[''] before:absolute before:left-6 before:right-6 before:bottom-0 before:h-px",
-          "before:bg-gradient-to-r before:from-transparent before:via-[var(--accent-warm)]/0 before:to-transparent",
-          "before:transition-all before:duration-500 hover:before:via-[var(--accent-warm)]/60",
+          "before:bg-gradient-to-r before:from-transparent before:via-[var(--primary)]/0 before:to-transparent",
+          "before:transition-all before:duration-500 hover:before:via-[var(--primary)]/60",
         ],
         paddingMap[padding],
         className
@@ -507,10 +507,10 @@ export function AnnouncementCard({
   category,
   className,
 }: AnnouncementCardProps) {
-  const priorityStyles: Record<string, { border: string; glow: string }> = {
-    low: { border: "border-l-4 border-stone-300 dark:border-stone-600", glow: "" },
-    normal: { border: "border-l-4 border-amber-500", glow: "" },
-    high: { border: "border-l-4 border-rose-500", glow: "shadow-lg shadow-rose-500/10" },
+  const priorityStyles: Record<string, { bg: string; glow: string }> = {
+    low: { bg: "bg-stone-50 dark:bg-stone-800/50", glow: "" },
+    normal: { bg: "bg-amber-50/50 dark:bg-amber-900/10", glow: "" },
+    high: { bg: "bg-rose-50/50 dark:bg-rose-900/10", glow: "shadow-lg shadow-rose-500/10" },
   };
 
   const priorityBadge: Record<string, string> = {
@@ -537,7 +537,7 @@ export function AnnouncementCard({
   const styles = priorityStyles[priority];
 
   return (
-    <Card className={cn(styles.border, styles.glow, "group", className)} padding="lg">
+    <Card className={cn(styles.bg, styles.glow, "group", className)} padding="lg">
       <div className="flex flex-wrap items-center gap-2 mb-3">
         {priority === "high" && (
           <span className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold", priorityBadge[priority])}>

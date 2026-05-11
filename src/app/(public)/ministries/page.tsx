@@ -195,7 +195,7 @@ export default function MinistriesPage() {
               <button
                 type="button"
                 onClick={() => setSelectedCategory("all")}
-                className="inline-flex items-center gap-1.5 pl-3 pr-2 py-1.5 rounded-full bg-[var(--primary)] text-white text-sm font-medium shadow-md shadow-[rgba(59,58,143,0.25)]"
+                className="inline-flex items-center gap-1.5 pl-3 pr-2 py-1.5 rounded-full bg-[var(--primary)] text-white text-sm font-medium shadow-md shadow-[rgba(234,179,8,0.25)]"
               >
                 {activeCategory.label}
                 <X className="w-3.5 h-3.5" />
@@ -282,7 +282,7 @@ export default function MinistriesPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="mailto:lhamilton@westjamaica.org"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[var(--primary)] text-white rounded-2xl font-semibold shadow-lg shadow-[rgba(59,58,143,0.30)] hover:bg-[var(--primary-hover)] hover:shadow-[rgba(59,58,143,0.45)] hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[var(--primary)] text-white rounded-2xl font-semibold shadow-lg shadow-[rgba(234,179,8,0.30)] hover:bg-[var(--primary-hover)] hover:shadow-[rgba(234,179,8,0.45)] hover:-translate-y-0.5 transition-all"
             >
               Contact a Ministry Leader
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

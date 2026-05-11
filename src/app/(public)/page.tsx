@@ -51,44 +51,55 @@ export default function Home() {
   const heroDescription = siteContent.find((c) => c.key === "hero_description")?.content;
   const heroImage = siteContent.find((c) => c.key === "hero_background")?.imageUrl;
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [eventsRes, announcementsRes, videosRes, testimonialsRes, contentRes] = await Promise.all([
-          fetch("/api/events"),
-          fetch("/api/announcements"),
-          fetch("/api/youtube/videos?maxResults=6"),
-          fetch("/api/testimonials"),
-          fetch("/api/site-content"),
-        ]);
+  async function fetchData() {
+    try {
+      const [eventsRes, announcementsRes, videosRes, testimonialsRes, contentRes] = await Promise.all([
+        fetch("/api/events"),
+        fetch("/api/announcements"),
+        fetch("/api/youtube/videos?maxResults=6"),
+        fetch("/api/testimonials"),
+        fetch("/api/site-content"),
+      ]);
 
-        const eventsData = await eventsRes.json();
-        const announcementsData = await announcementsRes.json();
-        const videosData = await videosRes.json();
-        const testimonialsData = await testimonialsRes.json();
-        const contentData = await contentRes.json();
+      const eventsData = await eventsRes.json();
+      const announcementsData = await announcementsRes.json();
+      const videosData = await videosRes.json();
+      const testimonialsData = await testimonialsRes.json();
+      const contentData = await contentRes.json();
 
-        if (Array.isArray(eventsData)) setEvents(eventsData);
-        else if (!eventsRes.ok) setEventsError(true);
+      if (Array.isArray(eventsData)) setEvents(eventsData);
+      else if (!eventsRes.ok) setEventsError(true);
 
-        if (Array.isArray(announcementsData)) setAnnouncements(announcementsData);
-        else if (!announcementsRes.ok) setAnnouncementsError(true);
+      if (Array.isArray(announcementsData)) setAnnouncements(announcementsData);
+      else if (!announcementsRes.ok) setAnnouncementsError(true);
 
-        if (videosData.videos) setSermonVideos(videosData.videos);
+      if (videosData.videos) setSermonVideos(videosData.videos);
 
-        if (Array.isArray(testimonialsData)) setTestimonials(testimonialsData);
+      if (Array.isArray(testimonialsData)) setTestimonials(testimonialsData);
 
-        if (Array.isArray(contentData)) setSiteContent(contentData);
-      } catch {
-        setEventsError(true);
-        setAnnouncementsError(true);
-      } finally {
-        setEventsLoading(false);
-        setAnnouncementsLoading(false);
-        setVideosLoading(false);
-        setTestimonialsLoading(false);
-      }
+      if (Array.isArray(contentData)) setSiteContent(contentData);
+    } catch {
+      setEventsError(true);
+      setAnnouncementsError(true);
+    } finally {
+      setEventsLoading(false);
+      setAnnouncementsLoading(false);
+      setVideosLoading(false);
+      setTestimonialsLoading(false);
     }
+  }
+
+  function refetch() {
+    setEventsLoading(true);
+    setAnnouncementsLoading(true);
+    setVideosLoading(true);
+    setTestimonialsLoading(true);
+    setEventsError(false);
+    setAnnouncementsError(false);
+    fetchData();
+  }
+
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -133,7 +144,7 @@ export default function Home() {
       {
         name: "Music Ministry",
         imageUrl: CHURCH_IMAGES.ministries.music.worship,
-        bgColor: "bg-gradient-to-br from-[var(--accent-warm)] to-[#7A5D2A]",
+        bgColor: "bg-gradient-to-br from-[var(--primary)] to-[#CA8A04]",
         href: "/ministries",
       },
     ],
@@ -226,6 +237,7 @@ export default function Home() {
                   events={events}
                   isLoading={eventsLoading}
                   isError={eventsError}
+                  onRetry={refetch}
                 />
               </div>
               <aside className="lg:col-span-1">
@@ -236,6 +248,7 @@ export default function Home() {
                   announcements={announcements}
                   isLoading={announcementsLoading}
                   isError={announcementsError}
+                  onRetry={refetch}
                 />
               </aside>
             </div>
@@ -265,7 +278,7 @@ export default function Home() {
       {testimonials.length > 0 && (
         <section
           id="testimonies"
-          className="py-20 lg:py-28 bg-gradient-to-br from-[var(--primary)]/5 via-[var(--accent-warm)]/5 to-[var(--accent-wine)]/5 dark:from-[var(--primary)]/10 dark:via-[var(--accent-warm)]/10 dark:to-[var(--accent-wine)]/10"
+          className="py-20 lg:py-28 bg-gradient-to-br from-[var(--primary)]/5 via-[var(--primary)]/3 to-[var(--accent-wine)]/5 dark:from-[var(--primary)]/10 dark:via-[var(--primary)]/5 dark:to-[var(--accent-wine)]/10"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeader label="Voices of Faith" title="Member Testimonies" />

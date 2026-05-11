@@ -64,8 +64,8 @@ export function HeroSection({
       </div>
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-[var(--primary)]/15 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[var(--accent-warm)]/12 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-[var(--primary)]/15 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[var(--accent-warm)]/12 rounded-full blur-3xl" />
       </div>
 
       <VesperLight intensity="soft" />
@@ -94,10 +94,10 @@ export function HeroSection({
 
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-[1.05]">
             <span className="block text-white drop-shadow-lg">{title}</span>
-            <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 bg-clip-text text-transparent drop-shadow-lg font-[family-name:var(--font-playfair)]">{subtitle}</span>
+            <span className="block text-[var(--primary)] drop-shadow-lg font-[family-name:var(--font-playfair)]">{subtitle}</span>
           </h1>
 
-          <p className="text-lg md:text-xl lg:text-2xl text-stone-100 mb-10 max-w-2xl leading-relaxed font-light animate-text-focus">
+          <p className="text-lg md:text-xl lg:text-2xl text-stone-100 mb-10 max-w-2xl leading-relaxed font-light animate-fade-in-up">
             {description}
           </p>
 

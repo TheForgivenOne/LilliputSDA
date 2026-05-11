@@ -77,6 +77,7 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [validationErrors, setValidationErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -108,10 +109,34 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }, []);
 
+  const validate = (): boolean => {
+    const errors: Partial<Record<keyof FormData, string>> = {};
+    if (!formData.name.trim()) errors.name = "Name is required";
+    else if (formData.name.length > 100) errors.name = "Name must be 100 characters or less";
+    if (!formData.decision) errors.decision = "Please select your decision";
+    if (!formData.isAdventist) errors.isAdventist = "Please select your membership status";
+    if (!formData.phone.trim()) errors.phone = "Phone number is required";
+    else if (formData.phone.length > 20) errors.phone = "Phone number must be 20 characters or less";
+    if (!formData.address.trim()) errors.address = "Address is required";
+    else if (formData.address.length > 200) errors.address = "Address must be 200 characters or less";
+    if (!formData.source) errors.source = "Please select how you found us";
+    if (formData.prayerRequest.length > 2000) errors.prayerRequest = "Prayer request must be 2000 characters or less";
+    if (formData.comments.length > 2000) errors.comments = "Comments must be 2000 characters or less";
+    if (formData.email && formData.email.length > 254) errors.email = "Email must be 254 characters or less";
+    if (formData.parish && formData.parish.length > 100) errors.parish = "Must be 100 characters or less";
+    if (formData.country && formData.country.length > 100) errors.country = "Must be 100 characters or less";
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setError("");
+    setValidationErrors({});
+
+    if (!validate()) return;
+
+    setIsSubmitting(true);
 
     try {
       const response = await fetch("/api/decision", {
@@ -129,6 +154,7 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
 
       setTimeout(() => {
         setIsSuccess(false);
+        setValidationErrors({});
         setFormData({
           name: "",
           decision: "",
@@ -151,6 +177,15 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
       setIsSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    if (!isOpen) return;
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [isOpen, onClose]);
 
   const modalContent = (
     <AnimatePresence>
@@ -284,13 +319,13 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
                       Thank You!
                     </h3>
                     <p className="text-stone-600 dark:text-stone-400">
-                      We have received your decision and will reach out to you soon.
+                      God bless you. We received your decision and will be in touch within a few days.
                     </p>
                   </motion.div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <p className="text-sm text-stone-600 dark:text-stone-400 text-center mb-6">
-                      Please complete the form below to share your needs and we will reach out to you as soon as possible.
+                      Share your decision with us and we will reach out to you soon.
                     </p>
 
                     {/* Required Fields Section */}
@@ -301,11 +336,13 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
                       </div>
 
                       <Input
-                        label="Please enter your name"
+                        label="Your full name"
                         required
+                        maxLength={100}
                         value={formData.name}
                         onChange={(e) => handleChange("name", e.target.value)}
                         placeholder="Your full name"
+                        error={validationErrors.name}
                       />
 
                       <Select
@@ -315,6 +352,7 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
                         onChange={(e) => handleChange("decision", e.target.value)}
                         options={decisionOptions}
                         placeholder="Please select the appropriate response"
+                        error={validationErrors.decision}
                       />
 
                       <Select
@@ -324,16 +362,19 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
                         onChange={(e) => handleChange("isAdventist", e.target.value)}
                         options={adventistOptions}
                         placeholder="Select your membership status"
+                        error={validationErrors.isAdventist}
                       />
 
                       <Input
-                        label="Please enter your phone number"
+                        label="Phone number"
                         type="tel"
                         required
+                        maxLength={20}
                         value={formData.phone}
                         onChange={(e) => handleChange("phone", e.target.value)}
                         placeholder={process.env.NEXT_PUBLIC_CHURCH_PHONE || "Phone number"}
                         leftIcon={<Phone className="w-5 h-5" />}
+                        error={validationErrors.phone}
                       />
 
                       <Select
@@ -345,11 +386,13 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
                       />
 
                       <Input
-                        label="Please enter your address"
+                        label="Street address"
                         required
+                        maxLength={200}
                         value={formData.address}
                         onChange={(e) => handleChange("address", e.target.value)}
                         placeholder="Street address"
+                        error={validationErrors.address}
                       />
                     </div>
 
@@ -362,6 +405,7 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
 
                       <Input
                         label="What Parish/State do you live in?"
+                        maxLength={100}
                         value={formData.parish}
                         onChange={(e) => handleChange("parish", e.target.value)}
                         placeholder="e.g., St. James"
@@ -369,14 +413,16 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
 
                       <Input
                         label="What country do you live in?"
+                        maxLength={100}
                         value={formData.country}
                         onChange={(e) => handleChange("country", e.target.value)}
                         placeholder="e.g., Jamaica"
                       />
 
                       <Input
-                        label="Please enter your email"
+                        label="Email address"
                         type="email"
+                        maxLength={254}
                         value={formData.email}
                         onChange={(e) => handleChange("email", e.target.value)}
                         placeholder="your@email.com"
@@ -392,6 +438,7 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
 
                       <Textarea
                         label="What would you like us to pray for?"
+                        maxLength={2000}
                         value={formData.prayerRequest}
                         onChange={(e) => handleChange("prayerRequest", e.target.value)}
                         placeholder="Share your prayer requests..."
@@ -400,6 +447,7 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
 
                       <Textarea
                         label="Please type any questions and/or comments that you have"
+                        maxLength={2000}
                         value={formData.comments}
                         onChange={(e) => handleChange("comments", e.target.value)}
                         placeholder="Your questions or comments..."
@@ -413,6 +461,7 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
                         onChange={(e) => handleChange("source", e.target.value)}
                         options={sourceOptions}
                         placeholder="Select how you found us"
+                        error={validationErrors.source}
                       />
                     </div>
 

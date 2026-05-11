@@ -166,34 +166,30 @@ function ToastItem({ toast, onRemove, defaultDuration }: ToastItemProps) {
     setTimeout(() => onRemove(toast.id), 300);
   };
 
-  const variantStyles: Record<ToastVariant, { icon: typeof CheckCircle; bg: string; border: string; iconColor: string; progressColor: string }> = {
+  const variantStyles: Record<ToastVariant, { icon: typeof CheckCircle; bg: string; iconColor: string; progressColor: string }> = {
     success: {
       icon: CheckCircle,
-      bg: "bg-white dark:bg-stone-800",
-      border: "border-l-4 border-green-500",
+      bg: "bg-green-50 dark:bg-green-900/20",
       iconColor: "text-green-500",
       progressColor: "bg-green-500",
     },
     error: {
       icon: AlertCircle,
-      bg: "bg-white dark:bg-stone-800",
-      border: "border-l-4 border-rose-500",
+      bg: "bg-rose-50 dark:bg-rose-900/20",
       iconColor: "text-rose-500",
       progressColor: "bg-rose-500",
     },
     warning: {
       icon: AlertTriangle,
-      bg: "bg-white dark:bg-stone-800",
-      border: "border-l-4 border-amber-500",
+      bg: "bg-amber-50 dark:bg-amber-900/20",
       iconColor: "text-amber-500",
       progressColor: "bg-amber-500",
     },
     info: {
       icon: Info,
-      bg: "bg-white dark:bg-stone-800",
-      border: "border-l-4 border-blue-500",
-      iconColor: "text-blue-500",
-      progressColor: "bg-blue-500",
+      bg: "bg-orange-50 dark:bg-orange-900/20",
+      iconColor: "text-orange-500",
+      progressColor: "bg-orange-500",
     },
   };
 
@@ -206,7 +202,6 @@ function ToastItem({ toast, onRemove, defaultDuration }: ToastItemProps) {
         "relative pointer-events-auto overflow-hidden rounded-lg shadow-xl ring-1 ring-black/5 dark:ring-white/10",
         "transition-all duration-300 ease-out",
         style.bg,
-        style.border,
         isVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
       )}
       role="alert"

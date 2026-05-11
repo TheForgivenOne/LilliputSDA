@@ -8,15 +8,17 @@ interface AnnouncementsListProps {
   announcements: Announcement[];
   isLoading: boolean;
   isError: boolean;
+  onRetry?: () => void;
 }
 
-export function AnnouncementsList({ announcements, isLoading, isError }: AnnouncementsListProps) {
+export function AnnouncementsList({ announcements, isLoading, isError, onRetry }: AnnouncementsListProps) {
   if (isError) {
     return (
       <DataLoadError
-        title="Unable to Load Announcements"
-        message="We're having trouble loading announcements. Please check your connection."
+        title="Couldn't load announcements"
+        message="Something went wrong while loading announcements. Check your connection and try again."
         variant="card"
+        onRetry={onRetry}
       />
     );
   }
@@ -25,7 +27,7 @@ export function AnnouncementsList({ announcements, isLoading, isError }: Announc
     return (
       <div className="space-y-6">
         {[1, 2].map((i) => (
-          <div key={i} className="bg-white dark:bg-stone-800 rounded-2xl p-6 shadow-sm border-l-4 border-amber-500">
+          <div key={i} className="bg-amber-50/50 dark:bg-amber-900/10 rounded-2xl p-6 shadow-sm">
             <div className="h-6 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-2/3 mb-3" />
             <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse mb-2" />
             <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-4/5" />
@@ -38,7 +40,7 @@ export function AnnouncementsList({ announcements, isLoading, isError }: Announc
   if (!announcements || announcements.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-stone-500 dark:text-stone-400">No announcements. Check back soon!</p>
+        <p className="text-stone-500 dark:text-stone-400">No announcements right now. Check back for updates.</p>
       </div>
     );
   }

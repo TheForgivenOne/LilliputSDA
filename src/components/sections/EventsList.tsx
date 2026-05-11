@@ -8,15 +8,17 @@ interface EventsListProps {
   events: ChurchEvent[];
   isLoading: boolean;
   isError: boolean;
+  onRetry?: () => void;
 }
 
-export function EventsList({ events, isLoading, isError }: EventsListProps) {
+export function EventsList({ events, isLoading, isError, onRetry }: EventsListProps) {
   if (isError) {
     return (
       <DataLoadError
-        title="Unable to Load Events"
-        message="We're having trouble loading upcoming events. Please check your connection."
+        title="Couldn't load events"
+        message="Something went wrong while fetching upcoming events. Check your connection and try again."
         variant="card"
+        onRetry={onRetry}
       />
     );
   }
@@ -42,7 +44,7 @@ export function EventsList({ events, isLoading, isError }: EventsListProps) {
   if (!events || events.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-stone-500 dark:text-stone-400">No upcoming events. Check back soon!</p>
+        <p className="text-stone-500 dark:text-stone-400">No events scheduled yet. Check back soon for updates.</p>
       </div>
     );
   }
