@@ -14,18 +14,18 @@
 
 | Branch | Purpose |
 |--------|---------|
-| `main` | Production-ready code (protected) |
+| `production` | Production-ready code (protected) |
 | `develop` | Integration branch for features |
 | `feature/<name>` | New features (branch from `develop`) |
 | `bugfix/<name>` | Bug fixes (branch from `develop`) |
-| `hotfix/<name>` | Critical production fixes (branch from `main`) |
+| `hotfix/<name>` | Critical production fixes (branch from `production`) |
 
 ### Making Changes
 
 ```bash
-# Sync your develop with main
+# Sync your develop with production
 git checkout develop
-git merge main
+git merge production
 
 # Create a feature branch
 git checkout -b feature/my-feature develop
@@ -57,7 +57,7 @@ test: add Playwright tests for contact form
 - [ ] Runs `npm run lint` with no errors
 - [ ] Passes `npm run typecheck`
 - [ ] Tests pass (if applicable)
-- [ ] PR targets `develop` (not `main`)
+- [ ] PR targets `develop` (not `production`)
 - [ ] Description explains *why*, not just *what*
 
 ## Code Standards

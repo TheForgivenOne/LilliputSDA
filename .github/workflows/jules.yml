@@ -39,7 +39,7 @@ jobs:
               "sourceContext": {
                 "source": "sources/github/TheForgivenOne/LilliputSDA",
                 "githubRepoContext": {
-                  "startingBranch": "main"
+                  "startingBranch": "production"
                 }
               },
               "automationMode": "AUTO_CREATE_PR",

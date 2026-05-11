@@ -110,35 +110,35 @@ tests/
 ## Git Branching Strategy
 
 ### Branch Types
-- **`main`** - Production-ready code (protected)
+- **`production`** - Production-ready code (protected)
 - **`develop`** - Integration branch for features
 - **`feature/<name>`** - New features (branch from `develop`)
 - **`bugfix/<name>`** - Bug fixes (branch from `develop`)
 - **`release/<version>`** - Release preparation
-- **`hotfix/<name>`** - Critical production fixes (branch from `main`)
+- **`hotfix/<name>`** - Critical production fixes (branch from `production`)
 
 ### Workflow
 1. Create feature branch from `develop`: `git checkout -b feature/my-feature develop`
 2. Work on feature, commit regularly
 3. Push and create PR to merge into `develop`
-4. When ready for release, merge `develop` into `main`
+4. When ready for release, merge `develop` into `production`
 
 ### Syncing Branches
-To keep branches up to date with `main`:
+To keep branches up to date with `production`:
 ```bash
 git checkout develop
-git merge main
+git merge production
 ```
 Or rebase for cleaner history:
 ```bash
 git checkout develop
-git rebase main
+git rebase production
 ```
 
 ### Key Rules
-- Never commit directly to `main` - use PRs
+- Never commit directly to `production` - use PRs
 - Delete merged feature branches
-- Sync branches with `main` regularly to avoid big merges
+- Sync branches with `production` regularly to avoid big merges
 
 ### Branch Selection
 When given a task, identify the appropriate branch type from the conventions above. If unclear, ask the user which branch to use before making changes.
