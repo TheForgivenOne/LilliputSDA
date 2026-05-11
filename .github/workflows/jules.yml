@@ -2,7 +2,7 @@ name: Jules
 
 on:
   issues:
-    types: [labeled]
+    types: [opened, labeled]
   issue_comment:
     types: [created]
   pull_request_review_comment:
@@ -11,7 +11,8 @@ on:
 jobs:
   jules:
     if: |
-      (github.event_name == 'issues' && github.event.label.name == 'jules-fix') ||
+      (github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'jules-fix') ||
+      (github.event_name == 'issues' && github.event.action == 'opened' && contains(github.event.issue.labels.*.name, 'jules-fix')) ||
       (github.event_name == 'issue_comment' && (
         contains(github.event.comment.body, '/jules') ||
         startsWith(github.event.comment.body, '/jules')
@@ -28,8 +29,6 @@ jobs:
           persist-credentials: false
 
       - name: Run Jules
-        env:
-          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
         run: |
           PROMPT="${{ github.event.issue.title || github.event.comment.body }}"
           curl -X POST 'https://jules.googleapis.com/v1alpha/sessions' \
