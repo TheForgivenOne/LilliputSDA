@@ -28,6 +28,8 @@ jobs:
           persist-credentials: false
 
       - name: Run Jules
+        env:
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
         run: |
           PROMPT="${{ github.event.issue.title || github.event.comment.body }}"
           curl -X POST 'https://jules.googleapis.com/v1alpha/sessions' \
