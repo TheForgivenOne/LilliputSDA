@@ -5,8 +5,9 @@ This file provides guidelines for AI agents working in this repository.
 ## Project Overview
 
 - **Stack**: Next.js 16 (App Router), TypeScript, Tailwind CSS 4
+- **Database**: Neon PostgreSQL via Prisma
+- **Auth**: NextAuth.js v5
 - **Purpose**: Church website for Lilliput Seventh-day Adventist Church
-- **Note**: Convex and Clerk were previously used but have been removed
 
 ---
 
@@ -15,12 +16,11 @@ This file provides guidelines for AI agents working in this repository.
 ### Development
 ```bash
 npm run dev           # Start Next.js dev server (port 3000)
-npx convex dev        # Run Convex backend dev server
 ```
 
 ### Build & Lint
 ```bash
-npm run build        # Production build
+npm run build        # Production build (prisma generate + next build)
 npm run start        # Start production server
 npm run lint         # Run ESLint
 npm run typecheck   # TypeScript type checking (tsc --noEmit)
@@ -32,6 +32,18 @@ npx playwright test                 # Run all tests
 npx playwright test --grep "query" # Run tests matching pattern
 npx playwright test path/to/test.spec.ts  # Run single test file
 ```
+
+### Jules (AI Coding Agent)
+Jules is Google's autonomous AI coding agent integrated into this repo.
+```bash
+npm install -g @google/jules  # Install Jules CLI
+jules login                   # Authenticate with Google
+jules remote new --session "task description"  # Create a session
+jules remote list --session   # List active sessions
+jules remote pull --session ID  # Pull results
+```
+
+Label an issue `jules-fix` or comment `/jules` on a PR to trigger the auto-fix workflow.
 
 ---
 
@@ -77,15 +89,20 @@ import type { FormErrors } from "@/types"
 ```
 src/
 ├── app/              # Next.js App Router pages
-│   └── api/         # API routes
+│   └── api/         # REST API routes
 ├── components/      # React components
 │   ├── ui/          # Reusable UI components (Button, Input, Card)
 │   ├── forms/       # Form components
 │   ├── admin/       # Admin dashboard components
 │   └── ...
-├── lib/             # Utilities (utils.ts, auth.ts, youtube.ts)
+├── lib/             # Utilities (db, auth, youtube, rate-limit)
+├── hooks/           # Custom React hooks
 └── types/           # TypeScript types
-tests/              # Playwright tests
+prisma/
+├── schema.prisma    # Database schema
+└── seed.ts          # Seed data
+tests/
+└── e2e/             # Playwright end-to-end tests
 ```
 
 ---
@@ -137,7 +154,6 @@ When given a task, identify the appropriate branch type from the conventions abo
 - Avoid barrel imports from large libraries
 
 ### React/Next.js
-- Follow Vercel React best practices (see below)
 - Use Server Components by default, client only when needed
 - Pass minimal props through RSC boundary
 
@@ -162,25 +178,8 @@ Key priorities:
 
 ---
 
-## Useful Skills
-
-The project has installed skills for common tasks:
-
-| Task | Skill |
-|------|-------|
-| UI Design | `frontend-design` |
-| Convex Setup | `convex-quickstart` |
-| Convex Auth | `convex-setup-auth` |
-| Convex Performance | `convex-performance-audit` |
-| Convex Migration | `convex-migration-helper` |
-| Library Docs | `context7-mcp` |
-| Web Accessibility | `web-design-guidelines` |
-
----
-
 ## Notes
 
-- Environment variables needed: YouTube API key (see README.md)
-- Uses Husky for git hooks
-- ESLint config ignores `.next/`, `node_modules/`
+- Environment variables: `DATABASE_URL`, `AUTH_SECRET`, `YOUTUBE_API_KEY`, `RESEND_API_KEY`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` (see README.md)
+- Uses Husky for git hooks (pre-commit runs lint + typecheck)
 - Playwright runs on `npm run start` (built app), not dev server
