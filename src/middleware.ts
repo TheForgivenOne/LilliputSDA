@@ -63,6 +63,11 @@ export default async function middleware(request: NextRequest) {
       return NextResponse.redirect(signInUrl);
     }
 
+    // RBAC: Only admins can access /admin routes
+    if (pathname.startsWith("/admin") && session.user.role !== "admin") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+
     return NextResponse.next();
   }
 
