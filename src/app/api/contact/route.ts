@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
+import { validateEmail } from "@/lib/validation";
 
 export async function GET(request: NextRequest) {
   const guard = await adminGuard();
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid name" }, { status: 400 });
     }
 
-    if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 320) {
+    if (typeof email !== "string" || !validateEmail(email) || email.length > 320) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
     }
 

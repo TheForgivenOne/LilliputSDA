@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { checkRateLimit, emailLimiter } from "@/lib/rate-limit";
+import { validateEmail } from "@/lib/validation";
 
 function getClientIP(request: Request): string {
   const headers = request.headers.get("x-forwarded-for");
@@ -35,7 +36,7 @@ function validateContactPayload(data: unknown): data is ContactPayload {
     obj.name.length > 0 &&
     obj.name.length <= 200 &&
     typeof obj.email === "string" &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(obj.email) &&
+    validateEmail(obj.email) &&
     typeof obj.message === "string" &&
     obj.message.length > 0 &&
     obj.message.length <= 5000
@@ -50,7 +51,7 @@ function validatePrayerPayload(data: unknown): data is PrayerPayload {
     obj.name.length > 0 &&
     obj.name.length <= 200 &&
     typeof obj.email === "string" &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(obj.email) &&
+    validateEmail(obj.email) &&
     typeof obj.request === "string" &&
     obj.request.length > 0 &&
     obj.request.length <= 2000 &&

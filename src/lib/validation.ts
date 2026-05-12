@@ -1,5 +1,7 @@
 export function validateEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  // Use a standard regex that is safe from ReDoS vulnerabilities.
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
 }
 
 export function validateRequired(value: string, maxLength?: number): boolean {
