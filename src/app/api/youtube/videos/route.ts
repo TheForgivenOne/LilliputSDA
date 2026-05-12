@@ -185,12 +185,19 @@ function mapVideo(
   details: YouTubeVideoItem | undefined
 ): YouTubeVideo {
   const videoId = item.id.videoId;
-  const thumbnails = item.snippet?.thumbnails || {};
-  const thumbnailUrl = thumbnails.maxres?.url || 
-                        thumbnails.standard?.url || 
-                        thumbnails.high?.url || 
-                        thumbnails.medium?.url || 
-                        getYouTubeThumbnailFallback(videoId, "high");
+  // Prefer details thumbnails (stable) over search snippet thumbnails.
+  // Skip maxres: the API returns the URL even when the image doesn't exist,
+  // causing 404s for videos uploaded after YouTube changed their encoding pipeline.
+  const dt = details?.snippet?.thumbnails || {};
+  const st = item.snippet?.thumbnails || {};
+  const thumbnailUrl =
+    dt.standard?.url ||
+    dt.high?.url ||
+    st.standard?.url ||
+    st.high?.url ||
+    dt.medium?.url ||
+    st.medium?.url ||
+    getYouTubeThumbnailFallback(videoId, "high");
 
   const title = decodeHtmlEntities(item.snippet?.title) || "Untitled Video";
   const description = decodeHtmlEntities(item.snippet?.description) || "";

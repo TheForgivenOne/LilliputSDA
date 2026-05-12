@@ -43,6 +43,7 @@ export function VideoCard({ video, onClick }: VideoCardProps) {
         onPlay={() => onClick(video)}
         size="sm"
         status={video.status}
+        videoId={video.id}
       />
       <div className="p-4">
         <h3 className="font-semibold text-stone-900 dark:text-stone-100 mb-1 line-clamp-2 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">

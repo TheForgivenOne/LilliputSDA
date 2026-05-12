@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { PlayButton } from "./PlayButton";
 import { decodeHtmlEntities } from "@/lib/utils";
@@ -12,6 +13,7 @@ interface VideoThumbnailProps {
   onPlay: () => void;
   size?: "sm" | "md" | "lg";
   status?: VideoStatus;
+  videoId?: string;
 }
 
 export function VideoThumbnail({
@@ -21,22 +23,34 @@ export function VideoThumbnail({
   onPlay,
   size = "md",
   status,
+  videoId,
 }: VideoThumbnailProps) {
+  const [src, setSrc] = useState(thumbnailUrl);
+  const [fallbackUsed, setFallbackUsed] = useState(false);
+
   const buttonSizes = {
     sm: "sm",
     md: "md",
     lg: "lg",
   } as const;
 
+  const handleError = () => {
+    // maxresdefault.jpg can 404 even when the API returns it — fall back to hqdefault
+    if (!fallbackUsed && videoId) {
+      setSrc(`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`);
+      setFallbackUsed(true);
+    }
+  };
+
   return (
     <div className="aspect-video relative bg-stone-900 group">
       <Image
-        src={thumbnailUrl}
+        src={src}
         alt={decodeHtmlEntities(title)}
         fill
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         className="object-cover group-hover:scale-105 transition-transform duration-300"
-        onError={() => {}}
+        onError={handleError}
       />
       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <PlayButton size={buttonSizes[size]} onClick={onPlay} />

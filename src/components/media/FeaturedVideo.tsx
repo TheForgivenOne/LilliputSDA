@@ -28,10 +28,19 @@ function formatScheduledTime(isoString?: string): string {
 
 export function FeaturedVideo({ video, isPlaying, onPlay }: FeaturedVideoProps) {
   const [isMobile, setIsMobile] = useState(false);
+  const [thumbnailSrc, setThumbnailSrc] = useState(video.thumbnailUrl);
+  const [thumbnailFallbackUsed, setThumbnailFallbackUsed] = useState(false);
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
   }, []);
+
+  const handleThumbnailError = () => {
+    if (!thumbnailFallbackUsed) {
+      setThumbnailSrc(`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`);
+      setThumbnailFallbackUsed(true);
+    }
+  };
 
   const handlePlay = () => {
     if (isMobile) {
@@ -56,11 +65,11 @@ export function FeaturedVideo({ video, isPlaying, onPlay }: FeaturedVideoProps) 
           ) : (
             <>
               <Image
-                src={video.thumbnailUrl}
+                src={thumbnailSrc}
                 alt={decodeHtmlEntities(video.title)}
                 fill
                 className="object-cover"
-                onError={() => {}}
+                onError={handleThumbnailError}
               />
               <div className="absolute inset-0 flex items-center justify-center">
                 <button onClick={handlePlay} className="group">
