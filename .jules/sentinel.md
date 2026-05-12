@@ -11,3 +11,9 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 3. Use correctly named framework-standard middleware (`middleware.ts`) to enforce routing protection.
 4. Implement role-based access control (RBAC) by verifying the user's role in the session object.
 5. Configure authentication providers to include necessary authorization metadata (like roles) in the session.
+
+**Implementation Note (2025-05-22):**
+- Implemented registration rate limiting in `/api/auth/register` to prevent brute-force attacks.
+- Renamed `proxy.ts` to `middleware.ts` to ensure it is correctly picked up by Next.js.
+- Implemented RBAC in `middleware.ts` to restrict `/admin` routes to users with the `admin` role.
+- Updated Auth.js callbacks in `src/auth.ts` to correctly persist and propagate user `role` and `id` in the session.

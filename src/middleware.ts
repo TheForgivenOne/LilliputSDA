@@ -41,6 +41,10 @@ const protectedPaths = [
   "/admin",
 ];
 
+const adminPaths = [
+  "/admin",
+];
+
 function isPublicRoute(pathname: string): boolean {
   return publicPaths.some(
     (path) => pathname === path || pathname.startsWith(path + "/")
@@ -49,6 +53,10 @@ function isPublicRoute(pathname: string): boolean {
 
 function isProtectedRoute(pathname: string): boolean {
   return protectedPaths.some((path) => pathname.startsWith(path));
+}
+
+function isAdminRoute(pathname: string): boolean {
+  return adminPaths.some((path) => pathname.startsWith(path));
 }
 
 export default async function middleware(request: NextRequest) {
@@ -61,6 +69,11 @@ export default async function middleware(request: NextRequest) {
       const signInUrl = new URL("/sign-in", request.url);
       signInUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(signInUrl);
+    }
+
+    // RBAC: Check for admin role on admin routes
+    if (isAdminRoute(pathname) && session.user.role !== "admin") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
     return NextResponse.next();
