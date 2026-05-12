@@ -5,7 +5,8 @@ import { NextRequest } from "next/server";
  * Prefers request.ip, falling back to common headers.
  */
 export function getClientIP(request: NextRequest): string {
-  const ip = (request as any).ip;
+  // @ts-ignore - ip exists on NextRequest but might not be in the type definition of the current version
+  const ip = request.ip;
   if (ip) {
     return ip;
   }
