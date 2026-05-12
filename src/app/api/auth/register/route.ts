@@ -5,9 +5,6 @@ import { authLimiter, checkRateLimit } from "@/lib/rate-limit";
 import { validateEmail } from "@/lib/validation";
 
 function getClientIP(request: NextRequest): string {
-  // Use built-in Next.js IP detection if available
-  if (request.ip) return request.ip;
-
   const headers = request.headers.get("x-forwarded-for");
   if (headers) {
     return headers.split(",")[0].trim();
@@ -33,7 +30,7 @@ export async function POST(request: NextRequest) {
   let body;
   try {
     body = await request.json();
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 

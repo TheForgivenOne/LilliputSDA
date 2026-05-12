@@ -27,7 +27,7 @@ export default defineConfig({
         "src/app/**/not-found.tsx",
         "src/components/**/*.tsx",
         "src/**/index.ts",
-        "src/middleware.ts",
+        "src/proxy.ts",
       ],
     },
   },
