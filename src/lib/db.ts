@@ -1,11 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
-import { config } from "dotenv";
-
-if (process.env.NODE_ENV !== "production") {
-  config({ path: ".env" });
-  config({ path: ".env.development", override: true });
-}
+import { Pool } from "@neondatabase/serverless";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -13,7 +8,8 @@ const globalForPrisma = globalThis as unknown as {
 
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL || "postgresql://mock:mock@localhost:5432/mock";
-  const adapter = new PrismaNeon({ connectionString });
+  const pool = new Pool({ connectionString });
+  const adapter = new PrismaNeon(pool as any);
   return new PrismaClient({ adapter });
 }
 
