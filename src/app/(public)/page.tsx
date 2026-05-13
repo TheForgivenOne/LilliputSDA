@@ -215,46 +215,41 @@ export default function Home() {
 
       {/* THIS WEEK — Events + Announcements merged into one section.
           Desktop: 2-col with events 2/3, announcements 1/3.
-          Mobile: stacked. Hidden if both are empty. */}
-      {(eventsLoading ||
-        events.length > 0 ||
-        announcementsLoading ||
-        announcements.length > 0) && (
-        <section id="this-week" className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectionHeader
-              label="What's Happening"
-              title="This Week at Lilliput"
-              href="/events"
-              linkText="Full Calendar"
-            />
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
-              <div className="lg:col-span-2">
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--primary)] dark:text-[var(--accent-lilac)] mb-4">
-                  Upcoming Events
-                </h3>
-                <EventsList
-                  events={events}
-                  isLoading={eventsLoading}
-                  isError={eventsError}
-                  onRetry={refetch}
-                />
-              </div>
-              <aside className="lg:col-span-1">
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--primary)] dark:text-[var(--accent-lilac)] mb-4">
-                  Announcements
-                </h3>
-                <AnnouncementsList
-                  announcements={announcements}
-                  isLoading={announcementsLoading}
-                  isError={announcementsError}
-                  onRetry={refetch}
-                />
-              </aside>
+          Mobile: stacked. */}
+      <section id="this-week" className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            label="What's Happening"
+            title="This Week at Lilliput"
+            href="/events"
+            linkText="Full Calendar"
+          />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
+            <div className="lg:col-span-2">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--primary)] dark:text-[var(--accent-lilac)] mb-4">
+                Upcoming Events
+              </h3>
+              <EventsList
+                events={events}
+                isLoading={eventsLoading}
+                isError={eventsError}
+                onRetry={refetch}
+              />
             </div>
+            <aside className="lg:col-span-1">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--primary)] dark:text-[var(--accent-lilac)] mb-4">
+                Announcements
+              </h3>
+              <AnnouncementsList
+                announcements={announcements}
+                isLoading={announcementsLoading}
+                isError={announcementsError}
+                onRetry={refetch}
+              />
+            </aside>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       <section id="ministries" className="py-20 lg:py-28 bg-white dark:bg-stone-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

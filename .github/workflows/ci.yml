@@ -79,7 +79,7 @@ jobs:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           NEXT_PUBLIC_SITE_URL: https://lilliputsda.org
-      - run: npx prisma db push
+      - run: npx prisma db push --skip-generate
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
       - run: npx playwright test tests/e2e --project=${{ matrix.browser }}
