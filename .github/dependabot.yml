@@ -16,6 +16,8 @@ updates:
       - "dependencies"
       - "automated"
     versioning-strategy: increase
+    ignore:
+      - dependency-name: "@hono/node-server"
 
   - package-ecosystem: "github-actions"
     directory: "/"
