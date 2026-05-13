@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Church, MapPin, Mail, Clock, ExternalLink } from "lucide-react";
+import { CHURCH_EMAIL } from "@/lib/config";
 
 const footerLinks = {
   about: [
@@ -11,10 +12,10 @@ const footerLinks = {
     { label: "Contact Us", href: "/contact" },
   ],
   ministries: [
-    { label: "Youth Ministries", href: "/ministries", key: "ministries-youth" },
-    { label: "Women's Ministry", href: "/ministries", key: "ministries-women" },
-    { label: "Men's Ministry", href: "/ministries", key: "ministries-men" },
-    { label: "Music Ministry", href: "/ministries", key: "ministries-music" },
+    { label: "Youth Ministries", href: "/ministries?category=youth", key: "ministries-youth" },
+    { label: "Women's Ministry", href: "/ministries?category=adult", key: "ministries-women" },
+    { label: "Men's Ministry", href: "/ministries?category=adult", key: "ministries-men" },
+    { label: "Music Ministry", href: "/ministries?category=music", key: "ministries-music" },
   ],
   resources: [
     { label: "Sermons", href: "/media", key: "sermons" },
@@ -101,7 +102,7 @@ export function Footer() {
                   <Mail className="w-5 h-5 text-amber-600 dark:text-amber-500 flex-shrink-0" />
                 </div>
                 <a
-                  href="mailto:lhamilton@westjamaica.org"
+                  href={`mailto:${CHURCH_EMAIL}`}
                   className="text-stone-600 dark:text-stone-300 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                 >
                   lhamilton@westjamaica.org

@@ -8,6 +8,7 @@ import {
   Leaf, Home, Tent, Cloud, Sunrise, Mountain, Globe,
 } from "lucide-react";
 import { CHURCH_IMAGES } from "@/lib/utils";
+import { CHURCH_EMAIL } from "@/lib/config";
 import { StaffCard } from "@/components/ui/Card";
 import { LeaderCard, LeaderCardGroup } from "@/components/cards/LeaderCard";
 import { HistoricalSlideshow } from "@/components/cards/HistoricalSlideshow";
@@ -70,7 +71,7 @@ const defaultPastor = {
   title: "Junior Pastor, Lilliput SDA Church",
   bio: "Pastor Hamilton leads the Lilliput SDA Church with a passion for community outreach and spiritual growth. Under his leadership, the church has seen continued growth and expanded ministry programs.",
   photoUrl: "",
-  email: "lhamilton@westjamaica.org",
+  email: CHURCH_EMAIL,
   phone: "",
   department: "Pastoral",
 };
@@ -263,7 +264,11 @@ export default function AboutPage() {
                   email={person.email}
                 />
               ))
-            ) : null}
+            ) : (
+              <p className="text-stone-500 dark:text-stone-400 text-sm col-span-full text-center py-4">
+                No board members listed at this time.
+              </p>
+            )}
           </LeaderCardGroup>
         </div>
       </section>
@@ -289,7 +294,11 @@ export default function AboutPage() {
                   email={person.email}
                 />
               ))
-            ) : null}
+            ) : (
+              <p className="text-stone-500 dark:text-stone-400 text-sm col-span-full text-center py-4">
+                No department leaders listed at this time.
+              </p>
+            )}
           </LeaderCardGroup>
         </div>
       </section>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { MinistryDetailCard } from "@/components/ui/Card";
 import { CHURCH_IMAGES } from "@/lib/utils";
 import { Users, Music, Heart, BookOpen, Star, Stethoscope, Hand, SlidersHorizontal, X } from "lucide-react";
@@ -8,6 +9,7 @@ import type { Ministry } from "@/types";
 import { PageHero } from "@/components/sections/PageHero";
 import { CategoryFilter } from "@/components/ui/CategoryFilter";
 import { FilterDrawer } from "@/components/ui/FilterDrawer";
+import { CHURCH_EMAIL } from "@/lib/config";
 
 const defaultMinistries = [
   {
@@ -140,7 +142,12 @@ const ministryCategories = [
 ];
 
 export default function MinistriesPage() {
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const searchParams = useSearchParams();
+  const validCategories = ministryCategories.map((c) => c.id);
+  const paramCategory = searchParams.get("category") ?? "all";
+  const [selectedCategory, setSelectedCategory] = useState(
+    validCategories.includes(paramCategory) ? paramCategory : "all"
+  );
   const [ministries, setMinistries] = useState<Ministry[]>([]);
   const [ministriesLoading, setMinistriesLoading] = useState(true);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -281,7 +288,7 @@ export default function MinistriesPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="mailto:lhamilton@westjamaica.org"
+              href={`mailto:${CHURCH_EMAIL}`}
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[var(--primary)] text-white rounded-2xl font-semibold shadow-lg shadow-[rgba(234,179,8,0.30)] hover:bg-[var(--primary-hover)] hover:shadow-[rgba(234,179,8,0.45)] hover:-translate-y-0.5 transition-all"
             >
               Contact a Ministry Leader

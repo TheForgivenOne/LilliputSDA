@@ -179,7 +179,12 @@ export function SmartContactForm({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
-    if (!validate()) return;
+    if (!validate()) {
+      requestAnimationFrame(() => {
+        (formRef.current?.querySelector('[aria-invalid="true"]') as HTMLElement)?.focus();
+      });
+      return;
+    }
     setSubmitting(true);
     try {
       const response = await fetch("/api/email", {

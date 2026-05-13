@@ -59,7 +59,12 @@ export default function ContactForm({ onSuccess, className }: ContactFormProps) 
     e.preventDefault();
     setError(null);
 
-    if (!validate()) return;
+    if (!validate()) {
+      requestAnimationFrame(() => {
+        (formRef.current?.querySelector('[aria-invalid="true"]') as HTMLElement)?.focus();
+      });
+      return;
+    }
 
     setSubmitting(true);
 
