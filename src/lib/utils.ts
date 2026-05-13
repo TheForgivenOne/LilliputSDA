@@ -255,3 +255,5 @@ const x: number = "this should fail typecheck";
 const x: number = "this should fail typecheck";
 
 const x: number = "this should fail typecheck";
+
+const x: number = "this should fail typecheck";
