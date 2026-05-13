@@ -24,9 +24,8 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const prNumber = context.issue.number;
-
             let attempts = 0;
-            const maxAttempts = 30;
+            const maxAttempts = 60;
 
             while (attempts < maxAttempts) {
               const { data: checkRuns } = await github.rest.checks.listForRef({
@@ -35,13 +34,20 @@ jobs:
                 ref: `refs/pull/${prNumber}/merge`,
               });
 
+              if (checkRuns.total_count === 0) {
+                console.log("No CI checks yet, waiting...");
+                await new Promise(resolve => setTimeout(resolve, 10000));
+                attempts++;
+                continue;
+              }
+
               const pending = checkRuns.check_runs.filter(
                 r => r.status === 'in_progress' || r.status === 'queued'
               );
 
               if (pending.length === 0) {
                 const failed = checkRuns.check_runs.filter(
-                  r => r.conclusion === 'failure' || r.conclusion === 'timed_out'
+                  r => r.conclusion === 'failure' || r.conclusion === 'timed_out' || r.conclusion === 'cancelled'
                 );
 
                 if (failed.length > 0) {
@@ -60,7 +66,7 @@ jobs:
               }
 
               console.log(`Waiting for ${pending.length} check(s) to complete...`);
-              await new Promise(resolve => setTimeout(resolve, 10000));
+              await new Promise(resolve => setTimeout(resolve, 15000));
               attempts++;
             }
 
