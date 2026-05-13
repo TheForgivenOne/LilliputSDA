@@ -67,6 +67,10 @@ Use conventional commits: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `chor
 
 Auto-reviews every PR at MEDIUM threshold. Tag `@gemini-code-assist` or comment `/gemini review` for re-review. Config in `.gemini/config.yaml`.
 
+## OpenCode GitHub Agent
+
+`opencode github install` sets up the GitHub App. `opencode github run` starts the agent to act on PR events.
+
 ## Style Guide
 
 `.gemini/styleguide.md` defines code review priorities (security, maintainability, performance, accessibility) and conventions — follow these when writing code.
