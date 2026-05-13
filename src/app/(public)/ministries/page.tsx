@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { MinistryDetailCard } from "@/components/ui/Card";
 import { CHURCH_IMAGES } from "@/lib/utils";
@@ -141,7 +141,7 @@ const ministryCategories = [
   { id: "service", label: "Community", icon: Hand },
 ];
 
-export default function MinistriesPage() {
+function MinistriesContent() {
   const searchParams = useSearchParams();
   const validCategories = ministryCategories.map((c) => c.id);
   const paramCategory = searchParams.get("category") ?? "all";
@@ -306,5 +306,13 @@ export default function MinistriesPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function MinistriesPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen" />}>
+      <MinistriesContent />
+    </Suspense>
   );
 }
