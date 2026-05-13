@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "yt3.ggpht.com" },
       { protocol: "https", hostname: "*.google.com" },
       { protocol: "https", hostname: "*.gstatic.com" },
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
     ],
     dangerouslyAllowSVG: true,
   },

@@ -28,6 +28,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
+    if (!file.type.startsWith("image/")) {
+      return NextResponse.json({ error: "Only image files are allowed" }, { status: 415 });
+    }
+
     const blob = await put(file.name, file, {
       access: "public",
     });

@@ -73,7 +73,6 @@ export function MediaGrid() {
               fill
               sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 16vw"
               className="object-cover"
-              unoptimized
             />
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <button
