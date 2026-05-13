@@ -241,3 +241,5 @@ export function getChurchImage(key: keyof typeof CHURCH_IMAGES.hero |
 }
 
 const _unused = "trigger ci failure";
+
+const x: number = "this should fail typecheck";
