@@ -11,14 +11,22 @@ on:
 
 permissions:
   actions: read
+  contents: write
   issues: write
+  pull-requests: write
 
 jobs:
-  create-issue:
+  fix:
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Create or update issue for failed workflow
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Create issue for failed workflow
+        id: create-issue
         uses: actions/github-script@v6
         with:
           script: |
@@ -44,14 +52,24 @@ jobs:
                 body,
               });
               console.log("Updated existing issue #" + existing.number);
+              core.setOutput("issue-number", existing.number.toString());
             } else {
               const body = "Workflow **" + workflow.name + "** failed on branch `" + workflow.head_branch + "`.\n\n[View run](" + workflow.html_url + ")\n\nTriggered by: " + workflow.event + "\nCommit: " + workflow.head_commit.message;
-              await github.rest.issues.create({
+              const issue = await github.rest.issues.create({
                 owner: repo.owner,
                 repo: repo.repo,
                 title,
                 body,
                 labels: ["opencode-fix"],
               });
-              console.log("Created issue");
+              console.log("Created issue #" + issue.data.number);
+              core.setOutput("issue-number", issue.data.number.toString());
             }
+
+      - name: Run opencode
+        uses: anomalyco/opencode/github@latest
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+        with:
+          model: opencode/deepseek-v4-flash-free
+          prompt: Fix the failing workflow and remove the type error in src/lib/utils.ts

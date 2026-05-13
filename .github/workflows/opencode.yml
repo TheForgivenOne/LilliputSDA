@@ -1,8 +1,6 @@
 name: opencode
 
 on:
-  issues:
-    types: [opened, labeled]
   issue_comment:
     types: [created]
   pull_request_review_comment:
@@ -11,7 +9,6 @@ on:
 jobs:
   opencode:
     if: |
-      (github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'opencode-fix')) ||
       contains(github.event.comment.body, ' /oc') ||
       startsWith(github.event.comment.body, '/oc') ||
       contains(github.event.comment.body, ' /opencode') ||
@@ -28,17 +25,9 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set prompt for issues event
-        if: github.event_name == 'issues'
-        id: prompt
-        run: |
-          ISSUE_TITLE="${{ github.event.issue.title }}"
-          echo "value=Fix this issue: ${ISSUE_TITLE}" >> "$GITHUB_OUTPUT"
-
       - name: Run opencode
         uses: anomalyco/opencode/github@latest
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
           model: opencode/deepseek-v4-flash-free
-          prompt: ${{ steps.prompt.outputs.value }}
