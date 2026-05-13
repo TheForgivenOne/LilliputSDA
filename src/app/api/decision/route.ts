@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
+import { checkRateLimit, submissionLimiter, getClientIP } from "@/lib/rate-limit";
 
 export async function GET(request: NextRequest) {
   const guard = await adminGuard();
@@ -29,6 +30,16 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(submissionLimiter, `decision:${ip}`);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many submissions. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
     const {
