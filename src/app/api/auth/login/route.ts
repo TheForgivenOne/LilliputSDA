@@ -4,6 +4,7 @@ import { compare } from "bcryptjs";
 import { signIn } from "@/auth";
 import { authLimiter, checkRateLimit, getClientIP } from "@/lib/rate-limit";
 
+export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   const ip = getClientIP(request);
   const { success } = await checkRateLimit(authLimiter, `login:${ip}`);

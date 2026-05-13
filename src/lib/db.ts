@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaNeon } from "@prisma/adapter-neon";
 import { config } from "dotenv";
 
 if (process.env.NODE_ENV !== "production") {
@@ -11,15 +10,30 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-function createPrismaClient() {
+let prismaClient: PrismaClient | undefined;
+
+export function getPrisma(): PrismaClient {
+  if (prismaClient) return prismaClient;
+  if (globalForPrisma.prisma) {
+    prismaClient = globalForPrisma.prisma;
+    return prismaClient;
+  }
+
   const connectionString = process.env.DATABASE_URL;
-  if (!connectionString && process.env.NODE_ENV === "production") {
+  if (!connectionString) {
     throw new Error("DATABASE_URL environment variable is not set");
   }
-  const adapter = new PrismaNeon({ connectionString: connectionString || "" });
-  return new PrismaClient({ adapter });
+
+  const { PrismaNeon } = require("@prisma/adapter-neon");
+  const adapter = new PrismaNeon({ connectionString });
+  prismaClient = new PrismaClient({ adapter });
+  if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prismaClient;
+  return prismaClient;
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
-
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    const client = getPrisma();
+    return (client as unknown as Record<string, unknown>)[prop as string];
+  },
+});
