@@ -56,14 +56,9 @@ jobs:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           NEXT_PUBLIC_SITE_URL: https://lilliputsda.org
-      - uses: actions/upload-artifact@v7
-        with:
-          name: next-build
-          path: .next
-          retention-days: 1
 
   cross-browser-tests:
-    name: Cross-Browser Tests
+    name: Cross-Browser Tests (${{ matrix.browser }})
     needs: build
     strategy:
       fail-fast: false
@@ -78,10 +73,12 @@ jobs:
           cache: "npm"
       - run: npm ci
       - run: npx playwright install ${{ matrix.browser }}
-      - uses: actions/download-artifact@v7
-        with:
-          name: next-build
-          path: .next
+      - run: npm run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          NEXT_PUBLIC_SITE_URL: https://lilliputsda.org
       - run: npx prisma db push --skip-generate
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
