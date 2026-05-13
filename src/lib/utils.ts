@@ -245,3 +245,5 @@ const _unused = "trigger ci failure";
 const x: number = "this should fail typecheck";
 
 const x: number = "this should fail typecheck";
+
+const x: number = "this should fail typecheck";
