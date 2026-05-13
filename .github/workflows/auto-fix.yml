@@ -10,6 +10,7 @@ on:
       - completed
 
 permissions:
+  actions: read
   issues: write
 
 jobs:
@@ -25,7 +26,7 @@ jobs:
             const repo = context.repo;
             const title = `🚨 Fix failing workflow: ${workflow.name}`;
 
-              const { data: issues } = await github.rest.issues.listForRepo({
+            const { data: issues } = await github.rest.issues.listForRepo({
               owner: repo.owner,
               repo: repo.repo,
               state: 'open',
