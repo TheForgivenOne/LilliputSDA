@@ -95,10 +95,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             className={cn(
               "px-4 py-3 bg-white dark:bg-stone-800 border rounded-lg transition-all duration-200 min-w-0",
               "placeholder:text-stone-400 dark:placeholder:text-stone-500",
-              "focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]/30 focus-visible:border-[var(--primary)]",
               "disabled:opacity-50 disabled:cursor-not-allowed",
               error
-                ? "border-rose-300 focus:border-rose-500 focus:ring-rose-500/20"
+                ? "border-rose-300 focus-visible:border-rose-500 focus-visible:ring-rose-500/20"
                 : "border-stone-300 dark:border-stone-600",
               leftIcon && "pl-10",
               rightIcon && "pr-10",
@@ -202,10 +202,10 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           className={cn(
             "px-4 py-3 bg-white dark:bg-stone-800 border rounded-lg transition-all duration-200 resize-y min-h-[100px] min-w-0",
             "placeholder:text-stone-400 dark:placeholder:text-stone-500",
-            "focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]/30 focus-visible:border-[var(--primary)]",
             "disabled:opacity-50 disabled:cursor-not-allowed",
             error
-              ? "border-rose-300 focus:border-rose-500 focus:ring-rose-500/20"
+              ? "border-rose-300 focus-visible:border-rose-500 focus-visible:ring-rose-500/20"
               : "border-stone-300 dark:border-stone-600",
             fullWidth && "w-full",
             className
@@ -276,10 +276,10 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
             className={cn(
               "px-4 py-3 bg-white dark:bg-stone-800 border rounded-lg transition-all duration-200 appearance-none",
-              "focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]/30 focus-visible:border-[var(--primary)]",
               "disabled:opacity-50 disabled:cursor-not-allowed",
               error
-                ? "border-rose-300 focus:border-rose-500 focus:ring-rose-500/20"
+                ? "border-rose-300 focus-visible:border-rose-500 focus-visible:ring-rose-500/20"
                 : "border-stone-300 dark:border-stone-600",
               fullWidth && "w-full",
               className
@@ -350,9 +350,8 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             aria-describedby={helperText ? `${inputId}-helper` : undefined}
             className={cn(
               "w-5 h-5 rounded border-stone-300 dark:border-stone-600",
-              "text-amber-700 focus:ring-amber-500 focus:ring-2",
-              "dark:bg-stone-800 dark:checked:bg-amber-700",
-              "focusable:outline-none focusable:ring-2 focusable:ring-amber-500 focusable:ring-offset-2"
+              "text-amber-700 focus-visible:ring-[var(--primary)] focus-visible:ring-2",
+              "dark:bg-stone-800 dark:checked:bg-amber-700"
             )}
             {...props}
           />

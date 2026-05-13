@@ -33,25 +33,25 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const isDisabled = disabled || isLoading;
 
     const baseStyles =
-      "inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group";
+      "inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group";
 
     // Vesper variants — brass (primary), indigo (accent-warm), mulberry (wine), slate (secondary).
     // Built on semantic tokens from globals.css / tokens.css.
     const variants = {
       primary:
-        "bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] focus:ring-[var(--primary)] shadow-lg shadow-[rgba(234,179,8,0.30)] hover:shadow-[rgba(234,179,8,0.45)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
+        "bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] shadow-lg shadow-[rgba(234,179,8,0.30)] hover:shadow-[rgba(234,179,8,0.45)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
       gold:
-        "bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] focus:ring-[var(--primary)] shadow-lg shadow-[rgba(234,179,8,0.28)] hover:shadow-[rgba(234,179,8,0.45)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
+        "bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] shadow-lg shadow-[rgba(234,179,8,0.28)] hover:shadow-[rgba(234,179,8,0.45)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
       wine:
-        "bg-[var(--accent-wine)] text-white hover:bg-[#561F30] focus:ring-[var(--accent-wine)] shadow-lg shadow-[rgba(110,42,62,0.30)] hover:shadow-[rgba(110,42,62,0.45)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
+        "bg-[var(--accent-wine)] text-white hover:bg-[#561F30] shadow-lg shadow-[rgba(110,42,62,0.30)] hover:shadow-[rgba(110,42,62,0.45)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
       secondary:
-        "bg-[var(--color-stone-800)] text-white hover:bg-[var(--color-stone-900)] focus:ring-[var(--color-stone-500)] shadow-lg shadow-[var(--color-stone-900)]/25 hover:shadow-[var(--color-stone-900)]/40 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
+        "bg-[var(--color-secondary-800)] text-white hover:bg-[var(--color-secondary-900)] shadow-lg shadow-[var(--color-secondary-900)]/25 hover:shadow-[var(--color-secondary-900)]/40 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
       outline:
-        "border-2 border-[var(--primary)] text-[var(--primary)] dark:text-[var(--accent-lilac)] hover:bg-[var(--primary)] hover:text-white focus:ring-[var(--primary)] hover:-translate-y-0.5 active:translate-y-0",
+        "border-2 border-[var(--primary)] text-[var(--primary)] dark:text-[var(--accent-lilac)] hover:bg-[var(--primary)] hover:text-white hover:-translate-y-0.5 active:translate-y-0",
       ghost:
-        "text-[var(--color-stone-700)] dark:text-[var(--color-stone-300)] hover:bg-[var(--color-stone-100)] dark:hover:bg-[var(--color-stone-800)] hover:text-[var(--color-stone-900)] dark:hover:text-[var(--color-stone-100)] focus:ring-[var(--color-stone-500)]",
+        "text-[var(--color-secondary-700)] dark:text-[var(--color-secondary-300)] hover:bg-[var(--color-secondary-100)] dark:hover:bg-[var(--color-secondary-800)] hover:text-[var(--color-secondary-900)] dark:hover:text-[var(--color-secondary-100)]",
       danger:
-        "bg-[var(--color-rose-600)] text-white hover:bg-[var(--color-rose-700)] focus:ring-[var(--color-rose-500)] shadow-lg shadow-[var(--color-rose-900)]/30 hover:shadow-[var(--color-rose-900)]/45 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
+        "bg-[var(--color-error-600)] text-white hover:bg-[var(--color-error-700)] shadow-lg shadow-[var(--color-error-900)]/30 hover:shadow-[var(--color-error-900)]/45 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md",
     };
 
     const sizes = {

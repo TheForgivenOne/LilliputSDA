@@ -76,15 +76,25 @@
   /* Semantic */
   --color-success-50:  #ECF5F2;
   --color-success-100: #D2EBE3;
+  --color-success-200: #ACD9CD;
+  --color-success-300: #7FC0AF;
+  --color-success-400: #54A290;
   --color-success-500: #3F7A6E;
   --color-success-600: #2E6256;
   --color-success-700: #214A42;
+  --color-success-800: #143028;
+  --color-success-900: #0B1F1A;
 
   --color-error-50:  #FBEEF0;
   --color-error-100: #F4D2D8;
+  --color-error-200: #E5B5C0;
+  --color-error-300: #CD8395;
+  --color-error-400: #B05A72;
   --color-error-500: #A23545;
   --color-error-600: #862936;
   --color-error-700: #66202B;
+  --color-error-800: #3E1722;
+  --color-error-900: #2A0F18;
 
   --color-warning-50:  #FFFBEB;
   --color-warning-100: #FEF3C7;
@@ -94,9 +104,14 @@
 
   --color-info-50:  #EEEEF8;
   --color-info-100: #D6D5EC;
+  --color-info-200: #C8C3E8;
+  --color-info-300: #A39CD8;
+  --color-info-400: #7C76C4;
   --color-info-500: #5B4FA0;
   --color-info-600: #3B3A8F;
   --color-info-700: #2D2C73;
+  --color-info-800: #232358;
+  --color-info-900: #181842;
 
   /* Spacing Scale */
   --space-xs:  0.25rem;

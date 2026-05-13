@@ -22,6 +22,9 @@
   --accent-wine:   #6E2A3E;
   --accent-lilac:  #B8A8D4;
 
+  /* Header height — used by sticky AnchorPillNav offset */
+  --header-height: 72px; /* py-2 (16px) + h-14 (56px), scrolled state */
+
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, #EAB308 0%, #CA8A04 100%);
   --gradient-hero:    linear-gradient(135deg, rgba(234, 179, 8, 0.12) 0%, rgba(234, 179, 8, 0.04) 100%);
@@ -36,13 +39,13 @@
 }
 
 @theme inline {
-  /* Surface aliases */
+  /* ── Surface ─────────────────────────────────────── */
   --color-background:    var(--background);
   --color-foreground:    var(--foreground);
   --color-surface:       var(--surface);
   --color-border-subtle: var(--border-subtle);
 
-  /* Brand aliases */
+  /* ── Brand shortcuts ──────────────────────────────── */
   --color-primary:       var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-accent-warm:   var(--accent-warm);
@@ -51,107 +54,216 @@
   --color-accent-wine:   var(--accent-wine);
   --color-accent-lilac:  var(--accent-lilac);
 
-  /* Fonts (variable names kept stable; values resolve to Fraunces / Inter via layout.tsx) */
+  /* ── Fonts ────────────────────────────────────────── */
   --font-sans:    var(--font-dm-sans);
   --font-serif:   var(--font-playfair);
   --font-mono:    var(--font-geist-mono);
   --font-display: var(--font-playfair);
 
-  /* ============================================
-     TAILWIND PALETTE REMAP
-     ============================================
-     Hardcoded `bg-amber-*`, `bg-orange-*`, `text-stone-*`, `bg-olive-*`
-     classes across ~68 files keep working but render in Vesper.
-     Once components are migrated to semantic tokens, these can be removed. */
+  /* ══════════════════════════════════════════════════
+     SEMANTIC COLOR SCALES
+     Exposes bg-primary-500, text-wine-600, etc. as
+     Tailwind utilities. All values resolve from
+     tokens.css via var() — a single edit to tokens.css
+     propagates to both utility classes and var() usage.
+     ═════════════════════════════════════════════════ */
 
-  /* amber-* → Yellow */
-  --color-amber-50:  #FFFBEB;
-  --color-amber-100: #FEF3C7;
-  --color-amber-200: #FDE68A;
-  --color-amber-300: #FCD34D;
-  --color-amber-400: #FBBF24;
-  --color-amber-500: #EAB308;
-  --color-amber-600: #CA8A04;
-  --color-amber-700: #A16207;
-  --color-amber-800: #854D0E;
-  --color-amber-900: #713F12;
+  /* Primary — Yellow / Brass */
+  --color-primary-50:  var(--color-primary-50);
+  --color-primary-100: var(--color-primary-100);
+  --color-primary-200: var(--color-primary-200);
+  --color-primary-300: var(--color-primary-300);
+  --color-primary-400: var(--color-primary-400);
+  --color-primary-500: var(--color-primary-500);
+  --color-primary-600: var(--color-primary-600);
+  --color-primary-700: var(--color-primary-700);
+  --color-primary-800: var(--color-primary-800);
+  --color-primary-900: var(--color-primary-900);
 
-  /* orange-* → Vesper Indigo */
-  --color-orange-50:  #F4F2FB;
-  --color-orange-100: #E5E2F4;
-  --color-orange-200: #C8C3E8;
-  --color-orange-300: #A39CD8;
-  --color-orange-400: #7C76C4;
-  --color-orange-500: #5B4FA0;
-  --color-orange-600: #3B3A8F;
-  --color-orange-700: #2D2C73;
-  --color-orange-800: #232358;
-  --color-orange-900: #181842;
+  /* Secondary — Slate-Mauve neutrals */
+  --color-secondary-50:  var(--color-secondary-50);
+  --color-secondary-100: var(--color-secondary-100);
+  --color-secondary-200: var(--color-secondary-200);
+  --color-secondary-300: var(--color-secondary-300);
+  --color-secondary-400: var(--color-secondary-400);
+  --color-secondary-500: var(--color-secondary-500);
+  --color-secondary-600: var(--color-secondary-600);
+  --color-secondary-700: var(--color-secondary-700);
+  --color-secondary-800: var(--color-secondary-800);
+  --color-secondary-900: var(--color-secondary-900);
 
-  /* stone-* → cool parchment / slate-mauve neutrals (replaces warm stone) */
-  --color-stone-50:  #FDFBF5;
-  --color-stone-100: #F6F1E7;
-  --color-stone-200: #E5DDCB;
-  --color-stone-300: #C9C1B0;
-  --color-stone-400: #9C95A9;
-  --color-stone-500: #6F6883;
-  --color-stone-600: #524F6B;
-  --color-stone-700: #3B3950;
-  --color-stone-800: #25243A;
-  --color-stone-900: #1B1A2E;
+  /* Wine — Mulberry */
+  --color-wine-50:  var(--color-wine-50);
+  --color-wine-100: var(--color-wine-100);
+  --color-wine-200: var(--color-wine-200);
+  --color-wine-300: var(--color-wine-300);
+  --color-wine-400: var(--color-wine-400);
+  --color-wine-500: var(--color-wine-500);
+  --color-wine-600: var(--color-wine-600);
+  --color-wine-700: var(--color-wine-700);
+  --color-wine-800: var(--color-wine-800);
+  --color-wine-900: var(--color-wine-900);
 
-  /* olive-* (any legacy refs) → Mulberry */
-  --color-olive-50:  #FBF2F4;
-  --color-olive-100: #F4DCE2;
-  --color-olive-200: #E5B5C0;
-  --color-olive-300: #CD8395;
-  --color-olive-400: #B05A72;
-  --color-olive-500: #8A3E55;
-  --color-olive-600: #6E2A3E;
-  --color-olive-700: #561F30;
-  --color-olive-800: #3E1722;
-  --color-olive-900: #2A0F18;
+  /* Lilac — Heaven highlight */
+  --color-lilac-100: var(--color-lilac-100);
+  --color-lilac-200: var(--color-lilac-200);
+  --color-lilac-300: var(--color-lilac-300);
+  --color-lilac-400: var(--color-lilac-400);
 
-  /* yellow-* → Yellow */
-  --color-yellow-50:  #FFFBEB;
-  --color-yellow-100: #FEF3C7;
-  --color-yellow-400: #FBBF24;
-  --color-yellow-500: #EAB308;
-  --color-yellow-600: #CA8A04;
+  /* Info — Deep Indigo */
+  --color-info-50:  var(--color-info-50);
+  --color-info-100: var(--color-info-100);
+  --color-info-200: var(--color-info-200);
+  --color-info-300: var(--color-info-300);
+  --color-info-400: var(--color-info-400);
+  --color-info-500: var(--color-info-500);
+  --color-info-600: var(--color-info-600);
+  --color-info-700: var(--color-info-700);
+  --color-info-800: var(--color-info-800);
+  --color-info-900: var(--color-info-900);
 
-  /* rose-* (destructive) → Mulberry/crimson */
-  --color-rose-50:  #FBEEF0;
-  --color-rose-100: #F4D2D8;
-  --color-rose-500: #A23545;
-  --color-rose-600: #862936;
-  --color-rose-700: #66202B;
+  /* Success — Desaturated Teal */
+  --color-success-50:  var(--color-success-50);
+  --color-success-100: var(--color-success-100);
+  --color-success-200: var(--color-success-200);
+  --color-success-300: var(--color-success-300);
+  --color-success-400: var(--color-success-400);
+  --color-success-500: var(--color-success-500);
+  --color-success-600: var(--color-success-600);
+  --color-success-700: var(--color-success-700);
+  --color-success-800: var(--color-success-800);
+  --color-success-900: var(--color-success-900);
 
-  /* green-* and emerald-* (success states) → desaturated Teal.
-   * Avoids literal green political signal while remaining a clearly "positive" hue. */
-  --color-green-50:  #ECF5F2;
-  --color-green-100: #D2EBE3;
-  --color-green-200: #ACD9CD;
-  --color-green-300: #7FC0AF;
-  --color-green-400: #54A290;
-  --color-green-500: #3F7A6E;
-  --color-green-600: #2E6256;
-  --color-green-700: #214A42;
-  --color-green-800: #143028;
-  --color-green-900: #0B1F1A;
+  /* Error — Mulberry/Crimson */
+  --color-error-50:  var(--color-error-50);
+  --color-error-100: var(--color-error-100);
+  --color-error-200: var(--color-error-200);
+  --color-error-300: var(--color-error-300);
+  --color-error-400: var(--color-error-400);
+  --color-error-500: var(--color-error-500);
+  --color-error-600: var(--color-error-600);
+  --color-error-700: var(--color-error-700);
+  --color-error-800: var(--color-error-800);
+  --color-error-900: var(--color-error-900);
 
-  --color-emerald-50:  #ECF5F2;
-  --color-emerald-100: #D2EBE3;
-  --color-emerald-200: #ACD9CD;
-  --color-emerald-300: #7FC0AF;
-  --color-emerald-400: #54A290;
-  --color-emerald-500: #3F7A6E;
-  --color-emerald-600: #2E6256;
-  --color-emerald-700: #214A42;
-  --color-emerald-800: #143028;
-  --color-emerald-900: #0B1F1A;
+  /* Warning — Yellow (shares hue with primary) */
+  --color-warning-50:  var(--color-warning-50);
+  --color-warning-100: var(--color-warning-100);
+  --color-warning-500: var(--color-warning-500);
+  --color-warning-600: var(--color-warning-600);
+  --color-warning-700: var(--color-warning-700);
 
-  --color-lime-500: #EAB308;
-  --color-teal-500: #3F7A6E;
+  /* ══════════════════════════════════════════════════
+     LEGACY COMPAT ALIASES
+     Standard Tailwind names repoint to Vesper scales.
+     Both the alias and the semantic name now resolve
+     from the same tokens.css variable — no drift.
+     Remove each group once its usages migrate to
+     semantic tokens (bg-primary-*, bg-wine-*, etc.).
+     ═════════════════════════════════════════════════ */
+
+  /* amber-* ← Primary (Yellow) */
+  --color-amber-50:  var(--color-primary-50);
+  --color-amber-100: var(--color-primary-100);
+  --color-amber-200: var(--color-primary-200);
+  --color-amber-300: var(--color-primary-300);
+  --color-amber-400: var(--color-primary-400);
+  --color-amber-500: var(--color-primary-500);
+  --color-amber-600: var(--color-primary-600);
+  --color-amber-700: var(--color-primary-700);
+  --color-amber-800: var(--color-primary-800);
+  --color-amber-900: var(--color-primary-900);
+
+  /* stone-* ← Secondary (Slate-Mauve) */
+  --color-stone-50:  var(--color-secondary-50);
+  --color-stone-100: var(--color-secondary-100);
+  --color-stone-200: var(--color-secondary-200);
+  --color-stone-300: var(--color-secondary-300);
+  --color-stone-400: var(--color-secondary-400);
+  --color-stone-500: var(--color-secondary-500);
+  --color-stone-600: var(--color-secondary-600);
+  --color-stone-700: var(--color-secondary-700);
+  --color-stone-800: var(--color-secondary-800);
+  --color-stone-900: var(--color-secondary-900);
+
+  /* olive-* ← Wine (Mulberry) */
+  --color-olive-50:  var(--color-wine-50);
+  --color-olive-100: var(--color-wine-100);
+  --color-olive-200: var(--color-wine-200);
+  --color-olive-300: var(--color-wine-300);
+  --color-olive-400: var(--color-wine-400);
+  --color-olive-500: var(--color-wine-500);
+  --color-olive-600: var(--color-wine-600);
+  --color-olive-700: var(--color-wine-700);
+  --color-olive-800: var(--color-wine-800);
+  --color-olive-900: var(--color-wine-900);
+
+  /* orange-* ← Info (Deep Indigo).
+     INTENTIONAL REMAP: bg-orange-500 renders #5B4FA0 (Vesper indigo),
+     not CSS orange. This reuses indigo-heavy classes from the prior
+     palette without renaming files. */
+  --color-orange-50:  var(--color-info-50);
+  --color-orange-100: var(--color-info-100);
+  --color-orange-200: var(--color-info-200);
+  --color-orange-300: var(--color-info-300);
+  --color-orange-400: var(--color-info-400);
+  --color-orange-500: var(--color-info-500);
+  --color-orange-600: var(--color-info-600);
+  --color-orange-700: var(--color-info-700);
+  --color-orange-800: var(--color-info-800);
+  --color-orange-900: var(--color-info-900);
+
+  /* yellow-* ← Primary */
+  --color-yellow-50:  var(--color-primary-50);
+  --color-yellow-100: var(--color-primary-100);
+  --color-yellow-400: var(--color-primary-400);
+  --color-yellow-500: var(--color-primary-500);
+  --color-yellow-600: var(--color-primary-600);
+
+  /* rose-* ← Error (Mulberry/Crimson) */
+  --color-rose-50:  var(--color-error-50);
+  --color-rose-100: var(--color-error-100);
+  --color-rose-200: var(--color-error-200);
+  --color-rose-300: var(--color-error-300);
+  --color-rose-400: var(--color-error-400);
+  --color-rose-500: var(--color-error-500);
+  --color-rose-600: var(--color-error-600);
+  --color-rose-700: var(--color-error-700);
+  --color-rose-800: var(--color-error-800);
+  --color-rose-900: var(--color-error-900);
+
+  /* green-* and emerald-* ← Success (Desaturated Teal) */
+  --color-green-50:  var(--color-success-50);
+  --color-green-100: var(--color-success-100);
+  --color-green-200: var(--color-success-200);
+  --color-green-300: var(--color-success-300);
+  --color-green-400: var(--color-success-400);
+  --color-green-500: var(--color-success-500);
+  --color-green-600: var(--color-success-600);
+  --color-green-700: var(--color-success-700);
+  --color-green-800: var(--color-success-800);
+  --color-green-900: var(--color-success-900);
+
+  --color-emerald-50:  var(--color-success-50);
+  --color-emerald-100: var(--color-success-100);
+  --color-emerald-200: var(--color-success-200);
+  --color-emerald-300: var(--color-success-300);
+  --color-emerald-400: var(--color-success-400);
+  --color-emerald-500: var(--color-success-500);
+  --color-emerald-600: var(--color-success-600);
+  --color-emerald-700: var(--color-success-700);
+  --color-emerald-800: var(--color-success-800);
+  --color-emerald-900: var(--color-success-900);
+
+  --color-lime-500: var(--color-primary-500);
+  --color-teal-500: var(--color-success-500);
+}
+
+/* Header height responsive override (h-16 at lg breakpoint) */
+@media (min-width: 1024px) {
+  :root {
+    --header-height: 80px; /* py-2 (16px) + h-16 (64px) */
+  }
 }
 
 /* Dark Mode — Night-sky indigo */
@@ -516,7 +628,6 @@ html {
   opacity: 1;
 }
 
-button,
 a[href^="mailto:"] {
   cursor: pointer;
 }
@@ -633,29 +744,29 @@ select:focus {
 }
 
 ::-webkit-scrollbar-track {
-  background: #F6F1E7;
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #C9C1B0;
+  background: var(--color-secondary-300);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9C95A9;
+  background: var(--color-secondary-400);
 }
 
 @media (prefers-color-scheme: dark) {
   ::-webkit-scrollbar-track {
-    background: #181729;
+    background: var(--surface);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #3B3950;
+    background: var(--color-secondary-700);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #524F6B;
+    background: var(--color-secondary-600);
   }
 }
 

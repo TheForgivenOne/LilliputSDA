@@ -11,7 +11,11 @@ export interface AnchorPillItem {
 
 interface AnchorPillNavProps {
   items: AnchorPillItem[];
-  /** Sticky offset from top in px. Should equal the fixed header height. */
+  /**
+   * Pixel offset for IntersectionObserver rootMargin — should equal the
+   * fixed header height. Defaults to 64 (matches --header-height).
+   * The visual sticky position always reads from --header-height in CSS.
+   */
   offset?: number;
   className?: string;
 }
@@ -73,7 +77,7 @@ export function AnchorPillNav({ items, offset = 64, className }: AnchorPillNavPr
         "sticky z-30 bg-[var(--background)]/85 backdrop-blur-md border-b border-[var(--border-subtle)]",
         className,
       )}
-      style={{ top: offset }}
+      style={{ top: "var(--header-height)" }}
     >
       <div
         ref={containerRef}
