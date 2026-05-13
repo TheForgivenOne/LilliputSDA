@@ -51,7 +51,7 @@ Build succeeds without `DATABASE_URL` (falls back gracefully), but full build re
 
 ## CI/CD
 
-4 sequential gates in CI: `lint+typecheck` → `unit tests` → `build` → `cross-browser tests` (each rebuilds independently). Deploys to Vercel on `main` push. Failed workflows auto-create issues with label `jules-fix`.
+4 sequential gates in CI: `lint+typecheck` → `unit tests` → `build` → `cross-browser tests` (each rebuilds independently). Deploys to Vercel on `main` push. Failed workflows auto-create issues with label `opencode-fix` — opencode auto-fixes them.
 
 ## Git Workflow
 
@@ -66,10 +66,6 @@ Use conventional commits: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `chor
 ## Gemini Code Assist
 
 Auto-reviews every PR at MEDIUM threshold. Tag `@gemini-code-assist` or comment `/gemini review` for re-review. Config in `.gemini/config.yaml`.
-
-## OpenCode GitHub Agent
-
-`opencode github install` sets up the GitHub App. `opencode github run` starts the agent to act on PR events.
 
 ## Style Guide
 

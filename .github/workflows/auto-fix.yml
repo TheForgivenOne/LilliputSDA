@@ -29,7 +29,7 @@ jobs:
               owner: repo.owner,
               repo: repo.repo,
               state: 'open',
-              labels: 'jules-fix',
+              labels: 'opencode-fix',
             });
 
             const existing = issues.find(i => i.title === title);
@@ -54,7 +54,7 @@ jobs:
 
       Triggered by: ${workflow.event}
       Commit: ${workflow.head_commit.message}`,
-                labels: ['jules-fix']
+                labels: ['opencode-fix']
               });
               console.log(`Created issue #${issue.data.number}`);
             }
