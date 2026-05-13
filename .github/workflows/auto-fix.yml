@@ -24,20 +24,20 @@ jobs:
           script: |
             const workflow = context.payload.workflow_run;
             const repo = context.repo;
-            const title = `🚨 Fix failing workflow: ${workflow.name}`;
+            const title = "\u{1F6A8} Fix failing workflow: " + workflow.name;
 
             const { data: issues } = await github.rest.issues.listForRepo({
               owner: repo.owner,
               repo: repo.repo,
-              state: 'open',
-              labels: 'opencode-fix',
+              state: "open",
+              labels: "opencode-fix",
             });
 
             const existing = issues.find(i => i.title === title);
 
             let issueNumber;
             if (existing) {
-              const body = existing.body + `\n\n---\nAnother failure on \`${workflow.head_branch}\` — [View run](${workflow.html_url})`;
+              const body = existing.body + "\n\n---\nAnother failure on `" + workflow.head_branch + "` \u2014 [View run](" + workflow.html_url + ")";
               await github.rest.issues.update({
                 owner: repo.owner,
                 repo: repo.repo,
@@ -45,29 +45,24 @@ jobs:
                 body,
               });
               issueNumber = existing.number;
-              console.log(`Updated existing issue #${existing.number}`);
+              console.log("Updated existing issue #" + existing.number);
             } else {
+              const body = "Workflow **" + workflow.name + "** failed on branch `" + workflow.head_branch + "`.\n\n[View run](" + workflow.html_url + ")\n\nTriggered by: " + workflow.event + "\nCommit: " + workflow.head_commit.message;
               const issue = await github.rest.issues.create({
                 owner: repo.owner,
                 repo: repo.repo,
                 title,
-                body: `Workflow **${workflow.name}** failed on branch \`${workflow.head_branch}\`.
-
-      [View run](${workflow.html_url})
-
-      Triggered by: ${workflow.event}
-      Commit: ${workflow.head_commit.message}`,
-                labels: ['opencode-fix']
+                body,
+                labels: ["opencode-fix"],
               });
               issueNumber = issue.data.number;
-              console.log(`Created issue #${issue.data.number}`);
+              console.log("Created issue #" + issue.data.number);
             }
 
-            // Trigger opencode by commenting /oc on the issue
             await github.rest.issues.createComment({
               owner: repo.owner,
               repo: repo.repo,
               issue_number: issueNumber,
-              body: `/oc`,
+              body: "/oc",
             });
-            console.log(`Triggered opencode on issue #${issueNumber}`);
+            console.log("Triggered opencode on issue #" + issueNumber);
