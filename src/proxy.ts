@@ -24,8 +24,6 @@ const publicPaths = [
   "/api/contact",
   "/api/prayers",
   "/api/auth",
-  "/api/auth/login",
-  "/api/auth/register",
   "/api/auth/session",
   "/api/auth/callback",
   "/api/testimonials",
