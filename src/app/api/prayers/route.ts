@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
 import { validateEmail } from "@/lib/validation";
 
+export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   const guard = await adminGuard();
   if (guard) return guard;

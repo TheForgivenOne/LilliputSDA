@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit, youtubeLimiter } from "@/lib/rate-limit";
 import type { VideoStatus } from "@/types";
 
+export const dynamic = 'force-dynamic';
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const CHANNEL_ID = "UC5PpTmwN_ZUyM1xgwQR-_8w";
 

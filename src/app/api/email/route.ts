@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { checkRateLimit, emailLimiter } from "@/lib/rate-limit";
 import { validateEmail } from "@/lib/validation";
 
+export const dynamic = 'force-dynamic';
 function getClientIP(request: Request): string {
   const headers = request.headers.get("x-forwarded-for");
   if (headers) {
