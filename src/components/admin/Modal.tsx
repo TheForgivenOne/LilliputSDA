@@ -34,9 +34,7 @@ export function Modal({
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        onClose();
-      }
+      if (e.key === "Escape" && isOpen) onClose();
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
@@ -53,37 +51,33 @@ export function Modal({
 
   return (
     <div
-      className={cn(
-        "fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300",
-        isOpen ? "opacity-100" : "opacity-0"
-      )}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
       <div
         className={cn(
-           "relative bg-[var(--surface)] dark:bg-stone-900 rounded-xl shadow-2xl w-full overflow-hidden transition-all duration-300",
-          sizes[size],
-          isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
+          "relative bg-white dark:bg-stone-900 rounded-2xl shadow-2xl w-full overflow-hidden",
+          "animate-in fade-in-0 zoom-in-95 duration-200",
+          sizes[size]
         )}
       >
         {(title || showClose) && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-subtle)] dark:border-stone-700">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-stone-100 dark:border-stone-800">
             {title && (
-              <h2 className="text-xl font-semibold text-stone-900 dark:text-stone-100">
+              <h2 className="text-lg font-semibold font-serif text-stone-900 dark:text-stone-100 border-l-[3px] border-[var(--primary)] pl-3">
                 {title}
               </h2>
             )}
             {showClose && (
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors"
+                className="ml-auto p-1.5 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors text-stone-400 hover:text-stone-700 dark:hover:text-stone-200"
+                aria-label="Close"
               >
-                <X className="w-5 h-5 text-stone-500" />
+                <X className="w-4 h-4" />
               </button>
             )}
           </div>
