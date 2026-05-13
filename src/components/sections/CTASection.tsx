@@ -39,7 +39,7 @@ export function CTASection({
   return (
     <section
       className={cn(
-        "py-24 lg:py-32 relative overflow-hidden",
+        "py-20 lg:py-28 relative overflow-hidden",
         bgStyles[backgroundColor],
         className
       )}

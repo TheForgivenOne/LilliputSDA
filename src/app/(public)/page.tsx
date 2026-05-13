@@ -216,11 +216,7 @@ export default function Home() {
       {/* THIS WEEK — Events + Announcements merged into one section.
           Desktop: 2-col with events 2/3, announcements 1/3.
           Mobile: stacked. Hidden if both are empty. */}
-      {(eventsLoading ||
-        events.length > 0 ||
-        announcementsLoading ||
-        announcements.length > 0) && (
-        <section id="this-week" className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
+      <section id="this-week" className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeader
               label="What's Happening"
@@ -253,8 +249,7 @@ export default function Home() {
               </aside>
             </div>
           </div>
-        </section>
-      )}
+      </section>
 
       <section id="ministries" className="py-20 lg:py-28 bg-white dark:bg-stone-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

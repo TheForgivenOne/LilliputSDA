@@ -119,10 +119,10 @@ export default function EventsPage() {
             </div>
           </section>
 
-          <section className="py-16 lg:py-24">
+          <section className="py-20 lg:py-28">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2">
+                <div className="lg:col-span-2 order-2 lg:order-1">
                   <h2 className="text-2xl font-bold text-stone-900 dark:text-stone-100 mb-8 font-[family-name:var(--font-playfair)]">
                     {selectedCategory === "all" ? "All Events" : categories.find(c => c.id === selectedCategory)?.label}
                   </h2>
@@ -173,7 +173,7 @@ export default function EventsPage() {
                   )}
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-6 order-1 lg:order-2">
                   <EventsSidebar />
                   <div className="bg-brass p-6 rounded-2xl text-white shadow-brass">
                   
