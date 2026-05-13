@@ -11,14 +11,22 @@ on:
 
 permissions:
   actions: read
+  contents: read
   issues: write
+  pull-requests: read
 
 jobs:
-  create-issue:
+  fix:
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Create or update issue for failed workflow
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Create issue for failed workflow
+        id: create-issue
         uses: actions/github-script@v6
         with:
           script: |
@@ -34,8 +42,8 @@ jobs:
             });
 
             const existing = issues.find(i => i.title === title);
-
             let issueNumber;
+
             if (existing) {
               const body = existing.body + "\n\n---\nAnother failure on `" + workflow.head_branch + "` \u2014 [View run](" + workflow.html_url + ")";
               await github.rest.issues.update({
@@ -59,10 +67,12 @@ jobs:
               console.log("Created issue #" + issue.data.number);
             }
 
-            await github.rest.issues.createComment({
-              owner: repo.owner,
-              repo: repo.repo,
-              issue_number: issueNumber,
-              body: "/oc",
-            });
-            console.log("Triggered opencode on issue #" + issueNumber);
+            core.setOutput("issue-number", issueNumber.toString());
+
+      - name: Run opencode
+        uses: anomalyco/opencode/github@latest
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_ISSUE: ${{ steps.create-issue.outputs.issue-number }}
+        with:
+          model: opencode/deepseek-v4-flash-free
