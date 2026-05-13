@@ -16,6 +16,7 @@ function createLimiter(prefix: string, limit: number, window: Duration) {
 
 export const emailLimiter = createLimiter("email", 5, "1 m");
 export const authLimiter = createLimiter("auth", 5, "15 m");
+export const submissionLimiter = createLimiter("submission", 5, "10 m");
 export const youtubeLimiter = createLimiter("youtube", 30, "1 m");
 export const scriptureLimiter = createLimiter("scripture", 20, "1 m");
 
