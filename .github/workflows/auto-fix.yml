@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
@@ -70,6 +70,7 @@ jobs:
         run: |
           gh workflow run opencode.yml \
             --ref main \
-            -f prompt="Fix the failing workflow: $(echo '${{ github.event.workflow_run.name }}')"
+            -f prompt="Fix the failing workflow: ${WORKFLOW_NAME}"
         env:
           GH_TOKEN: ${{ github.token }}
+          WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
