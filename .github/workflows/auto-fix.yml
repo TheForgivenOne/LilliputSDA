@@ -70,7 +70,7 @@ jobs:
         run: |
           gh workflow run opencode.yml \
             --ref main \
-            -f prompt="Fix the failing workflow: ${WORKFLOW_NAME}"
+            -f prompt="Fix the failing workflow: $WORKFLOW_NAME"
         env:
           GH_TOKEN: ${{ github.token }}
           WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
