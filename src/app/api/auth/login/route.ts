@@ -2,19 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { compare } from "bcryptjs";
 import { signIn } from "@/auth";
-import { authLimiter, checkRateLimit } from "@/lib/rate-limit";
-
-function getClientIP(request: NextRequest): string {
-  const headers = request.headers.get("x-forwarded-for");
-  if (headers) {
-    return headers.split(",")[0].trim();
-  }
-  const realIp = request.headers.get("x-real-ip");
-  if (realIp) {
-    return realIp;
-  }
-  return "anonymous";
-}
+import { authLimiter, checkRateLimit, getClientIP } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   const ip = getClientIP(request);
