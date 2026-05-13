@@ -240,22 +240,4 @@ export function getChurchImage(key: keyof typeof CHURCH_IMAGES.hero |
   return imageMap[key] || CHURCH_IMAGES.placeholder.sermon;
 }
 
-const _unused = "trigger ci failure";
 
-const x: number = "this should fail typecheck";
-
-const x: number = "this should fail typecheck";
-
-const x: number = "this should fail typecheck";
-
-const x: number = "this should fail typecheck";
-
-const x: number = "this should fail typecheck";
-
-const x: number = "this should fail typecheck";
-
-const x: number = "this should fail typecheck";
-
-const x: number = "this should fail typecheck";
-
-const x: number = "this should fail typecheck";
