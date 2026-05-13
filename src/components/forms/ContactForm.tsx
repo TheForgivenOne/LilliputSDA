@@ -69,18 +69,21 @@ export default function ContactForm({ onSuccess, className }: ContactFormProps) 
     setSubmitting(true);
 
     try {
-      const response = await fetch("/api/email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "contact",
-          data: {
-            name: form.name,
-            email: form.email,
-            message: form.message,
-          },
+      const [response] = await Promise.all([
+        fetch("/api/email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "contact",
+            data: { name: form.name, email: form.email, message: form.message },
+          }),
         }),
-      });
+        fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: form.name, email: form.email, message: form.message }),
+        }).catch(console.error),
+      ]);
 
       if (!response.ok) {
         throw new Error("Failed to send message");

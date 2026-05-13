@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/db";
-import { adminGuard } from "@/lib/auth";
 import { authLimiter, checkRateLimit, getClientIP } from "@/lib/rate-limit";
 import { validateEmail } from "@/lib/validation";
 
 export async function POST(request: NextRequest) {
-  const guard = await adminGuard();
-  if (guard) return guard;
-
   const ip = getClientIP(request);
   const { success } = await checkRateLimit(authLimiter, `register:${ip}`);
 

@@ -46,12 +46,14 @@ function validateContactPayload(data: unknown): data is ContactPayload {
 function validatePrayerPayload(data: unknown): data is PrayerPayload {
   if (typeof data !== "object" || data === null) return false;
   const obj = data as Record<string, unknown>;
+  const emailOk =
+    obj.email === "" ||
+    (typeof obj.email === "string" && validateEmail(obj.email));
   return (
     typeof obj.name === "string" &&
     obj.name.length > 0 &&
     obj.name.length <= 200 &&
-    typeof obj.email === "string" &&
-    validateEmail(obj.email) &&
+    emailOk &&
     typeof obj.request === "string" &&
     obj.request.length > 0 &&
     obj.request.length <= 2000 &&
@@ -111,7 +113,7 @@ function prayerNotificationHtml(data: PrayerPayload): string {
         
         <div style="background: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #f59e0b;">
           <p style="margin: 0 0 15px 0;"><strong>Name:</strong> ${escapeHtml(data.name)}</p>
-          <p style="margin: 0 0 15px 0;"><strong>Email:</strong> <a href="mailto:${escapeHtml(data.email)}" style="color: #d97706;">${escapeHtml(data.email)}</a></p>
+          <p style="margin: 0 0 15px 0;"><strong>Email:</strong> ${data.email ? `<a href="mailto:${escapeHtml(data.email)}" style="color: #d97706;">${escapeHtml(data.email)}</a>` : "Anonymous"}</p>
           <p style="margin: 0 0 15px 0;"><strong>Share on Prayer List:</strong> ${visibilityText}</p>
           <p style="margin: 0;"><strong>Prayer Request:</strong></p>
           <p style="margin: 10px 0 0 0; white-space: pre-wrap;">${escapeHtml(data.request)}</p>
@@ -241,25 +243,29 @@ export async function POST(request: Request) {
       }
 
       const payload = data as PrayerPayload;
-      
-      const [prayerResult, thankYouResult] = await Promise.all([
-        resend.emails.send({
+
+      const prayerSends: Parameters<typeof resend.emails.send>[0][] = [
+        {
           from: process.env.FROM_EMAIL!,
           to: process.env.PRAYER_TEAM_EMAIL,
           subject: `Prayer Request from ${payload.name}`,
           html: prayerNotificationHtml(payload),
-          replyTo: payload.email,
-        }),
-        resend.emails.send({
+          ...(payload.email ? { replyTo: payload.email } : {}),
+        },
+      ];
+      if (payload.email) {
+        prayerSends.push({
           from: process.env.FROM_EMAIL!,
           to: payload.email,
           subject: "Prayer Request Received",
           html: thankYouHtml("prayer"),
-        }),
-      ]);
+        });
+      }
 
-      if (prayerResult.error || thankYouResult.error) {
-        console.error("Prayer email errors:", prayerResult.error, thankYouResult.error);
+      const prayerResults = await Promise.all(prayerSends.map((s) => resend.emails.send(s)));
+
+      if (prayerResults.some((r) => r.error)) {
+        console.error("Prayer email errors:", prayerResults.map((r) => r.error));
         return NextResponse.json({ error: "Failed to send emails" }, { status: 500 });
       }
 

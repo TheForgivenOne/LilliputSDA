@@ -30,8 +30,6 @@ const publicPaths = [
   "/api/site-content",
   "/visit",
   "/decision",
-  "/favicons",
-  "/images",
 ];
 
 const protectedPaths = [

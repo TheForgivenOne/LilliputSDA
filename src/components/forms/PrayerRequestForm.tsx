@@ -65,19 +65,21 @@ export default function PrayerRequestForm({ onSuccess, className }: PrayerReques
     setSubmitting(true);
 
     try {
-      const response = await fetch("/api/email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "prayer",
-          data: {
-            name: form.name,
-            email: form.email,
-            request: form.request,
-            isPublic: form.isPublic,
-          },
+      const [response] = await Promise.all([
+        fetch("/api/email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "prayer",
+            data: { name: form.name, email: form.email, request: form.request, isPublic: form.isPublic },
+          }),
         }),
-      });
+        fetch("/api/prayers", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: form.name, email: form.email, request: form.request, isPublic: form.isPublic }),
+        }).catch(console.error),
+      ]);
 
       if (!response.ok) {
         throw new Error("Failed to submit prayer request");

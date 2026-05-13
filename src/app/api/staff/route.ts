@@ -36,6 +36,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
 
+    if (!body.title) {
+      return NextResponse.json({ error: "Title is required" }, { status: 400 });
+    }
+
     const staff = await prisma.staff.create({
       data: {
         name: body.name,

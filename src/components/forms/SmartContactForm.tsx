@@ -151,7 +151,7 @@ export function SmartContactForm({
           name: anonymous ? "Anonymous" : name,
           email: anonymous ? "" : email,
           request: message,
-          isPublic: anonymous,
+          isPublic: false,
         },
       };
     }
@@ -187,11 +187,36 @@ export function SmartContactForm({
     }
     setSubmitting(true);
     try {
-      const response = await fetch("/api/email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(buildPayload()),
-      });
+      const payload = buildPayload();
+      const dbCall =
+        topic === "prayer"
+          ? fetch("/api/prayers", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: anonymous ? "Anonymous" : name,
+                ...(anonymous ? {} : { email }),
+                request: message,
+                isPublic: false,
+              }),
+            }).catch(console.error)
+          : fetch("/api/contact", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name,
+                email,
+                message: (payload.data as { message: string }).message,
+              }),
+            }).catch(console.error);
+      const [response] = await Promise.all([
+        fetch("/api/email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }),
+        dbCall,
+      ]);
       if (!response.ok) throw new Error("Failed to send message");
       setSuccess(true);
       setName("");
