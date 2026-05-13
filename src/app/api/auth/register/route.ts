@@ -1,19 +1,56 @@
 import { NextRequest, NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/db";
+import { authLimiter, checkRateLimit, getClientIP } from "@/lib/rate-limit";
+import { validateEmail } from "@/lib/validation";
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(authLimiter, `register:${ip}`);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many registration attempts. Please try again later." },
+      { status: 429 }
+    );
+  }
+
+  let body: unknown;
   try {
-    const body = await request.json();
-    const { name, email, password } = body;
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
 
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: "Email and password are required" },
-        { status: 400 }
-      );
-    }
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
 
+  const { name, email, password } = body as Record<string, unknown>;
+
+  if (!email || !password) {
+    return NextResponse.json(
+      { error: "Email and password are required" },
+      { status: 400 }
+    );
+  }
+
+  if (name !== undefined && (typeof name !== "string" || name.length > 200)) {
+    return NextResponse.json({ error: "Invalid name" }, { status: 400 });
+  }
+
+  if (typeof email !== "string" || !validateEmail(email) || email.length > 320) {
+    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+  }
+
+  if (typeof password !== "string" || password.length < 6 || password.length > 100) {
+    return NextResponse.json(
+      { error: "Password must be between 6 and 100 characters" },
+      { status: 400 }
+    );
+  }
+
+  try {
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
