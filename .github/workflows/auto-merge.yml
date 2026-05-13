@@ -1,0 +1,67 @@
+name: Auto Merge
+
+on:
+  pull_request:
+    types: [labeled, opened, synchronize]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    if: |
+      github.event.pull_request.user.type == 'Bot' &&
+      github.event.pull_request.base.ref == 'main' &&
+      (contains(github.event.pull_request.labels.*.name, 'opencode-fix') ||
+       startsWith(github.event.pull_request.head.ref, 'opencode/'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for CI checks
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prNumber = context.issue.number;
+
+            let attempts = 0;
+            const maxAttempts = 30;
+
+            while (attempts < maxAttempts) {
+              const { data: checkRuns } = await github.rest.checks.listForRef({
+                owner,
+                repo,
+                ref: `refs/pull/${prNumber}/merge`,
+              });
+
+              const pending = checkRuns.check_runs.filter(
+                r => r.status === 'in_progress' || r.status === 'queued'
+              );
+
+              if (pending.length === 0) {
+                const failed = checkRuns.check_runs.filter(
+                  r => r.conclusion === 'failure' || r.conclusion === 'timed_out'
+                );
+
+                if (failed.length > 0) {
+                  console.log(`CI failed on ${failed.length} check(s), not merging`);
+                  return;
+                }
+
+                await github.rest.pulls.merge({
+                  owner,
+                  repo,
+                  pull_number: prNumber,
+                  merge_method: 'squash',
+                });
+                console.log(`PR #${prNumber} merged successfully`);
+                return;
+              }
+
+              console.log(`Waiting for ${pending.length} check(s) to complete...`);
+              await new Promise(resolve => setTimeout(resolve, 10000));
+              attempts++;
+            }
+
+            console.log('Timed out waiting for CI checks');
