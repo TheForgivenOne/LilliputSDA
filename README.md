@@ -4,7 +4,7 @@ Official website for the Lilliput SDA Church, part of the West Jamaica Conferenc
 
 ## About
 
-The Lilliput Seventh-day Adventist Church was founded in 1974 in the Lilliput District of St. James, Jamaica. Today, the church serves the community and oversees five daughter churches in the district.
+The Lilliput Seventh-day Adventist Church was founded in 1974 in the Lilliput District of St. James, Jamaica. Today, the church serves over 700 members and oversees five daughter churches in the district.
 
 ## Technology Stack
 
