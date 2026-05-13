@@ -56,34 +56,35 @@ export default function PrayerRequestForm({ onSuccess, className }: PrayerReques
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const doSubmit = async () => {
     setError(null);
 
-    if (!validate()) return;
+    if (!validate()) {
+      requestAnimationFrame(() => {
+        (formRef.current?.querySelector('[aria-invalid="true"]') as HTMLElement)?.focus();
+      });
+      return;
+    }
 
     setSubmitting(true);
 
     try {
-      const [response] = await Promise.all([
-        fetch("/api/email", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: "prayer",
-            data: { name: form.name, email: form.email, request: form.request, isPublic: form.isPublic },
-          }),
-        }),
-        fetch("/api/prayers", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: form.name, email: form.email, request: form.request, isPublic: form.isPublic }),
-        }).catch(console.error),
-      ]);
+      const dbRes = await fetch("/api/prayers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: form.name, email: form.email, request: form.request, isPublic: form.isPublic }),
+      });
 
-      if (!response.ok) {
-        throw new Error("Failed to submit prayer request");
-      }
+      if (!dbRes.ok) throw new Error("Failed to submit prayer request");
+
+      fetch("/api/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "prayer",
+          data: { name: form.name, email: form.email, request: form.request, isPublic: form.isPublic },
+        }),
+      }).catch(console.error);
 
       setSuccess(true);
       setForm({ name: "", email: "", request: "", isPublic: false });
@@ -100,6 +101,11 @@ export default function PrayerRequestForm({ onSuccess, className }: PrayerReques
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    doSubmit();
   };
 
   if (success) {
@@ -156,7 +162,7 @@ export default function PrayerRequestForm({ onSuccess, className }: PrayerReques
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={handleSubmit}
+                  onClick={doSubmit}
                   leftIcon={<RefreshCw className="w-4 h-4" />}
                   className="mt-2 text-red-700 dark:text-red-300 hover:text-red-800 dark:hover:text-red-200"
                 >

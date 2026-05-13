@@ -164,9 +164,8 @@ async function fetchWithTimeout(url: string, timeout: number = FETCH_TIMEOUT): P
   const timeoutId = setTimeout(() => controller.abort(), timeout);
   
   try {
-    const response = await fetch(url, { 
+    const response = await fetch(url, {
       signal: controller.signal,
-      next: { revalidate: 600 },
     });
     return response;
   } finally {
@@ -372,7 +371,6 @@ export async function GET(request: NextRequest) {
     try {
       detailsResponse = await fetch(detailsUrl, {
         signal: AbortSignal.timeout(FETCH_TIMEOUT),
-        next: { revalidate: CACHE_TTL_NORMAL },
       });
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {

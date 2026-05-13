@@ -3,6 +3,9 @@ import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
+  const guard = await adminGuard();
+  if (guard) return guard;
+
   try {
     const { searchParams } = new URL(request.url);
     const active = searchParams.get("active");

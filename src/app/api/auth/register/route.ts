@@ -5,6 +5,10 @@ import { authLimiter, checkRateLimit, getClientIP } from "@/lib/rate-limit";
 import { validateEmail } from "@/lib/validation";
 
 export async function POST(request: NextRequest) {
+  if (process.env.DISABLE_REGISTRATION === "true") {
+    return NextResponse.json({ error: "Registration is currently closed" }, { status: 403 });
+  }
+
   const ip = getClientIP(request);
   const { success } = await checkRateLimit(authLimiter, `register:${ip}`);
 

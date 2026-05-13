@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { checkRateLimit, emailLimiter } from "@/lib/rate-limit";
 import { validateEmail } from "@/lib/validation";
+import { escapeHtml } from "@/lib/sanitize";
 
-function getClientIP(request: Request): string {
+function getClientIPFromRequest(request: Request): string {
   const headers = request.headers.get("x-forwarded-for");
   if (headers) {
     return headers.split(",")[0].trim();
@@ -165,19 +166,8 @@ function thankYouHtml(type: "contact" | "prayer"): string {
   `;
 }
 
-function escapeHtml(text: string): string {
-  const map: Record<string, string> = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;",
-  };
-  return text.replace(/[&<>"']/g, (char) => map[char]);
-}
-
 export async function POST(request: Request) {
-  const ip = getClientIP(request);
+  const ip = getClientIPFromRequest(request);
   const { success } = await checkRateLimit(emailLimiter, ip);
   
   if (!success) {

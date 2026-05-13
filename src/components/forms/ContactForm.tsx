@@ -55,8 +55,7 @@ export default function ContactForm({ onSuccess, className }: ContactFormProps) 
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const doSubmit = async () => {
     setError(null);
 
     if (!validate()) {
@@ -69,25 +68,22 @@ export default function ContactForm({ onSuccess, className }: ContactFormProps) 
     setSubmitting(true);
 
     try {
-      const [response] = await Promise.all([
-        fetch("/api/email", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: "contact",
-            data: { name: form.name, email: form.email, message: form.message },
-          }),
-        }),
-        fetch("/api/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: form.name, email: form.email, message: form.message }),
-        }).catch(console.error),
-      ]);
+      const dbRes = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: form.name, email: form.email, message: form.message }),
+      });
 
-      if (!response.ok) {
-        throw new Error("Failed to send message");
-      }
+      if (!dbRes.ok) throw new Error("Failed to send message");
+
+      fetch("/api/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "contact",
+          data: { name: form.name, email: form.email, message: form.message },
+        }),
+      }).catch(console.error);
 
       setSuccess(true);
       setForm({ name: "", email: "", message: "" });
@@ -104,6 +100,11 @@ export default function ContactForm({ onSuccess, className }: ContactFormProps) 
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    doSubmit();
   };
 
   if (success) {
@@ -160,7 +161,7 @@ export default function ContactForm({ onSuccess, className }: ContactFormProps) 
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={handleSubmit}
+                  onClick={doSubmit}
                   leftIcon={<RefreshCw className="w-4 h-4" />}
                   className="mt-2 text-red-700 dark:text-red-300 hover:text-red-800 dark:hover:text-red-200"
                 >
