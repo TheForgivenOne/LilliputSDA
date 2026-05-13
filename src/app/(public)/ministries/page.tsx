@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { MinistryDetailCard } from "@/components/ui/Card";
 import { CHURCH_IMAGES } from "@/lib/utils";
@@ -141,7 +141,7 @@ const ministryCategories = [
   { id: "service", label: "Community", icon: Hand },
 ];
 
-export default function MinistriesPage() {
+function MinistriesContent() {
   const searchParams = useSearchParams();
   const validCategories = ministryCategories.map((c) => c.id);
   const paramCategory = searchParams.get("category") ?? "all";
@@ -306,5 +306,30 @@ export default function MinistriesPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function MinistriesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden shadow-sm">
+                <div className="aspect-video bg-stone-200 dark:bg-stone-700 animate-pulse" />
+                <div className="p-6 space-y-3">
+                  <div className="h-5 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-2/3" />
+                  <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse" />
+                  <div className="h-4 bg-stone-200 dark:bg-stone-700 rounded animate-pulse w-1/2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    }>
+      <MinistriesContent />
+    </Suspense>
   );
 }
