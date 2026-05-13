@@ -11,10 +11,7 @@ permissions:
 jobs:
   auto-merge:
     if: |
-      github.event.pull_request.user.type == 'Bot' &&
-      github.event.pull_request.base.ref == 'main' &&
-      (contains(github.event.pull_request.labels.*.name, 'opencode-fix') ||
-       startsWith(github.event.pull_request.head.ref, 'opencode/'))
+      false
     runs-on: ubuntu-latest
     steps:
       - name: Wait for CI checks

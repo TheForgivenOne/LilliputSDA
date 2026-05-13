@@ -13,7 +13,7 @@
     "test:coverage": "vitest run --coverage",
     "prepare": "husky && prisma generate",
     "db:seed": "npx tsx prisma/seed.ts",
-    "db:seed:prod": "DATABASE_URL=\"postgresql://neondb_owner:npg_gKhZVQY5oB3u@ep-morning-haze-amtgrz1f-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require\" npx tsx prisma/seed.ts"
+    "db:seed:prod": "npx tsx prisma/seed.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
@@ -35,7 +35,6 @@
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "resend": "^6.9.4",
-    "svix": "^1.89.0",
     "tailwind-merge": "^3.5.0"
   },
   "overrides": {
