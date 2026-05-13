@@ -12,8 +12,11 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient() {
-  const connectionString = process.env.DATABASE_URL || "postgresql://placeholder:placeholder@localhost:5432/placeholder";
-  const adapter = new PrismaNeon({ connectionString });
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString && process.env.NODE_ENV === "production") {
+    throw new Error("DATABASE_URL environment variable is not set");
+  }
+  const adapter = new PrismaNeon({ connectionString: connectionString || "" });
   return new PrismaClient({ adapter });
 }
 
