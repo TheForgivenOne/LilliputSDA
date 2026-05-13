@@ -6,6 +6,10 @@ on:
       prompt:
         description: "Task prompt for opencode"
         required: true
+      is_retry:
+        description: "Internal: prevents infinite restart loops"
+        required: false
+        default: 'false'
   issue_comment:
     types: [created]
   pull_request_review_comment:
@@ -32,9 +36,29 @@ jobs:
           persist-credentials: false
 
       - name: Run opencode
+        id: run-opencode
+        timeout-minutes: 15
+        continue-on-error: true
         uses: anomalyco/opencode/github@latest
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
           model: opencode/deepseek-v4-flash-free
           prompt: ${{ inputs.prompt || '' }}
+
+      - name: Restart on timeout
+        if: |
+          steps.run-opencode.outcome == 'failure' &&
+          (github.event_name != 'workflow_dispatch' || inputs.is_retry != 'true')
+        run: |
+          gh workflow run opencode.yml \
+            --ref main \
+            -f prompt="${PROMPT}" \
+            -f is_retry=true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PROMPT: ${{ inputs.prompt || github.event.comment.body || '' }}
+
+      - name: Fail after retry exhausted
+        if: steps.run-opencode.outcome == 'failure' && inputs.is_retry == 'true'
+        run: exit 1
