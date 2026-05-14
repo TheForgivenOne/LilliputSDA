@@ -60,6 +60,11 @@ export default async function middleware(request: NextRequest) {
       return NextResponse.redirect(signInUrl);
     }
 
+    // Role-based access control: /dashboard and /admin routes require admin role
+    if ((pathname.startsWith("/dashboard") || pathname.startsWith("/admin")) && session.user.role !== "admin") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+
     return NextResponse.next();
   }
 
