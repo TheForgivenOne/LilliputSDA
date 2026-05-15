@@ -1,20 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
-import { checkRateLimit, emailLimiter } from "@/lib/rate-limit";
+import { checkRateLimit, emailLimiter, getClientIP } from "@/lib/rate-limit";
 import { validateEmail } from "@/lib/validation";
 import { escapeHtml } from "@/lib/sanitize";
-
-function getClientIPFromRequest(request: Request): string {
-  const headers = request.headers.get("x-forwarded-for");
-  if (headers) {
-    return headers.split(",")[0].trim();
-  }
-  const realIp = request.headers.get("x-real-ip");
-  if (realIp) {
-    return realIp;
-  }
-  return "anonymous";
-}
 
 interface ContactPayload {
   name: string;
@@ -166,8 +154,8 @@ function thankYouHtml(type: "contact" | "prayer"): string {
   `;
 }
 
-export async function POST(request: Request) {
-  const ip = getClientIPFromRequest(request);
+export async function POST(request: NextRequest) {
+  const ip = getClientIP(request);
   const { success } = await checkRateLimit(emailLimiter, ip);
   
   if (!success) {

@@ -2,6 +2,8 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { compare } from "bcryptjs"
 import { prisma } from "@/lib/db"
+import { authLimiter, checkRateLimit } from "@/lib/rate-limit"
+import { headers } from "next/headers"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
@@ -15,6 +17,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           return null
+        }
+
+        // Rate limiting to prevent brute-force attacks
+        const headerList = await headers();
+        const ip = headerList.get("x-forwarded-for")?.split(",")[0].trim() ||
+                   headerList.get("x-real-ip") ||
+                   "anonymous";
+
+        const { success } = await checkRateLimit(authLimiter, `login:${ip}`);
+        if (!success) {
+          throw new Error("Too many login attempts. Please try again later.");
         }
 
         const email = String(credentials.email)
