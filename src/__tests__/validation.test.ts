@@ -3,6 +3,7 @@ import {
   validateEmail,
   validateRequired,
   validatePhone,
+  validatePassword,
   validateForm,
 } from "@/lib/validation";
 
@@ -55,6 +56,32 @@ describe("validateRequired", () => {
 
   it("returns true when string is within maxLength", () => {
     expect(validateRequired("hello", 10)).toBe(true);
+  });
+});
+
+describe("validatePassword", () => {
+  it("returns true for valid password", () => {
+    expect(validatePassword("Password123")).toBe(true);
+  });
+
+  it("returns false for too short password", () => {
+    expect(validatePassword("Pass1")).toBe(false);
+  });
+
+  it("returns false for password without uppercase", () => {
+    expect(validatePassword("password123")).toBe(false);
+  });
+
+  it("returns false for password without lowercase", () => {
+    expect(validatePassword("PASSWORD123")).toBe(false);
+  });
+
+  it("returns false for password without number", () => {
+    expect(validatePassword("Password")).toBe(false);
+  });
+
+  it("returns false for empty string", () => {
+    expect(validatePassword("")).toBe(false);
   });
 });
 
