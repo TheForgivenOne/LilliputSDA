@@ -13,13 +13,26 @@ const globalForPrisma = globalThis as unknown as {
 
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
-  if (!connectionString && process.env.NODE_ENV === "production") {
-    throw new Error("DATABASE_URL environment variable is not set");
-  }
   const adapter = new PrismaNeon({ connectionString: connectionString || "" });
   return new PrismaClient({ adapter });
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+function createLazyPrismaClient() {
+  let client: PrismaClient | null = null;
+  return new Proxy<PrismaClient>({} as PrismaClient, {
+    get(_, prop) {
+      if (!client) {
+        const connectionString = process.env.DATABASE_URL;
+        if (!connectionString) {
+          throw new Error("DATABASE_URL environment variable is not set");
+        }
+        client = createPrismaClient();
+      }
+      return Reflect.get(client, prop);
+    },
+  });
+}
+
+export const prisma = globalForPrisma.prisma ?? createLazyPrismaClient();
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
