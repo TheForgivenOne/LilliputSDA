@@ -95,7 +95,7 @@ export default function AboutPage() {
         ]);
         const staffData = await staffRes.json();
         const contentData = await contentRes.json();
-        if (staffData.staff) setStaff(staffData.staff);
+        if (Array.isArray(staffData)) setStaff(staffData);
         if (Array.isArray(contentData)) setSiteContent(contentData);
       } catch (err) {
         console.error("Failed to fetch data:", err);
