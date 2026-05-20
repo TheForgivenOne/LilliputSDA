@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { authLimiter, checkRateLimit, getClientIP } from "@/lib/rate-limit";
-import { validateEmail } from "@/lib/validation";
+import { validateEmail, validatePassword } from "@/lib/validation";
 
 export async function POST(request: NextRequest) {
   if (process.env.DISABLE_REGISTRATION === "true") {
@@ -47,9 +47,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid email" }, { status: 400 });
   }
 
-  if (typeof password !== "string" || password.length < 6 || password.length > 100) {
+  if (typeof password !== "string" || !validatePassword(password)) {
     return NextResponse.json(
-      { error: "Password must be between 6 and 100 characters" },
+      { error: "Password must be between 8 and 100 characters and include at least one uppercase letter, one lowercase letter, and one number." },
       { status: 400 }
     );
   }
