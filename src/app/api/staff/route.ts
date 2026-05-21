@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { adminGuard } from "@/lib/auth";
+import { adminGuard, checkAdmin } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
-  const guard = await adminGuard();
-  if (guard) return guard;
+  // Public access is allowed for staff listing (About page),
+  // but we must hide sensitive info and inactive staff for non-admins.
+  const isAdmin = await checkAdmin();
 
   try {
     const { searchParams } = new URL(request.url);
@@ -12,13 +13,30 @@ export async function GET(request: NextRequest) {
 
     const where: Record<string, unknown> = {};
 
-    if (active === "true") {
+    if (!isAdmin || active === "true") {
+      // Non-admins can only see active staff
       where.isActive = true;
     }
 
     const staff = await prisma.staff.findMany({
       where,
       orderBy: { order: "asc" },
+      // SECURITY: Whitelist fields to avoid leaking sensitive data (phone) to public
+      select: {
+        id: true,
+        name: true,
+        title: true,
+        role: true,
+        department: true,
+        email: true,
+        photoUrl: true,
+        bio: true,
+        isActive: true,
+        order: true,
+        createdAt: true,
+        updatedAt: true,
+        phone: isAdmin, // Only include phone if user is admin
+      },
     });
 
     return NextResponse.json(staff);

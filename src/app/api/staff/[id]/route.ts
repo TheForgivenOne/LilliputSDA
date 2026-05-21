@@ -1,18 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { adminGuard } from "@/lib/auth";
+import { adminGuard, checkAdmin } from "@/lib/auth";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const isAdmin = await checkAdmin();
+
   try {
     const { id } = await params;
     const staff = await prisma.staff.findUnique({
       where: { id },
+      // SECURITY: Whitelist fields to avoid leaking sensitive data (phone) to public
+      select: {
+        id: true,
+        name: true,
+        title: true,
+        role: true,
+        department: true,
+        email: true,
+        photoUrl: true,
+        bio: true,
+        isActive: true,
+        order: true,
+        createdAt: true,
+        updatedAt: true,
+        phone: isAdmin, // Only include phone if user is admin
+      },
     });
 
-    if (!staff) {
+    if (!staff || (!isAdmin && !staff.isActive)) {
       return NextResponse.json({ error: "Staff not found" }, { status: 404 });
     }
 
