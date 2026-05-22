@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { adminGuard } from "@/lib/auth";
+import { adminGuard, checkAdmin } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
-  const guard = await adminGuard();
-  if (guard) return guard;
+  const isAdmin = await checkAdmin();
 
   try {
     const { searchParams } = new URL(request.url);
@@ -12,13 +11,32 @@ export async function GET(request: NextRequest) {
 
     const where: Record<string, unknown> = {};
 
-    if (active === "true") {
+    // For non-admins, we only show active staff by default
+    if (!isAdmin) {
+      where.isActive = true;
+    } else if (active === "true") {
       where.isActive = true;
     }
 
     const staff = await prisma.staff.findMany({
       where,
       orderBy: { order: "asc" },
+      // Security: Exclude phone number for non-admins to prevent PII leak
+      select: {
+        id: true,
+        name: true,
+        title: true,
+        role: true,
+        department: true,
+        email: true,
+        photoUrl: true,
+        bio: true,
+        isActive: true,
+        order: true,
+        createdAt: true,
+        updatedAt: true,
+        phone: isAdmin,
+      },
     });
 
     return NextResponse.json(staff);
