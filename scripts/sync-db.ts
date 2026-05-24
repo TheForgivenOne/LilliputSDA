@@ -2,15 +2,22 @@
 import { PrismaClient } from "@prisma/client"
 import { PrismaNeon } from "@prisma/adapter-neon"
 
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is required for dev database connection")
+}
+if (!process.env.DATABASE_URL_PROD) {
+  throw new Error("DATABASE_URL_PROD is required for production database connection")
+}
+
 const devPrisma = new PrismaClient({
   adapter: new PrismaNeon({
-    connectionString: "postgresql://neondb_owner:npg_gKhZVQY5oB3u@ep-empty-shadow-amkr559u-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+    connectionString: process.env.DATABASE_URL,
   }),
 })
 
 const prodPrisma = new PrismaClient({
   adapter: new PrismaNeon({
-    connectionString: "postgresql://neondb_owner:npg_gKhZVQY5oB3u@ep-morning-haze-amtgrz1f-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+    connectionString: process.env.DATABASE_URL_PROD,
   }),
 })
 
@@ -29,14 +36,14 @@ const tables = [
 
 async function syncTable(table: { name: string; singular: string }) {
   console.log(`Syncing ${table.name}...`)
-  
+
   const data = await (devPrisma as any)[table.singular].findMany({})
   console.log(`  Found ${data.length} records in dev`)
-  
+
   if (data.length > 0) {
     await (prodPrisma as any)[table.singular].deleteMany({})
     console.log(`  Cleared production ${table.name}`)
-    
+
     for (const row of data) {
       await (prodPrisma as any)[table.singular].create({ data: row })
     }
@@ -46,7 +53,7 @@ async function syncTable(table: { name: string; singular: string }) {
 
 async function main() {
   console.log("Starting database sync from dev to production...\n")
-  
+
   for (const table of tables) {
     try {
       await syncTable(table)
@@ -54,7 +61,7 @@ async function main() {
       console.error(`  Error syncing ${table.name}:`, error)
     }
   }
-  
+
   console.log("\nSync complete!")
   await devPrisma.$disconnect()
   await prodPrisma.$disconnect()
