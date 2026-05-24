@@ -1,5 +1,4 @@
 version: 2
-
 updates:
   - package-ecosystem: "npm"
     directory: "/"
@@ -7,15 +6,63 @@ updates:
       interval: "weekly"
       day: "monday"
       time: "09:00"
-      timezone: "UTC"
-    open-pull-requests-limit: 10
-    commit-message:
-      prefix: "deps"
-      include: "scope"
+      timezone: "America/New_York"
+    target-branch: "develop"
     labels:
       - "dependencies"
-      - "automated"
-    versioning-strategy: increase
+    versioning-strategy: "increase"
+    open-pull-requests-limit: 20
+    reviewers:
+      - "TheForgivenOne"
+    assignees:
+      - "TheForgivenOne"
+    cooldown:
+      default-days: 3
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
+    groups:
+      nextjs:
+        patterns:
+          - "next"
+          - "@next/*"
+          - "eslint-config-next"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      tailwind:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
+      prisma:
+        patterns:
+          - "prisma"
+          - "@prisma/*"
+      eslint:
+        patterns:
+          - "eslint"
+          - "@eslint/*"
+          - "eslint-*"
+      testing:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "playwright"
+          - "@playwright/*"
+      typescript:
+        patterns:
+          - "typescript"
+          - "@types/*"
+      framer-motion:
+        patterns:
+          - "framer-motion"
+      hono:
+        patterns:
+          - "hono"
+          - "@hono/*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -23,9 +70,8 @@ updates:
       interval: "weekly"
       day: "monday"
       time: "09:00"
-      timezone: "UTC"
-    commit-message:
-      prefix: "ci"
+      timezone: "America/New_York"
+    target-branch: "develop"
     labels:
-      - "ci"
-      - "automated"
+      - "dependencies"
+    open-pull-requests-limit: 5
