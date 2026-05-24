@@ -8,6 +8,7 @@ The Lilliput Seventh-day Adventist Church was founded in 1974 in the Lilliput Di
 
 ## Technology Stack
 
+- **Runtime**: [Bun](https://bun.sh)
 - **Framework**: [Next.js](https://nextjs.org/) 16 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS 4
@@ -21,8 +22,7 @@ The Lilliput Seventh-day Adventist Church was founded in 1974 in the Lilliput Di
 
 ### Prerequisites
 
-- Node.js 18+
-- npm
+- [Bun](https://bun.sh) 1.2+
 
 ### Installation
 
@@ -30,12 +30,12 @@ The Lilliput Seventh-day Adventist Church was founded in 1974 in the Lilliput Di
 git clone https://github.com/TheForgivenOne/LilliputSDA.git
 cd LilliputSDA
 
-npm install
+bun install
 cp .env.example .env.local
 # Edit .env.local with your values
 
-npx prisma db push
-npm run dev
+bunx prisma db push
+bun run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the site.

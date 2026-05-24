@@ -3,17 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
-    "build": "prisma generate && next build --webpack",
+    "dev": "next dev",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "prepare": "husky && prisma generate",
-    "db:seed": "npx tsx prisma/seed.ts",
-    "db:seed:prod": "npx tsx prisma/seed.ts"
+    "prepare": "husky || true && prisma generate",
+    "db:seed": "bunx tsx prisma/seed.ts",
+    "db:seed:prod": "bunx tsx prisma/seed.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

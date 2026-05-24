@@ -4,9 +4,9 @@
 
 1. Fork the repository
 2. Clone your fork: `git clone https://github.com/TheForgivenOne/lilliputsda.git`
-3. Install dependencies: `npm install`
+3. Install dependencies: `bun install`
 4. Create a local `.env.local` from `.env.example`
-5. Start the dev server: `npm run dev`
+5. Start the dev server: `bun run dev`
 
 ## Workflow
 
@@ -54,8 +54,8 @@ test: add Playwright tests for contact form
 
 ### PR Checklist
 
-- [ ] Runs `npm run lint` with no errors
-- [ ] Passes `npm run typecheck`
+- [ ] Runs `bun run lint` with no errors
+- [ ] Passes `bun run typecheck`
 - [ ] Tests pass (if applicable)
 - [ ] PR targets `develop` (not `main`)
 - [ ] Description explains *why*, not just *what*
