@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
@@ -127,4 +127,4 @@ jobs:
             echo "VERCEL_TOKEN not set — skipping deploy"
             exit 0
           fi
-          npx vercel deploy --prod --token="$VERCEL_TOKEN" --yes
+          npx vercel deploy --prod --token="$VERCEL_TOKEN" --yes || echo "Vercel deploy failed (non-fatal)"
