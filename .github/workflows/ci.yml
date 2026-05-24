@@ -29,6 +29,12 @@ jobs:
           restore-keys: bun-${{ runner.os }}-
       - run: bun install --frozen-lockfile
       - run: bun run lint
+      - name: Generate Next.js type declarations
+        run: |
+          if [ ! -f next-env.d.ts ]; then
+            echo '/// <reference types="next" />' > next-env.d.ts
+            echo '/// <reference types="next/image-types/global" />' >> next-env.d.ts
+          fi
       - run: bun run typecheck
 
   unit-tests:
@@ -98,7 +104,7 @@ jobs:
           key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
           restore-keys: bun-${{ runner.os }}-
       - run: bun install --frozen-lockfile
-      - run: bunx prisma db push
+      - run: bunx prisma db push --accept-data-loss
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
