@@ -9,7 +9,7 @@ on:
 jobs:
   bundle-analysis:
     name: Bundle Analysis
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
