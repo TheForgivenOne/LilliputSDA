@@ -158,6 +158,7 @@ jobs:
     needs: cross-browser-tests
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
+    continue-on-error: true
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
@@ -169,4 +170,4 @@ jobs:
             echo "VERCEL_TOKEN not set — skipping deploy"
             exit 0
           fi
-          npx vercel deploy --prod --token="$VERCEL_TOKEN" --yes
+          npx vercel deploy --prod --token="$VERCEL_TOKEN" --yes || echo "Vercel deploy failed (non-fatal)"
