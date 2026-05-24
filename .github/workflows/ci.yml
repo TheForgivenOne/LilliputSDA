@@ -169,4 +169,4 @@ jobs:
             echo "VERCEL_TOKEN not set — skipping deploy"
             exit 0
           fi
-          npx vercel deploy --prod --token="$VERCEL_TOKEN" --yes
+          bunx vercel deploy --production --token="$VERCEL_TOKEN" --yes
