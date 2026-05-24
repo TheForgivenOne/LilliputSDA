@@ -3,8 +3,14 @@ name: Release
 on:
   push:
     branches: [main]
+    paths-ignore: ["**.md", "docs/**", "**.png", "**.svg", "**.jpg", "**.ico"]
   pull_request:
     branches: [main]
+    paths-ignore: ["**.md", "docs/**", "**.png", "**.svg", "**.jpg", "**.ico"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -13,6 +19,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     if: "!contains(github.event.head_commit.message, 'skip release')"
 
     steps:
@@ -26,6 +33,13 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: "latest"
+
+      - name: Cache Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
