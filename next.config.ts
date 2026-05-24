@@ -5,6 +5,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 const securityHeaders = [
+  { key: "Access-Control-Allow-Origin", value: "https://lilliputsda.vercel.app" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "SAMEORIGIN" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
@@ -15,7 +16,7 @@ const securityHeaders = [
   {
     key: "Content-Security-Policy",
       value:
-        "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://www.google.com https://maps.googleapis.com https://*.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' blob: data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.googleapis.com https://api.resend.com https://maps.googleapis.com; frame-src 'self' https://www.youtube.com https://youtube.com https://*.youtube.com https://www.google.com https://*.google.com https://player.vimeo.com; worker-src 'self' blob:;",
+        "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.google.com https://maps.googleapis.com https://*.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' blob: data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.googleapis.com https://maps.googleapis.com; frame-src 'self' https://www.youtube.com https://youtube.com https://*.youtube.com https://www.google.com https://*.google.com https://player.vimeo.com; worker-src 'self' blob:;",
   },
 ];
 
@@ -28,7 +29,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "img.youtube.com" },
       { protocol: "https", hostname: "i.ytimg.com" },
       { protocol: "https", hostname: "yt3.ggpht.com" },
-      { protocol: "https", hostname: "*.google.com" },
+      { protocol: "https",       hostname: "maps.googleapis.com" },
+      { protocol: "https", hostname: "www.google.com" },
       { protocol: "https", hostname: "*.gstatic.com" },
       { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
     ],
