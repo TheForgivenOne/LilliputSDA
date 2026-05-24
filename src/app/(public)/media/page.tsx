@@ -95,7 +95,7 @@ export default function MediaPage() {
 
   return (
     <div className="min-h-screen">
-      <section className="relative bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-white pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-white pt-20 pb-16 lg:pt-28 lg:pb-20 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
           <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />

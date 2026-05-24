@@ -461,12 +461,13 @@ export function SermonCard({
             {duration}
           </div>
         )}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition-colors duration-300">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition-colors duration-300" aria-hidden="true">
           <div className="w-16 h-16 rounded-full bg-white/95 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-75 group-hover:scale-100 shadow-lg">
             <svg
               className="w-7 h-7 text-amber-600 ml-1"
               fill="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path d="M8 5v14l11-7z" />
             </svg>

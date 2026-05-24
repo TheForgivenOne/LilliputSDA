@@ -3,7 +3,11 @@ import { put } from "@vercel/blob";
 import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
 
+export const dynamic = 'force-dynamic';
 export async function GET() {
+  const guard = await adminGuard();
+  if (guard) return guard;
+
   try {
     const media = await prisma.media.findMany({
       orderBy: { uploadedAt: "desc" },
@@ -26,6 +30,10 @@ export async function POST(request: Request) {
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    if (!file.type.startsWith("image/")) {
+      return NextResponse.json({ error: "Only image files are allowed" }, { status: 415 });
     }
 
     const blob = await put(file.name, file, {

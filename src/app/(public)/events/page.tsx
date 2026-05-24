@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bell } from "lucide-react";
+import { Bell, Calendar } from "lucide-react";
 import { EventCard, AnnouncementCard } from "@/components/ui/Card";
 import { PageHero } from "@/components/sections/PageHero";
 import { CategoryFilter } from "@/components/ui/CategoryFilter";
 import { EventsSidebar } from "@/components/sections/EventsSidebar";
 import { DataLoadError } from "@/components/ui/DataLoadError";
+import { formatTime } from "@/lib/date";
+import { CHURCH_EMAIL } from "@/lib/config";
 import type { ChurchEvent, Announcement } from "@/types";
 
 const categories = [
@@ -117,10 +119,10 @@ export default function EventsPage() {
             </div>
           </section>
 
-          <section className="py-16 lg:py-24">
+          <section className="py-20 lg:py-28">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2">
+                <div className="lg:col-span-2 order-2 lg:order-1">
                   <h2 className="text-2xl font-bold text-stone-900 dark:text-stone-100 mb-8 font-[family-name:var(--font-playfair)]">
                     {selectedCategory === "all" ? "All Events" : categories.find(c => c.id === selectedCategory)?.label}
                   </h2>
@@ -155,17 +157,23 @@ export default function EventsPage() {
                           key={event.id}
                           title={event.title}
                           date={event.startDate}
-                          time={event.endDate ? `${event.startDate.split('T')[1]?.slice(0, 5)} - ${event.endDate.split('T')[1]?.slice(0, 5)}` : undefined}
+                          time={event.startDate.includes('T') ? (event.endDate ? `${formatTime(event.startDate)} – ${formatTime(event.endDate)}` : formatTime(event.startDate)) : undefined}
                           location={event.location || "TBD"}
                           description={event.description}
                           category={event.category as "service" | "special" | "youth" | "community" | undefined}
                         />
                       ))}
                     </div>
-                  ) : null}
+                  ) : (
+                    <div className="text-center py-16 bg-white dark:bg-stone-800 rounded-2xl border border-stone-100 dark:border-stone-700">
+                      <Calendar className="w-12 h-12 text-stone-300 dark:text-stone-600 mx-auto mb-4" />
+                      <p className="text-stone-600 dark:text-stone-300 font-medium mb-1">No events in this category</p>
+                      <p className="text-stone-400 dark:text-stone-500 text-sm">Check back soon or browse all events.</p>
+                    </div>
+                  )}
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-6 order-1 lg:order-2">
                   <EventsSidebar />
                   <div className="bg-brass p-6 rounded-2xl text-white shadow-brass">
                   
@@ -243,7 +251,13 @@ export default function EventsPage() {
                         </div>
                       ))}
                     </div>
-                  ) : filteredAnnouncements.length > 0 ? (
+                  ) : filteredAnnouncements.length === 0 ? (
+                    <div className="text-center py-16 bg-white dark:bg-stone-800 rounded-2xl border border-stone-100 dark:border-stone-700">
+                      <Bell className="w-12 h-12 text-stone-300 dark:text-stone-600 mx-auto mb-4" />
+                      <p className="text-stone-600 dark:text-stone-300 font-medium mb-1">No announcements in this category</p>
+                      <p className="text-stone-400 dark:text-stone-500 text-sm">Check back soon or browse all news.</p>
+                    </div>
+                  ) : (
                     <>
                       {filteredAnnouncements.find((a: Announcement) => a.priority === "high") && (
                         <div className="mb-8">
@@ -288,30 +302,10 @@ export default function EventsPage() {
                         </div>
                       </div>
                     </>
-                  ) : null}
+                  )}
                 </div>
 
                 <div className="space-y-6">
-                  <div className="bg-gradient-to-br from-amber-500 to-orange-500 p-6 rounded-2xl text-white shadow-lg shadow-amber-500/25">
-                    <h3 className="text-lg font-bold mb-2 font-[family-name:var(--font-playfair)]">Stay Updated</h3>
-                    <p className="text-amber-100 text-sm mb-4">
-                      Get the latest news and announcements delivered to your inbox.
-                    </p>
-                    <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
-                      <input
-                        type="email"
-                        placeholder="Your email address"
-                        className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-amber-200 focus:outline-none focus:ring-2 focus:ring-white/30 backdrop-blur-sm"
-                      />
-                      <button
-                        type="submit"
-                        className="w-full px-4 py-3 bg-white text-amber-700 rounded-xl font-semibold hover:bg-stone-100 transition-colors shadow-lg"
-                      >
-                        Subscribe
-                      </button>
-                    </form>
-                  </div>
-
                   <div className="bg-white dark:bg-stone-800 p-6 rounded-2xl shadow-sm border border-stone-100 dark:border-stone-700">
                     <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100 mb-2 font-[family-name:var(--font-playfair)]">
                       Have News to Share?
@@ -320,11 +314,11 @@ export default function EventsPage() {
                       Submit announcements for your ministry or department.
                     </p>
                     <a
-                      href="mailto:lhamilton@westjamaica.org"
+                      href={`mailto:${CHURCH_EMAIL}`}
                       className="inline-flex items-center gap-2 text-amber-600 dark:text-amber-400 font-semibold hover:underline"
                     >
                       Submit Announcement
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
                     </a>

@@ -113,7 +113,7 @@ export default function VisitPage() {
       </section>
 
       {/* Map paired with What to expect — the signature visit pairing */}
-      <section className="py-16 lg:py-24">
+      <section className="py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12">
             {/* Left: Map + address */}
@@ -157,7 +157,7 @@ export default function VisitPage() {
               <h2 className="text-3xl lg:text-4xl font-black text-stone-900 dark:text-stone-100 mb-6 font-[family-name:var(--font-playfair)]">
                 What to Expect
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                 {whatToExpectItems.map((item) => (
                   <WhatToExpectCard key={item.title} {...item} />
                 ))}
@@ -168,7 +168,7 @@ export default function VisitPage() {
       </section>
 
       {/* FAQ accordion */}
-      <section className="py-16 lg:py-24 bg-[var(--surface)]/60 border-y border-[var(--border-subtle)]">
+      <section className="py-20 lg:py-28 bg-[var(--surface)]/60 border-y border-[var(--border-subtle)]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-3xl lg:text-4xl font-black text-stone-900 dark:text-stone-100 mb-3 font-[family-name:var(--font-playfair)]">
@@ -199,37 +199,33 @@ export default function VisitPage() {
         </div>
       </section>
 
-      {/* CTA stripe */}
-      <section className="py-16 lg:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative bg-gradient-to-br from-[var(--primary-hover)] via-[var(--primary)] to-[#CA8A04] rounded-3xl overflow-hidden shadow-2xl">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute -top-40 -right-40 w-96 h-96 bg-[var(--accent-warm)]/15 rounded-full blur-3xl" />
-              <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
-            </div>
-            <div className="relative p-8 md:p-12 lg:p-16 text-center">
-              <h2 className="text-3xl lg:text-4xl font-black text-white mb-5 font-[family-name:var(--font-playfair)]">
-                Questions? We&apos;d Love to Help.
-              </h2>
-              <p className="text-white/85 text-lg mb-8 max-w-2xl mx-auto">
-                Reach out before your visit and we&apos;ll have someone ready to greet you.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Link
-                  href="/contact?topic=visit#form"
-                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white text-[var(--primary)] rounded-xl font-semibold hover:bg-stone-100 transition-all shadow-lg hover:-translate-y-0.5"
-                >
-                  Plan a Visit
-                  <ChevronRight className="w-5 h-5" />
-                </Link>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border-2 border-white/40 text-white rounded-xl font-semibold hover:border-white/80 hover:bg-white/5 transition-all"
-                >
-                  General Contact
-                </Link>
-              </div>
-            </div>
+      {/* CTA stripe — full-bleed, matches every other CTA on the site */}
+      <section className="py-20 lg:py-28 relative overflow-hidden bg-gradient-to-br from-[var(--primary-hover)] via-[var(--primary)] to-[#CA8A04]">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-[var(--accent-warm)]/15 rounded-full blur-3xl" />
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+        </div>
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl sm:text-5xl font-black text-white mb-6 font-[family-name:var(--font-playfair)]">
+            Questions? We&apos;d Love to Help.
+          </h2>
+          <p className="text-white/85 text-xl mb-10 max-w-2xl mx-auto font-light">
+            Reach out before your visit and we&apos;ll have someone ready to greet you.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/contact?topic=visit#form"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[var(--primary)] rounded-xl font-semibold hover:bg-stone-100 transition-all shadow-xl hover:-translate-y-0.5"
+            >
+              Plan a Visit
+              <ChevronRight className="w-5 h-5" />
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white/40 text-white rounded-xl font-semibold hover:border-white/80 hover:bg-white/5 transition-all"
+            >
+              General Contact
+            </Link>
           </div>
         </div>
       </section>

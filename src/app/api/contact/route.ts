@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
 import { validateEmail } from "@/lib/validation";
+import { checkRateLimit, formLimiter } from "@/lib/rate-limit";
+import { getClientIP } from "@/lib/rate-limit";
+import { sanitizeString } from "@/lib/sanitize";
 
+export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   const guard = await adminGuard();
   if (guard) return guard;
@@ -30,6 +34,16 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(formLimiter, ip);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
     const { name, email, message } = body;
@@ -52,9 +66,9 @@ export async function POST(request: NextRequest) {
 
     const submission = await prisma.contactSubmission.create({
       data: {
-        name,
+        name: sanitizeString(name, 200),
         email,
-        message,
+        message: sanitizeString(message, 5000),
       },
     });
 

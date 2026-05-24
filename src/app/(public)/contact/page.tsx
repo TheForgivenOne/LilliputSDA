@@ -42,7 +42,7 @@ export default function ContactPage() {
       </section>
 
       <section className="pb-16 lg:pb-24" id="form">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <SmartContactForm initialTopic={initialTopic} />
         </div>
       </section>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
 
+export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const ministries = await prisma.ministry.findMany({

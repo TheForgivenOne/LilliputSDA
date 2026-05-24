@@ -10,7 +10,7 @@ test.describe('Contact Page', () => {
   });
 
   test('contact form renders', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'Send Us a Message' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'General' })).toBeVisible();
     await expect(page.getByLabel('Name')).toBeVisible();
     await expect(page.getByLabel('Email')).toBeVisible();
     await expect(page.getByLabel('Message')).toBeVisible();

@@ -40,8 +40,13 @@ export function BeliefGrid({ beliefs, visibleCount, onShowMore }: BeliefGridProp
           <BeliefCard key={`${belief.title}-${index}`} {...belief} />
         ))}
       </div>
+      {onShowMore && !isShowingAll && visibleCount !== undefined && (
+        <p className="text-center mt-6 text-stone-500 dark:text-stone-400 text-sm">
+          Showing {visibleCount} of {beliefs.length} — {beliefs.length - visibleCount} more below
+        </p>
+      )}
       {onShowMore && (
-        <div className="text-center mt-10">
+        <div className="text-center mt-4">
           <button
             onClick={onShowMore}
             className="inline-flex items-center gap-2 px-8 py-4 bg-brass text-white rounded-2xl font-semibold shadow-brass transition-all"
