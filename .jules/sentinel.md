@@ -11,3 +11,14 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 3. Use correctly named framework-standard middleware (`middleware.ts`) to enforce routing protection.
 4. Implement role-based access control (RBAC) by verifying the user's role in the session object.
 5. Configure authentication providers to include necessary authorization metadata (like roles) in the session.
+
+## 2025-05-23 - Password Complexity Enforcement Gap
+**Vulnerability:** The application's registration endpoint (`/api/auth/register`) only enforced a minimum password length of 6 characters, despite project documentation suggesting much stricter requirements (8-100 characters with mixed case and numbers). This allowed users to create weak accounts susceptible to brute-force attacks.
+
+**Learning:** Documentation and memory can diverge from reality. Security-critical validation must be centralized and unit-tested independently to ensure consistency across the application. Relying on manual length checks in route handlers is error-prone and leads to inconsistent security postures.
+
+**Prevention:**
+1. Centralize all validation logic in a dedicated utility (e.g., `src/lib/validation.ts`).
+2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
+3. Add unit tests specifically for validation utilities to prevent regressions.
+4. Always verify that actual implementation matches security specifications recorded in project documentation.
