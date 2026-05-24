@@ -22,6 +22,12 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1", "150.136.61.22"],
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion"],
+  },
+  outputFileTracingExcludes: {
+    "/*": ["./public/images/**", "./public/fonts/**", "./src/app/**/*.test.*"],
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "placehold.co" },
