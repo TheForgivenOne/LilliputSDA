@@ -25,17 +25,21 @@ export function AdminPageShell({
 }: AdminPageShellProps) {
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100">{title}</h1>
-          <p className="text-stone-600 dark:text-stone-400 mt-1">{description}</p>
+      <div className="flex items-start justify-between gap-4">
+        <div className="border-l-4 border-[var(--primary)] pl-4">
+          <h1 className="text-2xl font-bold font-serif text-stone-900 dark:text-stone-100 leading-tight">
+            {title}
+          </h1>
+          <p className="text-sm text-stone-500 dark:text-stone-400 mt-0.5">{description}</p>
         </div>
         {addButtonLabel && addButtonHref && (
-          <Link href={addButtonHref}>
+          <Link href={addButtonHref} className="flex-shrink-0">
             <Button leftIcon={<Plus className="w-4 h-4" />}>{addButtonLabel}</Button>
           </Link>
         )}
       </div>
+
+      <hr className="border-stone-200 dark:border-stone-700/60" />
 
       {isLoading ? <AdminLoadingSkeleton /> : children}
     </div>

@@ -14,21 +14,18 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) {
-    throw new Error("DATABASE_URL environment variable is not set");
+    return new Proxy({} as PrismaClient, {
+      get(_, _prop: string | symbol) {
+        throw new Error(
+          "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+        );
+      },
+    });
   }
   const adapter = new PrismaNeon({ connectionString });
   return new PrismaClient({ adapter });
 }
 
-function ensurePrisma(): PrismaClient {
-  if (!globalForPrisma.prisma) {
-    globalForPrisma.prisma = createPrismaClient();
-  }
-  return globalForPrisma.prisma;
-}
+export const prisma = globalForPrisma.prisma ?? createPrismaClient();
 
-export const prisma = new Proxy<PrismaClient>({} as PrismaClient, {
-  get(_, prop: keyof PrismaClient) {
-    return ensurePrisma()[prop];
-  },
-});
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

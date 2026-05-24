@@ -15,7 +15,6 @@ export type Department = "pastoral" | "elder" | "deacon" | "music" | "youth" | "
 
 export interface AdminEvent {
   id: string;
-  _creationTime: number;
   title: string;
   description: string;
   startDate: string;
@@ -29,7 +28,6 @@ export interface AdminEvent {
 
 export interface AdminAnnouncement {
   id: string;
-  _creationTime: number;
   title: string;
   content: string;
   date: string;
@@ -42,7 +40,6 @@ export interface AdminAnnouncement {
 
 export interface AdminMinistry {
   id: string;
-  _creationTime: number;
   name: string;
   description: string;
   category: MinistryCategory;
@@ -55,7 +52,6 @@ export interface AdminMinistry {
 
 export interface AdminStaff {
   id: string;
-  _creationTime: number;
   name: string;
   title: string;
   role?: string;
@@ -70,7 +66,6 @@ export interface AdminStaff {
 
 export interface AdminContactSubmission {
   id: string;
-  _creationTime: number;
   name: string;
   email: string;
   message: string;
@@ -80,7 +75,6 @@ export interface AdminContactSubmission {
 
 export interface AdminPrayerRequest {
   id: string;
-  _creationTime: number;
   name: string;
   email: string;
   request: string;
