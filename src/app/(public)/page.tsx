@@ -213,9 +213,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* THIS WEEK — Events + Announcements merged into one section.
-          Desktop: 2-col with events 2/3, announcements 1/3.
-          Mobile: stacked. Hidden if both are empty. */}
+      {/* THIS WEEK — hidden when both lists are confirmed empty and not loading */}
+      {(eventsLoading || announcementsLoading || eventsError || announcementsError ||
+        events.length > 0 || announcements.length > 0) && (
       <section id="this-week" className="py-20 lg:py-28 bg-stone-50 dark:bg-stone-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeader
@@ -250,6 +250,7 @@ export default function Home() {
             </div>
           </div>
       </section>
+      )}
 
       <section id="ministries" className="py-20 lg:py-28 bg-white dark:bg-stone-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

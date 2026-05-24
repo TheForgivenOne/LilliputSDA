@@ -31,5 +31,10 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
+    env: {
+      NODE_ENV: 'production',
+      DATABASE_URL: process.env.DATABASE_URL || '',
+      AUTH_SECRET: process.env.AUTH_SECRET || '',
+    },
   },
 });

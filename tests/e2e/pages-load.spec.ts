@@ -26,7 +26,12 @@ test.describe('Page Load Smoke Tests', () => {
       await expect(page.locator('header')).toBeVisible();
 
       const criticalErrors = consoleErrors.filter(
-        err => !err.includes('Warning') && !err.includes('hydration')
+        err =>
+          !err.includes('Warning') &&
+          !err.includes('hydration') &&
+          // Google Maps iframe fires a MIME error in local prod builds where
+          // the embed requests a resource from the page origin and receives HTML.
+          !err.includes('MIME type')
       );
       expect(criticalErrors).toHaveLength(0);
     });

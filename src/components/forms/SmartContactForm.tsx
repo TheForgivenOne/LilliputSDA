@@ -151,7 +151,7 @@ export function SmartContactForm({
           name: anonymous ? "Anonymous" : name,
           email: anonymous ? "" : email,
           request: message,
-          isPublic: anonymous,
+          isPublic: false,
         },
       };
     }
@@ -176,8 +176,7 @@ export function SmartContactForm({
     };
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const doSubmit = async () => {
     setError(null);
     if (!validate()) {
       requestAnimationFrame(() => {
@@ -187,12 +186,36 @@ export function SmartContactForm({
     }
     setSubmitting(true);
     try {
-      const response = await fetch("/api/email", {
+      const payload = buildPayload();
+      let dbRes: Response;
+      if (topic === "prayer") {
+        dbRes = await fetch("/api/prayers", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: anonymous ? "Anonymous" : name,
+            email: anonymous ? "" : email,
+            request: message,
+            isPublic: false,
+          }),
+        });
+      } else {
+        dbRes = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            email,
+            message: (payload.data as { message: string }).message,
+          }),
+        });
+      }
+      if (!dbRes.ok) throw new Error("Failed to send message");
+      fetch("/api/email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(buildPayload()),
-      });
-      if (!response.ok) throw new Error("Failed to send message");
+        body: JSON.stringify(payload),
+      }).catch(console.error);
       setSuccess(true);
       setName("");
       setEmail("");
@@ -208,6 +231,11 @@ export function SmartContactForm({
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    doSubmit();
   };
 
   const switchTopic = (next: Topic) => {
@@ -308,7 +336,7 @@ export function SmartContactForm({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={handleSubmit}
+                    onClick={doSubmit}
                     leftIcon={<RefreshCw className="w-4 h-4" />}
                     className="mt-2"
                   >

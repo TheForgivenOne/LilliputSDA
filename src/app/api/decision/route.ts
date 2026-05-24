@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
+import { checkRateLimit, formLimiter } from "@/lib/rate-limit";
+import { getClientIP } from "@/lib/rate-limit";
+import { sanitizeString } from "@/lib/sanitize";
+import { validateEmail } from "@/lib/validation";
 
+export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   const guard = await adminGuard();
   if (guard) return guard;
@@ -29,6 +34,16 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(formLimiter, ip);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
     const {
@@ -57,19 +72,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid name" }, { status: 400 });
     }
 
+    if (email && (typeof email !== "string" || !validateEmail(email) || email.length > 320)) {
+      return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+    }
+
     const newDecision = await prisma.decision.create({
       data: {
-        name,
+        name: sanitizeString(name, 200),
         email,
         phone,
-        decision,
+        decision: sanitizeString(decision, 100),
         isAdventist,
         ageGroup,
-        address,
+        address: address ? sanitizeString(address, 500) : null,
         parish,
         country,
-        prayerRequest,
-        comments,
+        prayerRequest: prayerRequest ? sanitizeString(prayerRequest, 2000) : null,
+        comments: comments ? sanitizeString(comments, 2000) : null,
         source,
       },
     });
@@ -77,9 +96,9 @@ export async function POST(request: NextRequest) {
     if (decision === "prayer" && prayerRequest) {
       await prisma.prayerRequest.create({
         data: {
-          name,
+          name: sanitizeString(name, 200),
           email: email || null,
-          request: prayerRequest,
+          request: sanitizeString(prayerRequest, 2000),
           isPublic: false,
         },
       });
