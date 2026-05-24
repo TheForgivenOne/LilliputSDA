@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit, scriptureLimiter } from "@/lib/rate-limit";
 
+export const dynamic = 'force-dynamic';
 const KNOWN_REFERENCES: Record<string, string> = {
   "genesis 1:1": "In the beginning God created the heaven and the earth.",
   "john 3:16": "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.",

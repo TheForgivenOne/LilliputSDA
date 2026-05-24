@@ -3,6 +3,7 @@ import { del } from "@vercel/blob";
 import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
 
+export const dynamic = 'force-dynamic';
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
