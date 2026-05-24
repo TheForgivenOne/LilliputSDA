@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const active = searchParams.get("active");
 
-    const where: Record<string, any> = {};
+    const where: { isActive?: boolean } = {};
 
     // Non-admins can only see active staff
     if (!isAdmin || active === "true") {

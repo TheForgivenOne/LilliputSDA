@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
+interface FindManyArgs {
+  where: { isActive?: boolean };
+  select?: Record<string, boolean | undefined>;
+}
+
 const mocks = vi.hoisted(() => ({
   auth: { auth: vi.fn() },
   findMany: vi.fn(),
@@ -35,7 +40,7 @@ describe("Staff API Security", () => {
       const response = await GET_ALL(new NextRequest("http://localhost:3000/api/staff"));
       expect(response.status).toBe(200);
 
-      const callArgs = mocks.findMany.mock.calls[0][0] as any;
+      const callArgs = mocks.findMany.mock.calls[0][0] as FindManyArgs;
       expect(callArgs.where.isActive).toBe(true);
       expect(callArgs.select).toBeDefined();
       expect(callArgs.select.phone).toBeUndefined();
