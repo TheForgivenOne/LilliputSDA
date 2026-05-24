@@ -59,6 +59,7 @@ Build succeeds without `DATABASE_URL` (falls back gracefully), but full build re
 - Branch from `develop`, PR into `develop`. `main` is production (protected).
 - Branch naming: `feature/<name>`, `bugfix/<name>`, `hotfix/<name>`.
 - PRs target `develop`, never `main`. Merged feature branches should be deleted.
+- **NEVER push directly to `main`.** Always create a PR from a feature branch into `develop`. Direct pushes to `main` bypass CI checks and protection rules.
 
 ### Commit style
 
