@@ -105,7 +105,7 @@ export function Footer() {
                   href={`mailto:${CHURCH_EMAIL}`}
                   className="text-stone-600 dark:text-stone-300 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                 >
-                  lhamilton@westjamaica.org
+                  {CHURCH_EMAIL}
                 </a>
               </div>
             </div>

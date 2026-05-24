@@ -142,7 +142,7 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
       const response = await fetch("/api/decision", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, _hp: "", _ts: Date.now() }),
       });
 
       if (!response.ok) {

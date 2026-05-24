@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Plus, Phone, MapPin, Mail, Heart, X } from "lucide-react";
 import Link from "next/link";
+import { CHURCH_EMAIL } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
 interface ActionItem {
@@ -20,7 +21,7 @@ const ACTIONS: ActionItem[] = [
     label: "Directions",
   },
   { href: "tel:+18769521234", icon: Phone, label: "Call" },
-  { href: "mailto:lhamilton@westjamaica.org", icon: Mail, label: "Email" },
+    { href: `mailto:${CHURCH_EMAIL}`, icon: Mail, label: "Email" },
   { href: "/contact#prayer", icon: Heart, label: "Prayer" },
 ];
 

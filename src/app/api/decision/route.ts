@@ -59,7 +59,17 @@ export async function POST(request: NextRequest) {
       prayerRequest,
       comments,
       source,
+      _hp,
+      _ts,
     } = body;
+
+    if (_hp) {
+      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    }
+
+    if (_ts && Date.now() - Number(_ts) < 3000) {
+      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    }
 
     if (!name || !decision) {
       return NextResponse.json(

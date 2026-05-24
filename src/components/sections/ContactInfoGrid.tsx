@@ -1,5 +1,6 @@
 import { MapPin, Mail, Clock } from "lucide-react";
 import { ContactInfoCard } from "@/components/ui/ContactInfoCard";
+import { CHURCH_EMAIL } from "@/lib/config";
 
 const contactInfo = [
   {
@@ -19,11 +20,11 @@ const contactInfo = [
     icon: Mail,
     title: "Email",
     content: (
-      <a 
-        href="mailto:lhamilton@westjamaica.org" 
-        className="hover:text-amber-700 dark:hover:text-amber-400"
-      >
-        lhamilton@westjamaica.org
+          <a 
+            href={`mailto:${CHURCH_EMAIL}`}
+            className="hover:text-amber-700 dark:hover:text-amber-400 transition-colors"
+          >
+            {CHURCH_EMAIL}
       </a>
     ),
   },
