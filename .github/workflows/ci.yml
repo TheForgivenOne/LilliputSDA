@@ -17,7 +17,7 @@ jobs:
           bun-version: "latest"
       - run: bun install --frozen-lockfile
       - run: bun run lint
-      - run: bunx tsc --noEmit
+      - run: bun run typecheck
 
   unit-tests:
     name: Unit Tests
@@ -29,7 +29,7 @@ jobs:
         with:
           bun-version: "latest"
       - run: bun install --frozen-lockfile
-      - run: bunx vitest run --coverage
+      - run: bun run test:coverage
       - uses: actions/upload-artifact@v7
         if: always()
         with:
