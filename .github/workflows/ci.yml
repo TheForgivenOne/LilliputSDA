@@ -56,7 +56,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - run: npx vitest run --coverage
+      - run: bun run test:coverage
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -104,13 +104,20 @@ jobs:
           key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
           restore-keys: bun-${{ runner.os }}-
       - run: bun install --frozen-lockfile
-      - run: bunx prisma db push --accept-data-loss
+      - name: Push database schema
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "DATABASE_URL not set — skipping db push"
+            exit 0
+          fi
+          bunx prisma db push --accept-data-loss
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
   cross-browser-tests:
     name: Cross-Browser Tests (${{ matrix.browser }})
     needs: [build, db-setup]
+    if: needs.db-setup.result == 'success' || needs.db-setup.result == 'skipped'
     timeout-minutes: 30
     strategy:
       fail-fast: false
@@ -129,8 +136,21 @@ jobs:
           key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
           restore-keys: bun-${{ runner.os }}-
       - run: bun install --frozen-lockfile
+      - name: Check secrets
+        id: check
+        run: |
+          if [ -z "$DATABASE_URL" ] || [ -z "$AUTH_SECRET" ]; then
+            echo "Required secrets not set — skipping cross-browser tests"
+            exit 0
+          fi
+          echo "has-secrets=true" >> $GITHUB_OUTPUT
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
       - run: bunx playwright install --with-deps ${{ matrix.browser }}
+        if: steps.check.outputs.has-secrets == 'true'
       - run: bun run build
+        if: steps.check.outputs.has-secrets == 'true'
         env:
           NODE_ENV: production
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -138,6 +158,7 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           NEXT_PUBLIC_SITE_URL: https://lilliputsda.org
       - run: bunx playwright test tests/e2e --project=${{ matrix.browser }} --retries=2
+        if: steps.check.outputs.has-secrets == 'true'
         env:
           NODE_ENV: production
           NEXT_PUBLIC_API_URL: http://localhost:3000
