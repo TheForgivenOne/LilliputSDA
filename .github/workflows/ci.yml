@@ -17,7 +17,7 @@ jobs:
           bun-version: "latest"
       - run: bun install --frozen-lockfile
       - run: bun run lint
-      - run: bunx tsc --noEmit
+      - run: bun run typecheck
 
   unit-tests:
     name: Unit Tests
