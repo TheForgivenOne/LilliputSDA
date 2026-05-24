@@ -29,7 +29,16 @@ jobs:
         with:
           bun-version: "latest"
       - run: bun install --frozen-lockfile
-      - run: bun run test
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npx vitest run --coverage
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
 
   build:
     name: Build
