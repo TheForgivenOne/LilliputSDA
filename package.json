@@ -11,7 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "prepare": "husky || true && prisma generate",
+    "prepare": "husky || true; prisma generate",
     "db:seed": "bunx tsx prisma/seed.ts",
     "db:seed:prod": "bunx tsx prisma/seed.ts"
   },
