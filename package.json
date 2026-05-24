@@ -42,7 +42,7 @@
     "@hono/node-server": "^1.19.13"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^16.2.1",
+    "@next/bundle-analyzer": "^16.2.6",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
