@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkRateLimit, youtubeLimiter } from "@/lib/rate-limit";
+import { checkRateLimit, youtubeLimiter, redis } from "@/lib/rate-limit";
 import type { VideoStatus } from "@/types";
 
 export const dynamic = 'force-dynamic';
@@ -126,14 +126,47 @@ function getYouTubeThumbnailFallback(videoId: string, quality: "default" | "medi
   return qualities[quality];
 }
 
+const CACHE_TTL_NORMAL = 600;    // 10 min — no live streams
+const CACHE_TTL_LIVE = 60;       // 1 min — live stream active
+const CACHE_TTL_UPCOMING = 300;  // 5 min — upcoming stream within range
+const CACHE_TTL_STALE = 86400;   // 24 h — last-known-good backup
+const CACHE_KEY_PREFIX = "youtube:videos";
+const STALE_KEY_PREFIX = "youtube:videos:stale";
+
+interface CachedResponse {
+  videos: YouTubeVideo[];
+  count: number;
+  liveCount: number;
+  upcomingCount: number;
+  cachedAt: number;
+}
+
+async function getCache(key: string): Promise<CachedResponse | null> {
+  if (!redis) return null;
+  try {
+    return await redis.get<CachedResponse>(key);
+  } catch {
+    return null;
+  }
+}
+
+async function setCache(key: string, value: CachedResponse, ttl: number): Promise<void> {
+  if (!redis) return;
+  try {
+    await redis.set(key, value, { ex: ttl });
+  } catch {
+    // Non-critical — log but don't fail the request
+    console.warn("[YouTube] Failed to write cache");
+  }
+}
+
 async function fetchWithTimeout(url: string, timeout: number = FETCH_TIMEOUT): Promise<Response> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
   
   try {
-    const response = await fetch(url, { 
+    const response = await fetch(url, {
       signal: controller.signal,
-      next: { revalidate: 600 },
     });
     return response;
   } finally {
@@ -252,6 +285,14 @@ export async function GET(request: NextRequest) {
       maxResults = parsed;
     }
 
+    const cacheKey = `${CACHE_KEY_PREFIX}:${maxResults}`;
+    const cached = await getCache(cacheKey);
+    if (cached) {
+      return NextResponse.json(cached, {
+        headers: { "X-Cache": "HIT" },
+      });
+    }
+
     const baseSearchUrl = `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${CHANNEL_ID}&part=snippet&type=video`;
     const upcomingSearchUrl = `${baseSearchUrl}&eventType=upcoming&maxResults=5`;
     const regularSearchUrl = `${baseSearchUrl}&order=date&maxResults=${maxResults}`;
@@ -273,6 +314,12 @@ export async function GET(request: NextRequest) {
         );
       }
       if (message === "QUOTA_EXCEEDED") {
+        const stale = await getCache(`${STALE_KEY_PREFIX}:${maxResults}`);
+        if (stale) {
+          return NextResponse.json(stale, {
+            headers: { "X-Cache": "STALE" },
+          });
+        }
         return NextResponse.json(
           { error: "YouTube API quota exceeded", code: "QUOTA_EXCEEDED" },
           { status: 403 }
@@ -323,7 +370,9 @@ export async function GET(request: NextRequest) {
 
     let detailsResponse: Response;
     try {
-      detailsResponse = await fetchWithTimeout(detailsUrl);
+      detailsResponse = await fetch(detailsUrl, {
+        signal: AbortSignal.timeout(FETCH_TIMEOUT),
+      });
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
         return NextResponse.json(
@@ -379,12 +428,25 @@ export async function GET(request: NextRequest) {
     });
 
     const limitedVideos = videos.slice(0, maxResults);
+    const liveCount = videos.filter((v) => v.status === "live").length;
+    const upcomingCount = videos.filter((v) => v.status === "upcoming").length;
 
-    return NextResponse.json({ 
+    const payload: CachedResponse = {
       videos: limitedVideos,
       count: limitedVideos.length,
-      liveCount: videos.filter((v) => v.status === "live").length,
-      upcomingCount: videos.filter((v) => v.status === "upcoming").length,
+      liveCount,
+      upcomingCount,
+      cachedAt: Date.now(),
+    };
+
+    const ttl = liveCount > 0 ? CACHE_TTL_LIVE : upcomingCount > 0 ? CACHE_TTL_UPCOMING : CACHE_TTL_NORMAL;
+    await Promise.all([
+      setCache(cacheKey, payload, ttl),
+      setCache(`${STALE_KEY_PREFIX}:${maxResults}`, payload, CACHE_TTL_STALE),
+    ]);
+
+    return NextResponse.json(payload, {
+      headers: { "X-Cache": "MISS" },
     });
 
   } catch (error) {

@@ -5,6 +5,9 @@ import { adminGuard } from "@/lib/auth";
 
 export const dynamic = 'force-dynamic';
 export async function GET() {
+  const guard = await adminGuard();
+  if (guard) return guard;
+
   try {
     const media = await prisma.media.findMany({
       orderBy: { uploadedAt: "desc" },

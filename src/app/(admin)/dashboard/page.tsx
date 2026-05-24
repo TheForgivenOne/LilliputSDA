@@ -10,24 +10,10 @@ import {
   Clock,
   ArrowRight,
   ClipboardList,
+  Image,
 } from "lucide-react";
 import { format } from "date-fns";
 import { useFetch } from "@/hooks/useData";
-
-const statCards = [
-  { label: "Upcoming Events", icon: Calendar, href: "/dashboard/events", color: "amber" },
-  { label: "Active Announcements", icon: Megaphone, href: "/dashboard/announcements", color: "amber" },
-  { label: "Staff Members", icon: Users, href: "/dashboard/staff", color: "emerald" },
-  { label: "Contact Submissions", icon: Mail, href: "/dashboard/contact", color: "stone" },
-  { label: "Decisions", icon: ClipboardList, href: "/dashboard/decisions", color: "amber" },
-];
-
-const quickActions = [
-  { label: "Add Event", href: "/dashboard/events/new", icon: Calendar },
-  { label: "Add Announcement", href: "/dashboard/announcements/new", icon: Megaphone },
-  { label: "Add Staff", href: "/dashboard/staff/new", icon: Users },
-  { label: "Upload Media", href: "/dashboard/media", icon: Heart },
-];
 
 type DashboardEvent = {
   id: string;
@@ -51,6 +37,20 @@ type DashboardMinistry = {
   category: string;
 };
 
+function getGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
+}
+
+const categoryColors: Record<string, string> = {
+  youth: "bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400",
+  service: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+  special: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400",
+  community: "bg-stone-100 text-stone-600 dark:bg-stone-700 dark:text-stone-300",
+};
+
 export default function DashboardPage() {
   const { data: events } = useFetch<DashboardEvent[]>("/api/events?upcoming=true&limit=5");
   const { data: announcements } = useFetch<DashboardAnnouncement[]>("/api/announcements?limit=5");
@@ -59,75 +59,76 @@ export default function DashboardPage() {
   const { data: contactSubmissions } = useFetch<{ id: string }[]>("/api/contact");
   const { data: decisions } = useFetch<{ id: string }[]>("/api/decision");
 
-  const colorStyles: Record<string, { bg: string; text: string; icon: string }> = {
-    amber: { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-600", icon: "bg-amber-500" },
-    emerald: { bg: "bg-emerald-100 dark:bg-emerald-900/30", text: "text-emerald-600", icon: "bg-emerald-500" },
-    stone: { bg: "bg-stone-100 dark:bg-stone-700", text: "text-stone-600", icon: "bg-stone-500" },
-  };
+  const stats = [
+    { label: "Upcoming Events", count: events?.length ?? 0, icon: Calendar, href: "/dashboard/events", color: "from-amber-400 to-amber-500" },
+    { label: "Announcements", count: announcements?.length ?? 0, icon: Megaphone, href: "/dashboard/announcements", color: "from-amber-400 to-amber-500" },
+    { label: "Staff Members", count: staff?.length ?? 0, icon: Users, href: "/dashboard/staff", color: "from-emerald-400 to-teal-500" },
+    { label: "Contact Requests", count: contactSubmissions?.length ?? 0, icon: Mail, href: "/dashboard/contact", color: "from-stone-400 to-stone-500" },
+    { label: "Decisions", count: decisions?.length ?? 0, icon: ClipboardList, href: "/dashboard/decisions", color: "from-amber-400 to-amber-500" },
+  ];
+
+  const quickActions = [
+    { label: "Add Event", href: "/dashboard/events/new", icon: Calendar },
+    { label: "Announcement", href: "/dashboard/announcements/new", icon: Megaphone },
+    { label: "Add Staff", href: "/dashboard/staff/new", icon: Users },
+    { label: "Upload Media", href: "/dashboard/media", icon: Image },
+  ];
 
   return (
     <div className="space-y-8">
+      {/* Greeting */}
       <div>
-        <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100">Dashboard</h1>
-        <p className="text-stone-600 dark:text-stone-400 mt-1">
-          Welcome back! Here&apos;s an overview of your church website.
+        <h1 className="text-3xl font-black font-serif text-stone-900 dark:text-stone-100 tracking-tight">
+          {getGreeting()} 👋
+        </h1>
+        <p className="text-stone-500 dark:text-stone-400 mt-1 text-sm">
+          Here&apos;s what&apos;s happening at Lilliput SDA today.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        {statCards.map((stat) => {
-          const style = colorStyles[stat.color];
+      {/* Stat Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-4">
+        {stats.map((stat) => {
           const Icon = stat.icon;
-          let count = 0;
-          if (stat.label.includes("Events") && events) count = events.length;
-          if (stat.label.includes("Announcements") && announcements) count = announcements.length;
-          if (stat.label.includes("Staff") && staff) count = staff.length;
-          if (stat.label.includes("Contact") && contactSubmissions) count = contactSubmissions.length;
-          if (stat.label.includes("Decisions") && decisions) count = decisions.length;
-
           return (
             <Link
               key={stat.href}
               href={stat.href}
-              className="bg-white dark:bg-stone-800 rounded-xl p-6 border border-stone-200 dark:border-stone-700 hover:border-amber-500 dark:hover:border-amber-500 transition-colors group"
+              className="group bg-white dark:bg-stone-900 rounded-2xl p-5 border border-stone-200 dark:border-stone-700 hover:border-[var(--primary)] hover:-translate-y-0.5 hover:shadow-md dark:hover:border-amber-500/50 transition-all duration-200"
             >
-              <div className="flex items-center justify-between">
-                <div className={`p-3 rounded-lg ${style.bg}`}>
-                  <Icon className={`w-6 h-6 ${style.text}`} />
-                </div>
-                <ArrowRight className="w-5 h-5 text-stone-400 group-hover:text-amber-500 transition-colors" />
+              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-4 shadow-sm`}>
+                <Icon className="w-5 h-5 text-white" />
               </div>
-              <p className="mt-4 text-3xl font-bold text-stone-900 dark:text-stone-100">
-                {count}
+              <p className="text-3xl font-black font-serif text-stone-900 dark:text-stone-100 leading-none">
+                {stat.count}
               </p>
-              <p className="text-sm text-stone-500 dark:text-stone-400">{stat.label}</p>
+              <p className="text-xs text-stone-500 dark:text-stone-400 mt-1.5 font-medium">{stat.label}</p>
+              <ArrowRight className="w-3.5 h-3.5 text-stone-300 group-hover:text-[var(--primary)] mt-2 transition-colors duration-200" />
             </Link>
           );
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-1">
-          <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100 mb-4">
+      {/* Quick Actions + Events */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Quick Actions */}
+        <div>
+          <h2 className="text-sm font-bold uppercase tracking-widest text-stone-400 dark:text-stone-500 mb-3">
             Quick Actions
           </h2>
-          <div className="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 overflow-hidden">
-            {quickActions.map((action, index) => {
+          <div className="grid grid-cols-2 gap-2">
+            {quickActions.map((action) => {
               const Icon = action.icon;
               return (
                 <Link
                   key={action.href}
                   href={action.href}
-                  className={`flex items-center gap-4 p-4 hover:bg-stone-50 dark:hover:bg-stone-700/50 transition-colors ${
-                    index !== quickActions.length - 1
-                      ? "border-b border-stone-200 dark:border-stone-700"
-                      : ""
-                  }`}
+                  className="group flex flex-col items-center justify-center gap-2 p-4 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-700 hover:border-[var(--primary)] hover:shadow-sm dark:hover:border-amber-500/50 transition-all duration-200 text-center"
                 >
-                  <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-900/30">
-                    <Icon className="w-5 h-5 text-amber-600" />
+                  <div className="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800/30 flex items-center justify-center group-hover:bg-[var(--primary)] group-hover:border-[var(--primary)] transition-all duration-200">
+                    <Icon className="w-4 h-4 text-amber-600 group-hover:text-[#1B1A2E] transition-colors duration-200" />
                   </div>
-                  <span className="font-medium text-stone-900 dark:text-stone-100">
+                  <span className="text-xs font-semibold text-stone-700 dark:text-stone-300 leading-tight">
                     {action.label}
                   </span>
                 </Link>
@@ -136,62 +137,52 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Upcoming Events */}
         <div className="lg:col-span-2">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-stone-400 dark:text-stone-500">
               Upcoming Events
             </h2>
-            <Link
-              href="/dashboard/events"
-              className="text-sm text-amber-600 hover:text-amber-700 font-medium"
-            >
+            <Link href="/dashboard/events" className="text-xs font-semibold text-[var(--primary)] hover:underline">
               View all
             </Link>
           </div>
-          <div className="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 overflow-hidden">
+          <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-700 overflow-hidden shadow-sm">
             {events && events.length > 0 ? (
-              <div className="divide-y divide-stone-200 dark:divide-stone-700">
+              <div className="divide-y divide-stone-100 dark:divide-stone-800">
                 {events.slice(0, 5).map((event) => (
-                  <div key={event.id} className="p-4 flex items-center gap-4">
-                    <div className="flex-shrink-0 text-center bg-amber-100 dark:bg-amber-900/30 rounded-lg p-3">
-                      <p className="text-xs font-medium text-amber-600 uppercase">
+                  <div key={event.id} className="p-4 flex items-center gap-4 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors">
+                    <div className="flex-shrink-0 text-center bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800/30 rounded-xl px-3 py-2 min-w-[52px]">
+                      <p className="text-[10px] font-bold text-amber-600 uppercase tracking-wider">
                         {format(new Date(event.startDate), "MMM")}
                       </p>
-                      <p className="text-lg font-bold text-amber-700 dark:text-amber-400">
+                      <p className="text-xl font-black font-serif text-amber-700 dark:text-amber-400 leading-none mt-0.5">
                         {format(new Date(event.startDate), "d")}
                       </p>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-stone-900 dark:text-stone-100 truncate">
+                      <p className="font-semibold text-stone-900 dark:text-stone-100 truncate text-sm">
                         {event.title}
                       </p>
-                      <div className="flex items-center gap-2 text-sm text-stone-500 dark:text-stone-400">
-                        <Clock className="w-4 h-4" />
+                      <div className="flex items-center gap-2 text-xs text-stone-400 dark:text-stone-500 mt-0.5">
+                        <Clock className="w-3 h-3" />
                         <span>{format(new Date(event.startDate), "h:mm a")}</span>
                         {event.location && (
                           <>
-                            <span>•</span>
+                            <span>·</span>
                             <span className="truncate">{event.location}</span>
                           </>
                         )}
                       </div>
                     </div>
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        event.category === "youth"
-                          ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
-                          : event.category === "service"
-                          ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                          : "bg-stone-100 text-stone-700 dark:bg-stone-700 dark:text-stone-300"
-                      }`}
-                    >
+                    <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-full flex-shrink-0 ${categoryColors[event.category] ?? categoryColors.community}`}>
                       {event.category}
                     </span>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="p-8 text-center text-stone-500 dark:text-stone-400">
+              <div className="p-10 text-center text-stone-400 dark:text-stone-500 text-sm">
                 No upcoming events
               </div>
             )}
@@ -199,95 +190,88 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* Announcements + Ministries */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Announcements */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-stone-400 dark:text-stone-500">
               Recent Announcements
             </h2>
-            <Link
-              href="/dashboard/announcements"
-              className="text-sm text-amber-600 hover:text-amber-700 font-medium"
-            >
+            <Link href="/dashboard/announcements" className="text-xs font-semibold text-[var(--primary)] hover:underline">
               View all
             </Link>
           </div>
-          <div className="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 overflow-hidden">
+          <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-700 overflow-hidden shadow-sm">
             {announcements && announcements.length > 0 ? (
-              <div className="divide-y divide-stone-200 dark:divide-stone-700">
-                {announcements.slice(0, 5).map((announcement) => (
-                  <div key={announcement.id} className="p-4">
-                    <div className="flex items-start gap-3">
-                      <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                        <Megaphone className="w-4 h-4 text-blue-600" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <p className="font-medium text-stone-900 dark:text-stone-100 truncate">
-                            {announcement.title}
-                          </p>
-                          {announcement.isPinned && (
-                            <span className="px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded-full">
-                              Pinned
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-sm text-stone-500 dark:text-stone-400 line-clamp-2 mt-1">
-                          {announcement.content}
+              <div className="divide-y divide-stone-100 dark:divide-stone-800">
+                {announcements.slice(0, 5).map((a) => (
+                  <div key={a.id} className="p-4 flex items-start gap-3 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors">
+                    <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Megaphone className="w-3.5 h-3.5 text-amber-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="font-semibold text-stone-900 dark:text-stone-100 truncate text-sm">
+                          {a.title}
                         </p>
+                        {a.isPinned && (
+                          <span className="flex-shrink-0 px-1.5 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded-full">
+                            Pinned
+                          </span>
+                        )}
                       </div>
+                      <p className="text-xs text-stone-400 dark:text-stone-500 line-clamp-2 mt-0.5">
+                        {a.content}
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="p-8 text-center text-stone-500 dark:text-stone-400">
+              <div className="p-10 text-center text-stone-400 dark:text-stone-500 text-sm">
                 No announcements
               </div>
             )}
           </div>
         </div>
 
+        {/* Ministries */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-stone-400 dark:text-stone-500">
               Ministries
             </h2>
-            <Link
-              href="/dashboard/ministries"
-              className="text-sm text-amber-600 hover:text-amber-700 font-medium"
-            >
+            <Link href="/dashboard/ministries" className="text-xs font-semibold text-[var(--primary)] hover:underline">
               View all
             </Link>
           </div>
-          <div className="bg-white dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 overflow-hidden">
+          <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-700 overflow-hidden shadow-sm">
             {ministries && ministries.length > 0 ? (
-              <div className="divide-y divide-stone-200 dark:divide-stone-700">
-                {ministries.slice(0, 5).map((ministry) => (
-                  <div key={ministry.id} className="p-4 flex items-center gap-4">
-                    <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/30">
-                      <Heart className="w-4 h-4 text-green-600" />
+              <div className="divide-y divide-stone-100 dark:divide-stone-800">
+                {ministries.slice(0, 5).map((m) => (
+                  <div key={m.id} className="p-4 flex items-center gap-3 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/30 flex items-center justify-center flex-shrink-0">
+                      <Heart className="w-3.5 h-3.5 text-emerald-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-stone-900 dark:text-stone-100">
-                        {ministry.name}
+                      <p className="font-semibold text-stone-900 dark:text-stone-100 text-sm truncate">
+                        {m.name}
                       </p>
-                      {ministry.meetingTime && (
-                        <p className="text-sm text-stone-500 dark:text-stone-400">
-                          {ministry.meetingTime}
-                        </p>
+                      {m.meetingTime && (
+                        <p className="text-xs text-stone-400 dark:text-stone-500">{m.meetingTime}</p>
                       )}
                     </div>
-                    {ministry.category && (
-                      <span className="px-2 py-1 text-xs font-medium bg-stone-100 text-stone-700 dark:bg-stone-700 dark:text-stone-300 rounded-full">
-                        {ministry.category}
+                    {m.category && (
+                      <span className="flex-shrink-0 px-2 py-0.5 text-[10px] font-semibold bg-stone-100 text-stone-600 dark:bg-stone-700 dark:text-stone-300 rounded-full">
+                        {m.category}
                       </span>
                     )}
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="p-8 text-center text-stone-500 dark:text-stone-400">
+              <div className="p-10 text-center text-stone-400 dark:text-stone-500 text-sm">
                 No ministries
               </div>
             )}
