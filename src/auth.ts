@@ -24,12 +24,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           where: { email },
         })
 
-        const userPassword = user?.password || ""
-        const isPasswordValid = await compare(password, userPassword)
-
-        if (!user || !user.password || !isPasswordValid) {
+        if (!user || !user.password) {
+          await compare(password, "$2b$12$j/CB/cmVuE6iXSig5zRkIu.DK3JwL4X4xvKlv0ifTgEO6tUSSvxF6")
           return null
         }
+
+        const isValid = await compare(password, user.password)
+        if (!isValid) return null
 
         return {
           id: user.id,
