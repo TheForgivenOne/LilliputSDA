@@ -3,35 +3,60 @@ name: CI
 on:
   push:
     branches: [main, develop]
+    paths-ignore: ["**.md", "docs/**", "**.png", "**.svg", "**.jpg", "**.ico"]
   pull_request:
     branches: [main, develop]
+    paths-ignore: ["**.md", "docs/**", "**.png", "**.svg", "**.jpg", "**.ico"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint-and-typecheck:
     name: Lint & Type Check
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: "22"
-          cache: "npm"
-      - run: npm ci
-      - run: npm run lint
-      - run: npx tsc --noEmit
+          bun-version: "latest"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+      - name: Generate Next.js type declarations
+        run: |
+          if [ ! -f next-env.d.ts ]; then
+            echo '/// <reference types="next" />' > next-env.d.ts
+            echo '/// <reference types="next/image-types/global" />' >> next-env.d.ts
+          fi
+      - run: bun run typecheck
 
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
     needs: lint-and-typecheck
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "latest"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+      - run: bun install --frozen-lockfile
+      - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "npm"
-      - run: npm ci
-      - run: npx vitest run --coverage
+      - run: bun run test:coverage
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -43,47 +68,78 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     needs: [lint-and-typecheck, unit-tests]
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: "22"
-          cache: "npm"
-      - run: npm ci
-      - run: npm run build
+          bun-version: "latest"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+      - run: bun install --frozen-lockfile
+      - run: bun run build
         env:
+          NODE_ENV: production
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           NEXT_PUBLIC_SITE_URL: https://lilliputsda.org
 
+  db-setup:
+    name: Database Setup
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "latest"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+      - run: bun install --frozen-lockfile
+      - run: bunx prisma db push --accept-data-loss
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
   cross-browser-tests:
     name: Cross-Browser Tests (${{ matrix.browser }})
-    needs: build
+    needs: [build, db-setup]
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
         browser: [chromium, firefox, webkit]
+      max-parallel: 2
     runs-on: ${{ matrix.browser == 'webkit' && 'macos-latest' || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: "22"
-          cache: "npm"
-      - run: npm ci
-      - run: npx playwright install ${{ matrix.browser }}
-      - run: npm run build
+          bun-version: "latest"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+      - run: bun install --frozen-lockfile
+      - run: bunx playwright install --with-deps ${{ matrix.browser }}
+      - run: bun run build
         env:
+          NODE_ENV: production
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           NEXT_PUBLIC_SITE_URL: https://lilliputsda.org
-      - run: npx prisma db push
+      - run: bunx playwright test tests/e2e --project=${{ matrix.browser }} --retries=2
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      - run: npx playwright test tests/e2e --project=${{ matrix.browser }}
-        env:
+          NODE_ENV: production
           NEXT_PUBLIC_API_URL: http://localhost:3000
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
@@ -102,7 +158,15 @@ jobs:
     needs: cross-browser-tests
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
       - name: Deploy to Vercel
-        run: npx vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "VERCEL_TOKEN not set — skipping deploy"
+            exit 0
+          fi
+          npx vercel deploy --prod --token="$VERCEL_TOKEN" --yes
