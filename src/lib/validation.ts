@@ -14,6 +14,16 @@ export function validatePhone(phone: string): boolean {
   return phoneRegex.test(phone);
 }
 
+export function validatePassword(password: string): boolean {
+  if (password.length < 8 || password.length > 100) return false;
+
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasLowercase = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+
+  return hasUppercase && hasLowercase && hasNumber;
+}
+
 export interface ValidationRule<T> {
   validate: (value: T) => boolean;
   message: string;

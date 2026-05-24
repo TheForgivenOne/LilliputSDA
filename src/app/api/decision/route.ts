@@ -6,6 +6,7 @@ import { getClientIP } from "@/lib/rate-limit";
 import { sanitizeString } from "@/lib/sanitize";
 import { validateEmail } from "@/lib/validation";
 
+export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   const guard = await adminGuard();
   if (guard) return guard;
