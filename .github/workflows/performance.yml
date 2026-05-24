@@ -3,29 +3,42 @@ name: Performance
 on:
   push:
     branches: [main, develop]
+    paths-ignore: ["**.md", "docs/**", "**.png", "**.svg", "**.jpg", "**.ico"]
   pull_request:
     branches: [main, develop]
+    paths-ignore: ["**.md", "docs/**", "**.png", "**.svg", "**.jpg", "**.ico"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   bundle-analysis:
     name: Bundle Analysis
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '22'
-          cache: 'npm'
+          bun-version: "latest"
+
+      - name: Cache Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Build Next.js
-        run: npm run build
+        run: bun run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
