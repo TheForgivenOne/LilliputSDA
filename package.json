@@ -26,24 +26,23 @@
     "@vercel/blob": "^2.3.3",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
-    "date-fns": "^4.1.0",
-    "framer-motion": "^12.38.0",
+    "date-fns": "^4.3.0",
+    "framer-motion": "^12.40.0",
     "lucide-react": "^1.14.0",
     "next": "^16.2.6",
     "next-auth": "^5.0.0-beta.30",
     "prisma": "^7.5.0",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "resend": "^6.9.4",
-    "svix": "^1.94.0",
-    "tailwind-merge": "^3.5.0"
+    "resend": "^6.12.3",
+    "tailwind-merge": "^3.6.0"
   },
   "overrides": {
     "postcss": "^8.5.10",
     "@hono/node-server": "^1.19.13"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^16.2.1",
+    "@next/bundle-analyzer": "^16.2.6",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
@@ -54,13 +53,13 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitest/coverage-v8": "^4.1.6",
-    "eslint": "^10.3.0",
+    "eslint": "^10.4.0",
     "eslint-config-next": "16.2.6",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "lighthouse": "^13.3.0",
     "tailwindcss": "^4",
-    "tsx": "^4.21.0",
+    "tsx": "^4.22.3",
     "typescript": "^6",
     "vitest": "^4.1.6"
   }
