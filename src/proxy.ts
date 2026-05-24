@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 const publicPaths = [
   "/",
   "/about",
+  "/manifest.json",
   "/leadership",
   "/ministries",
   "/services",
@@ -30,8 +31,6 @@ const publicPaths = [
   "/api/site-content",
   "/visit",
   "/decision",
-  "/favicons",
-  "/images",
 ];
 
 const protectedPaths = [

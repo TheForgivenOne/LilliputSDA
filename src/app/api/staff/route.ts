@@ -3,6 +3,9 @@ import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
+  const guard = await adminGuard();
+  if (guard) return guard;
+
   try {
     const { searchParams } = new URL(request.url);
     const active = searchParams.get("active");
@@ -34,6 +37,10 @@ export async function POST(request: NextRequest) {
 
     if (!body.name) {
       return NextResponse.json({ error: "Name is required" }, { status: 400 });
+    }
+
+    if (!body.title) {
+      return NextResponse.json({ error: "Title is required" }, { status: 400 });
     }
 
     const staff = await prisma.staff.create({

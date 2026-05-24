@@ -4,6 +4,9 @@ import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
 
 export async function GET() {
+  const guard = await adminGuard();
+  if (guard) return guard;
+
   try {
     const media = await prisma.media.findMany({
       orderBy: { uploadedAt: "desc" },
