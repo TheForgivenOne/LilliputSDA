@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -53,7 +53,7 @@ jobs:
           NEXT_PUBLIC_SITE_URL: https://lilliputsda.org
 
       - name: Release
-        uses: release-drafter/release-drafter@v7
+        uses: release-drafter/release-drafter@v6
         with:
           config-name: release-drafter.yml
         env:
