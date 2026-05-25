@@ -29,6 +29,7 @@ jobs:
           restore-keys: bun-${{ runner.os }}-
       - run: bun install --frozen-lockfile
       - run: bun run lint
+      - run: bunx prisma generate
       - name: Generate Next.js type declarations
         run: |
           if [ ! -f next-env.d.ts ]; then
