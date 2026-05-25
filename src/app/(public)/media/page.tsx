@@ -60,7 +60,7 @@ export default function MediaPage() {
           setVideos([]);
         }
       } catch (err) {
-        console.error("Failed to load videos:", err);
+        console.warn("Failed to load videos:", err);
         setError(err instanceof Error ? err.message : "Failed to load videos");
         setVideos([]);
       } finally {
