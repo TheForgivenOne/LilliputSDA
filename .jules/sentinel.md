@@ -22,3 +22,13 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - Inconsistent RBAC Visibility Filtering
+**Vulnerability:** While some parts of the API (like Staff) correctly implemented role-based visibility filtering for inactive records, others (like Testimonials) were either overly restrictive for admins or leaked inactive data to public users via direct ID access.
+
+**Learning:** Security controls must be applied consistently across all similar entities. A "check-list" approach or a unified filtering utility is needed to ensure that "isActive" flags are respected for public users while remaining visible to administrators across the entire API surface.
+
+**Prevention:**
+1. Perform a full API audit when implementing security patterns in one module to ensure they are replicated in all other relevant modules (Events, Announcements, Testimonials, etc.).
+2. Always use `findFirst` instead of `findUnique` in Prisma when an additional non-unique filter (like `isActive: true`) is required for security.
+3. Implement security tests for every new API endpoint that verify both authenticated (admin) and unauthenticated (public) data visibility.
