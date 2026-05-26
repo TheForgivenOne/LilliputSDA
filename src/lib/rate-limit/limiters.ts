@@ -30,5 +30,11 @@ export async function checkRateLimit(
     }
     return { success: true };
   }
-  return limiter.limit(identifier);
+  try {
+    return await limiter.limit(identifier);
+  } catch (error) {
+    console.error("[RateLimit] Error during rate limit check:", error);
+    // Fail open to avoid blocking legitimate requests if rate limiter is down
+    return { success: true };
+  }
 }

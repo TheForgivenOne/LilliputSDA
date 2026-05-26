@@ -1,9 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
+import { checkRateLimit, authLimiter, getClientIP, formLimiter } from "@/lib/rate-limit";
 
 export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
+  // Security: Rate limit public data fetching
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(formLimiter, ip);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const limit = searchParams.get("limit");
@@ -32,6 +44,17 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Security: Rate limit administrative actions
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(authLimiter, ip);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   const guard = await adminGuard();
   if (guard) return guard;
 
