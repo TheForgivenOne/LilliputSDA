@@ -2,24 +2,24 @@
 
 ## Stack
 
-**Runtime:** Bun
+**Runtime:** Node.js 22
 Next.js 16 (App Router) / TypeScript / Tailwind CSS 4 / Prisma (Neon PostgreSQL) / NextAuth.js v5
 
 ## Commands
 
 ```bash
-bun run dev            # next dev (port 3000)
-bun run build          # prisma generate && next build
-bun run lint           # eslint
-bun run typecheck      # tsc --noEmit
-bun run test           # vitest run
-bun run test:coverage  # vitest run --coverage
-bunx playwright test                  # E2E tests (requires bun run start)
-bunx playwright test tests/e2e/foo    # Single E2E test file
+npm run dev            # next dev (port 3000)
+npm run build          # prisma generate && next build
+npm run lint           # eslint
+npm run typecheck      # tsc --noEmit
+npm run test           # vitest run
+npm run test:coverage  # vitest run --coverage
+npx playwright test                  # E2E tests (requires npm run start)
+npx playwright test tests/e2e/foo    # Single E2E test file
 ```
 
-- Pre-commit hook (husky): `bun run lint -- --fix && bun run typecheck`
-- Run `bun install` after clone (generates Prisma client via postinstall)
+- Pre-commit hook (husky): `npm run lint -- --fix && npm run typecheck`
+- Run `npm install` after clone (generates Prisma client via postinstall)
 
 ## Architecture
 
