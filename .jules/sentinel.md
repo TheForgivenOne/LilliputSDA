@@ -22,3 +22,13 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - Testimonials API IDOR and RBAC Bypass
+**Vulnerability:** The `GET /api/testimonials/[id]` and `GET /api/testimonials` endpoints failed to properly filter by the `isActive` flag for non-admin users. This created an Insecure Direct Object Reference (IDOR) vulnerability where hidden or deactivated testimonials could be accessed by anyone.
+
+**Learning:** Data visibility must be enforced at the API layer based on the user's role. Relying on the frontend to filter data is insecure as an attacker can query the API directly. Using `findFirst` with conditional filters is a secure alternative to `findUnique` when enforcing such access controls in Prisma.
+
+**Prevention:**
+1. Always implement role-based filtering for record visibility in both collection and item retrieval endpoints.
+2. Use `getUserRole` to differentiate between public and administrative access levels.
+3. Ensure that security-critical flags (like `isActive`) are strictly honored in API responses.
