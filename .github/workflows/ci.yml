@@ -3,10 +3,8 @@ name: CI
 on:
   push:
     branches: [main, develop]
-    paths-ignore: ["**.md", "docs/**", "**.png", "**.svg", "**.jpg", "**.ico"]
   pull_request:
     branches: [main, develop]
-    paths-ignore: ["**.md", "docs/**", "**.png", "**.svg", "**.jpg", "**.ico"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -19,23 +17,13 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v6
         with:
-          bun-version: "latest"
-      - uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
-          restore-keys: bun-${{ runner.os }}-
-      - run: bun install --frozen-lockfile
-      - run: bun run lint
-      - name: Generate Next.js type declarations
-        run: |
-          if [ ! -f next-env.d.ts ]; then
-            echo '/// <reference types="next" />' > next-env.d.ts
-            echo '/// <reference types="next/image-types/global" />' >> next-env.d.ts
-          fi
-      - run: bun run typecheck
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
 
   unit-tests:
     name: Unit Tests
@@ -44,18 +32,11 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: "latest"
-      - uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
-          restore-keys: bun-${{ runner.os }}-
-      - run: bun install --frozen-lockfile
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
+          cache: "npm"
+      - run: npm ci
       - run: npx vitest run --coverage
       - uses: actions/upload-artifact@v7
         if: always()
@@ -71,16 +52,12 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v6
         with:
-          bun-version: "latest"
-      - uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
-          restore-keys: bun-${{ runner.os }}-
-      - run: bun install --frozen-lockfile
-      - run: bun run build
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build
         env:
           NODE_ENV: production
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -88,29 +65,9 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           NEXT_PUBLIC_SITE_URL: https://lilliputsda.org
 
-  db-setup:
-    name: Database Setup
-    runs-on: ubuntu-latest
-    needs: build
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: "latest"
-      - uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
-          restore-keys: bun-${{ runner.os }}-
-      - run: bun install --frozen-lockfile
-      - run: bunx prisma db push --accept-data-loss
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
   cross-browser-tests:
     name: Cross-Browser Tests (${{ matrix.browser }})
-    needs: [build, db-setup]
+    needs: build
     timeout-minutes: 30
     strategy:
       fail-fast: false
@@ -120,24 +77,23 @@ jobs:
     runs-on: ${{ matrix.browser == 'webkit' && 'macos-latest' || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v6
         with:
-          bun-version: "latest"
-      - uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
-          restore-keys: bun-${{ runner.os }}-
-      - run: bun install --frozen-lockfile
-      - run: bunx playwright install --with-deps ${{ matrix.browser }}
-      - run: bun run build
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - run: npm run build
         env:
           NODE_ENV: production
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           NEXT_PUBLIC_SITE_URL: https://lilliputsda.org
-      - run: bunx playwright test tests/e2e --project=${{ matrix.browser }} --retries=2
+      - run: npx prisma db push --accept-data-loss
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      - run: npx playwright test tests/e2e --project=${{ matrix.browser }} --retries=2
         env:
           NODE_ENV: production
           NEXT_PUBLIC_API_URL: http://localhost:3000

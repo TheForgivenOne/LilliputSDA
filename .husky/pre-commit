@@ -1,1 +1,1 @@
-bun run lint -- --fix && bun run typecheck
+npm run lint -- --fix && npm run typecheck
