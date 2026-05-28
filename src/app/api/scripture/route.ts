@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkRateLimit, scriptureLimiter } from "@/lib/rate-limit";
+import { checkRateLimit, scriptureLimiter, getClientIP } from "@/lib/rate-limit";
 
 export const dynamic = 'force-dynamic';
 const KNOWN_REFERENCES: Record<string, string> = {
@@ -25,18 +25,6 @@ const KNOWN_REFERENCES: Record<string, string> = {
   "revelation 3:20": "Behold, I stand at the door, and knock: if any man hear my voice, and open the door, I will come in to him, and will sup with him, and he with me.",
   "revelation 21:4": "And God shall wipe away all tears from their eyes; and there shall be no more death, neither sorrow, nor crying, neither shall there be any more pain: for the former things are passed away.",
 };
-
-function getClientIP(request: Request): string {
-  const headers = request.headers.get("x-forwarded-for");
-  if (headers) {
-    return headers.split(",")[0].trim();
-  }
-  const realIp = request.headers.get("x-real-ip");
-  if (realIp) {
-    return realIp;
-  }
-  return "anonymous";
-}
 
 function sanitizeQuery(query: string): string {
   return query
