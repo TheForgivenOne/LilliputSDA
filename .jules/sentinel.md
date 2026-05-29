@@ -22,3 +22,14 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - Broken Access Control in Resource Detail Routes
+**Vulnerability:** API routes that fetched a single resource by ID (e.g., `/api/testimonials/[id]`, `/api/site-content/[id]`) used `findUnique` with only the `id` as a filter. This allowed unauthenticated users to access "inactive" or draft records if they knew or guessed the ID (Insecure Direct Object Reference).
+
+**Learning:** Finding a record by its unique primary key is not enough to ensure it should be visible to the requester. Business logic constraints, such as `isActive` or `isPublic` flags, must be included in the query filter for non-administrative users. In Prisma, this requires switching from `findUnique` to `findFirst` when filtering by a unique ID combined with non-unique status fields.
+
+**Prevention:**
+1. In "GET by ID" routes, always verify visibility flags (e.g., `isActive`, `published`) for non-admin users.
+2. Use `findFirst` with a filter object `{ id, isActive: true }` instead of `findUnique({ where: { id } })` when status checks are required.
+3. Centralize RBAC checks using utilities like `getUserRole` to differentiate between public, user, and admin access levels.
+4. Implement corresponding security tests that attempt to fetch inactive records as a non-admin to verify enforcement.
