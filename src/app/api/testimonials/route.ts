@@ -1,12 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { adminGuard } from "@/lib/auth";
+import { adminGuard, getUserRole } from "@/lib/auth";
+import { checkRateLimit, publicApiLimiter, getClientIP } from "@/lib/rate-limit";
 
 export const dynamic = 'force-dynamic';
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(publicApiLimiter, ip);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests, please try again later" },
+      { status: 429 }
+    );
+  }
+
   try {
+    const role = await getUserRole();
+    const isAdmin = role === "admin";
+
     const testimonials = await prisma.testimonial.findMany({
-      where: { isActive: true },
+      where: isAdmin ? {} : { isActive: true },
       orderBy: [{ order: "asc" }, { createdAt: "desc" }],
     });
     return NextResponse.json(testimonials);

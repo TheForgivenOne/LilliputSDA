@@ -22,3 +22,13 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - Prisma findUnique Limitation in RBAC
+**Vulnerability:** Attempting to enforce security filters (like `isActive: true`) within a `findUnique` query in Prisma 7 results in a TypeScript error because `findUnique` only accepts unique identifiers in its `where` clause. This can lead developers to skip authorization checks in favor of "cleaner" code.
+
+**Learning:** When implementing Role-Based Access Control (RBAC) or object-level security filters on individual records (IDOR prevention), Prisma's `findFirst` must be used instead of `findUnique` to allow combining the unique ID with security-critical flags.
+
+**Prevention:**
+1. Always use `findFirst` when applying security filters to a query that would otherwise use `findUnique`.
+2. Standardize API route patterns to include an `isAdmin` check that toggles these filters.
+3. Add integration tests that specifically attempt to access "inactive" or "private" records via their unique ID as a non-admin.
