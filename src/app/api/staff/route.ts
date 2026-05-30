@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { adminGuard, getUserRole } from "@/lib/auth";
-import { checkRateLimit, announcementLimiter, getClientIP } from "@/lib/rate-limit";
+import { checkRateLimit, publicApiLimiter, getClientIP } from "@/lib/rate-limit";
 
 export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   const ip = getClientIP(request);
-  const { success } = await checkRateLimit(announcementLimiter, ip);
+  const { success } = await checkRateLimit(publicApiLimiter, ip);
 
   if (!success) {
     return NextResponse.json(
