@@ -22,3 +22,14 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - RBAC for Inactive Records and IDOR Prevention
+**Vulnerability:** The SiteContent and Testimonials APIs allowed unauthenticated users to access "inactive" records. While the collection routes (GET /api/site-content) leaked all records, the item routes (GET /api/site-content/[id]) allowed users to view hidden content if they knew or guessed the ID (a form of IDOR/Information Exposure).
+
+**Learning:** "Inactive" or "Draft" flags must be enforced at the API level for all read operations, not just the primary listing. Furthermore, Prisma 7's `findUnique` does not support filtering by non-unique fields (like `isActive`). To enforce RBAC while fetching by ID, `findFirst` must be used instead to allow combining the unique ID with the `isActive` status check for non-admin users.
+
+**Prevention:**
+1. Always apply `isActive: true` (or equivalent) filters in both collection and item GET handlers for non-privileged users.
+2. Ensure administrators have a way to see inactive content for preview/management purposes by making the filter conditional on the user's role.
+3. Use `prisma.findFirst` when you need to query by a unique ID AND an additional non-unique property (like a visibility flag) to avoid TypeScript errors in Prisma 7.
+4. Add security tests that specifically attempt to access inactive records as an unauthenticated user via both collection and item routes.
