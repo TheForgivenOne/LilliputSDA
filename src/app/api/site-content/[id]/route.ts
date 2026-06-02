@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { adminGuard } from "@/lib/auth";
+import { adminGuard, checkAdmin } from "@/lib/auth";
 
 export const dynamic = 'force-dynamic';
 export async function GET(
@@ -9,8 +9,12 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const content = await prisma.siteContent.findUnique({
-      where: { id },
+    const isAdmin = await checkAdmin();
+    const content = await prisma.siteContent.findFirst({
+      where: {
+        id,
+        ...(isAdmin ? {} : { isActive: true }),
+      },
     });
 
     if (!content) {

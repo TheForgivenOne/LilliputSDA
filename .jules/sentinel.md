@@ -22,3 +22,13 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - Inconsistent RBAC Visibility for Inactive Records
+**Vulnerability:** Inactive records for `SiteContent` and `Testimonials` were leaked to unauthenticated users via the `/api/site-content/[id]` and `/api/testimonials/[id]` endpoints. Furthermore, administrators were unable to see inactive `Testimonial` records in the collection view, hindering content management.
+
+**Learning:** RBAC must be applied consistently across both collection (list) and detail (ID-based) views. Relying on Prisma's `findUnique` for ID-based lookups can accidentally bypass visibility filters because it doesn't support non-unique criteria like `isActive: true`. Switching to `findFirst` is necessary when combining a unique ID with status-based filtering.
+
+**Prevention:**
+1. Always apply the same role-based visibility filters to both list and detail API endpoints.
+2. Use `findFirst` instead of `findUnique` in Prisma when you need to enforce additional security constraints (like `isActive`) alongside a unique ID.
+3. Verify that administrators have full visibility for management purposes while public users are restricted to "active" content.

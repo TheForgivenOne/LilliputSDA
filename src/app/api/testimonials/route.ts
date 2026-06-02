@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { adminGuard } from "@/lib/auth";
+import { adminGuard, checkAdmin } from "@/lib/auth";
 
 export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
+    const isAdmin = await checkAdmin();
     const testimonials = await prisma.testimonial.findMany({
-      where: { isActive: true },
+      where: isAdmin ? {} : { isActive: true },
       orderBy: [{ order: "asc" }, { createdAt: "desc" }],
     });
     return NextResponse.json(testimonials);
