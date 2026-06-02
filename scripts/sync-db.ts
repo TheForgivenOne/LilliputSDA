@@ -4,13 +4,13 @@ import { PrismaNeon } from "@prisma/adapter-neon"
 
 const devPrisma = new PrismaClient({
   adapter: new PrismaNeon({
-    connectionString: "postgresql://neondb_owner:npg_gKhZVQY5oB3u@ep-empty-shadow-amkr559u-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+    connectionString: process.env.DEV_DATABASE_URL || ""
   }),
 })
 
 const prodPrisma = new PrismaClient({
   adapter: new PrismaNeon({
-    connectionString: "postgresql://neondb_owner:npg_gKhZVQY5oB3u@ep-morning-haze-amtgrz1f-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+    connectionString: process.env.PROD_DATABASE_URL || ""
   }),
 })
 
