@@ -248,17 +248,6 @@ export default function Home() {
                 />
               </aside>
             </div>
-            <aside className="lg:col-span-1">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--primary)] dark:text-[var(--accent-lilac)] mb-4">
-                Announcements
-              </h3>
-              <AnnouncementsList
-                announcements={announcements}
-                isLoading={announcementsLoading}
-                isError={announcementsError}
-                onRetry={refetch}
-              />
-            </aside>
           </div>
       </section>
       )}

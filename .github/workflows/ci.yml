@@ -53,10 +53,7 @@ jobs:
           key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
           restore-keys: bun-${{ runner.os }}-
       - run: bun install --frozen-lockfile
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - run: npx vitest run --coverage
+      - run: bun run test:coverage
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -85,6 +82,7 @@ jobs:
           NODE_ENV: production
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          AUTH_URL: ${{ secrets.AUTH_URL || 'https://lilliputsda.org' }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           NEXT_PUBLIC_SITE_URL: https://lilliputsda.org
 
