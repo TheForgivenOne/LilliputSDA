@@ -60,7 +60,7 @@
     "jsdom": "^29.1.1",
     "lighthouse": "^13.3.0",
     "tailwindcss": "^4",
-    "tsx": "^4.21.0",
+    "tsx": "^4.22.3",
     "typescript": "^6",
     "vitest": "^4.1.6"
   }
