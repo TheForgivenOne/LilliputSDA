@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
+import { announcementLimiter, checkRateLimit } from "@/lib/rate-limit/limiters";
+import { getClientIP } from "@/lib/rate-limit/utils";
 
 export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
+    const ip = getClientIP(request);
+    const { success } = await checkRateLimit(announcementLimiter, `events:${ip}`);
+    if (!success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const { searchParams } = new URL(request.url);
     const upcoming = searchParams.get("upcoming");
     const limit = searchParams.get("limit");

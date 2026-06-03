@@ -1,0 +1,113 @@
+$ next start
+▲ Next.js 16.2.6
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+✓ Ready in 237ms
+[RateLimit] Redis not configured — rate limiting disabled
+Failed to fetch events: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at C (.next/server/chunks/[root-of-the-server]__0y38q.o._.js:1:2740)
+[RateLimit] Redis not configured — rate limiting disabled
+Failed to fetch announcements: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at C (.next/server/chunks/[root-of-the-server]__0u0w.vz._.js:1:2730)
+[RateLimit] Redis not configured — rate limiting disabled
+Error fetching YouTube videos: Error: YouTube API key not configured
+    at ignore-listed frames
+Error fetching testimonials: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at w (.next/server/chunks/[root-of-the-server]__0eyxv.z._.js:1:2203)
+Error fetching site content: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at w (.next/server/chunks/[root-of-the-server]__0slzr5l._.js:1:2203)
+[31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: http://localhost:3000/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+    at /app/.next/server/chunks/_0.-jjjb._.js:404:51445
+    at iU (/app/.next/server/chunks/_0.-jjjb._.js:404:54110)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async rW.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.prod.js:5:20926)
+[31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: http://localhost:3000/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+    at /app/.next/server/chunks/_0.-jjjb._.js:404:51445
+    at iU (/app/.next/server/chunks/_0.-jjjb._.js:404:54110)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async rW.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.prod.js:5:20926)
+[RateLimit] Redis not configured — rate limiting disabled
+Failed to fetch events: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at C (.next/server/chunks/[root-of-the-server]__0y38q.o._.js:1:2740)
+[RateLimit] Redis not configured — rate limiting disabled
+Failed to fetch announcements: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at C (.next/server/chunks/[root-of-the-server]__0u0w.vz._.js:1:2730)
+[RateLimit] Redis not configured — rate limiting disabled
+Error fetching YouTube videos: Error: YouTube API key not configured
+    at ignore-listed frames
+Error fetching testimonials: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at w (.next/server/chunks/[root-of-the-server]__0eyxv.z._.js:1:2203)
+Error fetching site content: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at w (.next/server/chunks/[root-of-the-server]__0slzr5l._.js:1:2203)
+[31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: http://localhost:3000/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+    at /app/.next/server/chunks/_0.-jjjb._.js:404:51445
+    at iU (/app/.next/server/chunks/_0.-jjjb._.js:404:54110)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async rW.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.prod.js:5:20926)
+[31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: http://localhost:3000/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+    at /app/.next/server/chunks/_0.-jjjb._.js:404:51445
+    at iU (/app/.next/server/chunks/_0.-jjjb._.js:404:54110)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async rW.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.prod.js:5:20926)
+[RateLimit] Redis not configured — rate limiting disabled
+Failed to fetch events: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at C (.next/server/chunks/[root-of-the-server]__0y38q.o._.js:1:2740)
+[RateLimit] Redis not configured — rate limiting disabled
+Failed to fetch announcements: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at C (.next/server/chunks/[root-of-the-server]__0u0w.vz._.js:1:2730)
+[RateLimit] Redis not configured — rate limiting disabled
+Error fetching YouTube videos: Error: YouTube API key not configured
+    at ignore-listed frames
+Error fetching testimonials: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at w (.next/server/chunks/[root-of-the-server]__0eyxv.z._.js:1:2203)
+Error fetching site content: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at w (.next/server/chunks/[root-of-the-server]__0slzr5l._.js:1:2203)
+[31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: http://localhost:3000/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+    at /app/.next/server/chunks/_0.-jjjb._.js:404:51445
+    at iU (/app/.next/server/chunks/_0.-jjjb._.js:404:54110)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async rW.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.prod.js:5:20926)
+[31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: http://localhost:3000/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+    at /app/.next/server/chunks/_0.-jjjb._.js:404:51445
+    at iU (/app/.next/server/chunks/_0.-jjjb._.js:404:54110)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async rW.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.prod.js:5:20926)
+[RateLimit] Redis not configured — rate limiting disabled
+Failed to fetch events: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at C (.next/server/chunks/[root-of-the-server]__0y38q.o._.js:1:2740)
+[RateLimit] Redis not configured — rate limiting disabled
+Failed to fetch announcements: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at C (.next/server/chunks/[root-of-the-server]__0u0w.vz._.js:1:2730)
+[RateLimit] Redis not configured — rate limiting disabled
+Error fetching YouTube videos: Error: YouTube API key not configured
+    at ignore-listed frames
+Error fetching testimonials: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at w (.next/server/chunks/[root-of-the-server]__0eyxv.z._.js:1:2203)
+Error fetching site content: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (.next/server/chunks/_0rezt2i._.js:18:12420)
+    at w (.next/server/chunks/[root-of-the-server]__0slzr5l._.js:1:2203)
+[31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: http://localhost:3000/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+    at /app/.next/server/chunks/_0.-jjjb._.js:404:51445
+    at iU (/app/.next/server/chunks/_0.-jjjb._.js:404:54110)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async rW.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.prod.js:5:20926)
+[31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: http://localhost:3000/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+    at /app/.next/server/chunks/_0.-jjjb._.js:404:51445
+    at iU (/app/.next/server/chunks/_0.-jjjb._.js:404:54110)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async rW.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.prod.js:5:20926)
