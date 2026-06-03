@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { adminGuard, getUserRole } from "@/lib/auth";
+import { announcementLimiter, checkRateLimit } from "@/lib/rate-limit/limiters";
+import { getClientIP } from "@/lib/rate-limit/utils";
 
 export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
+    const ip = getClientIP(request);
+    const { success } = await checkRateLimit(announcementLimiter, `staff:${ip}`);
+    if (!success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const role = await getUserRole();
     const isAdmin = role === "admin";
 
