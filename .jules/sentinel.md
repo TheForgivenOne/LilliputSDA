@@ -22,3 +22,13 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - RBAC and IDOR Vulnerability in Content APIs
+**Vulnerability:** The `GET` endpoints for individual `SiteContent` and `Testimonial` records (`/api/site-content/[id]` and `/api/testimonials/[id]`) lacked authorization checks, allowing anyone with a record ID to access inactive or draft content. Additionally, the `SiteContent` collection endpoint leaked all records regardless of their `isActive` status.
+
+**Learning:** When implementing "soft-delete" or "draft" states via a boolean flag like `isActive`, it is critical to enforce this filter at the API level for non-privileged users. Relying on the frontend to hide inactive items is insufficient as direct API calls can still bypass those UI-level filters.
+
+**Prevention:**
+1. Always implement server-side Role-Based Access Control (RBAC) that filters database results based on the requester's permissions.
+2. For single-record lookups by ID, use `findFirst` instead of `findUnique` when additional filters (like `isActive: true`) are required, as Prisma 7 (and earlier) does not support non-unique fields in the `where` clause of `findUnique`.
+3. Centralize role retrieval (e.g., `getUserRole()`) to ensure consistent authorization logic across all API routes.
