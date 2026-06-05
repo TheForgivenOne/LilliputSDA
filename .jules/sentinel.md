@@ -22,3 +22,14 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - Role-Based Inactive Record Leak
+**Vulnerability:** The `SiteContent` and `Testimonials` APIs were leaking inactive (draft/hidden) records to unauthenticated and non-admin users. While the front-end might have filtered these, the API endpoints allowed direct access via collection URLs or ID guessing (IDOR). Specifically, `SiteContent` didn't filter at all in `GET` requests, and `Testimonials` filtered only in the collection view but not in the detail view.
+
+**Learning:** IDOR (Insecure Direct Object Reference) often occurs when security checks applied to list views are omitted in detail views. Security must be enforced at the API level by verifying that the requested object's state (e.g., `isActive: true`) is compatible with the user's role. Using Prisma's `findUnique` prevents non-unique filtering; `findFirst` is required when combining a unique ID with other status checks like `isActive`.
+
+**Prevention:**
+1. Always enforce role-based visibility in both collection and detail API routes.
+2. Ensure that "inactive" or "hidden" states are strictly respected in Prisma queries for non-admin users.
+3. When filtering by ID and a status field, use `findFirst` instead of `findUnique` to allow the query to include the status condition.
+4. Add security-focused unit tests that specifically attempt to access records in unauthorized states.
