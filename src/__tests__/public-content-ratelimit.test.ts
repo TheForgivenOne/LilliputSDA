@@ -37,25 +37,25 @@ describe("Rate Limiting for Public Content Endpoints", () => {
   it("calls rate limiter for announcements GET", async () => {
     const req = new NextRequest("http://localhost/api/announcements");
     await announcementsGET(req);
-    expect(rateLimit.checkRateLimit).toHaveBeenCalledWith(rateLimit.announcementLimiter, "127.0.0.1");
+    expect(rateLimit.checkRateLimit).toHaveBeenCalledWith(rateLimit.publicContentLimiter, "127.0.0.1");
   });
 
   it("calls rate limiter for events GET", async () => {
     const req = new NextRequest("http://localhost/api/events");
     await eventsGET(req);
-    expect(rateLimit.checkRateLimit).toHaveBeenCalledWith(rateLimit.announcementLimiter, "127.0.0.1");
+    expect(rateLimit.checkRateLimit).toHaveBeenCalledWith(rateLimit.publicContentLimiter, "127.0.0.1");
   });
 
   it("calls rate limiter for ministries GET", async () => {
     const req = new NextRequest("http://localhost/api/ministries");
     await ministriesGET(req);
-    expect(rateLimit.checkRateLimit).toHaveBeenCalledWith(rateLimit.announcementLimiter, "127.0.0.1");
+    expect(rateLimit.checkRateLimit).toHaveBeenCalledWith(rateLimit.publicContentLimiter, "127.0.0.1");
   });
 
   it("calls rate limiter for staff GET", async () => {
     const req = new NextRequest("http://localhost/api/staff");
     await staffGET(req);
-    expect(rateLimit.checkRateLimit).toHaveBeenCalledWith(rateLimit.announcementLimiter, "127.0.0.1");
+    expect(rateLimit.checkRateLimit).toHaveBeenCalledWith(rateLimit.publicContentLimiter, "127.0.0.1");
   });
 
   it("returns 429 when rate limit is exceeded", async () => {
