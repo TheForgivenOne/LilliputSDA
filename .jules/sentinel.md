@@ -22,3 +22,14 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - Public Content Discovery Rate Limiting Gap
+**Vulnerability:** Public GET endpoints for core content (Announcements, Events, Ministries, Staff) lacked rate limiting. This made the application susceptible to automated scraping and denial-of-service (DoS) attacks by exhausting database connections through concurrent unauthenticated requests.
+
+**Learning:** Publicly accessible "read-only" endpoints are often overlooked in security audits but can be primary vectors for DoS if they involve non-trivial database queries. Consistent application of rate limiting across all public-facing routes is a fundamental layer of defense.
+
+**Prevention:**
+1. Audit all public-facing API routes for missing rate limiting, regardless of whether they are read-only or read-write.
+2. Implement a dedicated rate limiter for public content discovery to prevent scraping while allowing legitimate user traffic.
+3. Use centralized utilities for IP detection to ensure consistent rate limiting across different environments (e.g., behind proxies).
+4. Verify rate limiting implementation with tests that mock the rate limiting service.
