@@ -1,9 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
+import { checkRateLimit, publicContentLimiter, getClientIP } from "@/lib/rate-limit";
 
 export const dynamic = 'force-dynamic';
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(publicContentLimiter, ip);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests, please try again later" },
+      { status: 429 }
+    );
+  }
+
   try {
     const ministries = await prisma.ministry.findMany({
       orderBy: { order: "asc" },
