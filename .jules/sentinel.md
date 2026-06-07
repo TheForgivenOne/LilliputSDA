@@ -22,3 +22,14 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - Role-Based Visibility Leak for Inactive Records
+**Vulnerability:** The `SiteContent` and `Testimonials` GET endpoints (both collection and item routes) lacked role-based filtering for the `isActive` field. This allowed unauthenticated users to access "inactive" or draft content by fetching the full list or guessing/obtaining direct record IDs.
+
+**Learning:** Data visibility must be enforced at the API layer based on the user's authorization level. In Prisma 7, `findUnique` does not support filtering by non-unique fields (like `isActive`) within the `where` clause; `findFirst` must be used instead when combining a unique ID with other status filters.
+
+**Prevention:**
+1. Implement role-based filtering in all public-facing GET routes that support an `isActive` or `status` flag.
+2. Ensure administrators can still access all records for management purposes by checking their role (e.g., using `getUserRole`).
+3. Use `findFirst` instead of `findUnique` when queries require a mix of unique identifiers and state filters.
+4. Add security-focused unit tests that verify different visibility levels for unauthenticated, authenticated, and administrative users.
