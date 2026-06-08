@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { adminGuard } from "@/lib/auth";
+import { adminGuard, getUserRole } from "@/lib/auth";
+import { announcementLimiter, checkRateLimit } from "@/lib/rate-limit/limiters";
+import { getClientIP } from "@/lib/rate-limit/utils";
 
 export const dynamic = 'force-dynamic';
 export async function GET(
@@ -8,9 +10,27 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Rate limiting
+    const ip = getClientIP(request);
+    const { success } = await checkRateLimit(announcementLimiter, `announcements:${ip}`);
+    if (!success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const { id } = await params;
-    const announcement = await prisma.announcement.findUnique({
-      where: { id },
+    const role = await getUserRole();
+    const isAdmin = role === "admin";
+
+    const announcement = await prisma.announcement.findFirst({
+      where: {
+        id,
+        ...(!isAdmin && {
+          OR: [
+            { expiresAt: null },
+            { expiresAt: { gte: new Date() } }
+          ]
+        })
+      },
     });
 
     if (!announcement) {

@@ -1,18 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { adminGuard } from "@/lib/auth";
+import { adminGuard, getUserRole } from "@/lib/auth";
+import { announcementLimiter, checkRateLimit } from "@/lib/rate-limit/limiters";
+import { getClientIP } from "@/lib/rate-limit/utils";
 
 export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
+    // Rate limiting
+    const ip = getClientIP(request);
+    const { success } = await checkRateLimit(announcementLimiter, `announcements:${ip}`);
+    if (!success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const { searchParams } = new URL(request.url);
     const limit = searchParams.get("limit");
     const pinned = searchParams.get("pinned");
 
-    const where: Record<string, unknown> = {};
+    const role = await getUserRole();
+    const isAdmin = role === "admin";
+
+    const where: any = {};
 
     if (pinned === "true") {
       where.isPinned = true;
+    }
+
+    // Security: Filter out expired announcements for non-admins
+    if (!isAdmin) {
+      where.OR = [
+        { expiresAt: null },
+        { expiresAt: { gte: new Date() } }
+      ];
     }
 
     const announcements = await prisma.announcement.findMany({
