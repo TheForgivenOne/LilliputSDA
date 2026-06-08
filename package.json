@@ -29,7 +29,7 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.14.0",
-    "next": "^16.2.6",
+    "next": "^16.2.7",
     "next-auth": "^5.0.0-beta.30",
     "prisma": "^7.5.0",
     "react": "19.2.6",
@@ -43,7 +43,7 @@
     "@hono/node-server": "^1.19.13"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^16.2.1",
+    "@next/bundle-analyzer": "^16.2.7",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
@@ -55,7 +55,7 @@
     "@types/react-dom": "^19",
     "@vitest/coverage-v8": "^4.1.6",
     "eslint": "^10.3.0",
-    "eslint-config-next": "16.2.6",
+    "eslint-config-next": "16.2.7",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "lighthouse": "^13.3.0",
