@@ -22,3 +22,13 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - Announcement Information Leak & DoS Vector
+**Vulnerability:** The Announcements API lacked rate limiting and did not filter out expired records, allowing unauthorized access to outdated information and creating a potential denial-of-service vector.
+
+**Learning:** Data visibility rules must be enforced at the database query level for both collection and detail views. Relying on "security by obscurity" (hoping users won't guess IDs for expired content) is insufficient. Rate limiting is a foundational security requirement for all public-facing endpoints, not just authentication or form submission routes.
+
+**Prevention:**
+1. Implement consistent filtering logic (e.g., `expiresAt` checks) in both `/api/resource` and `/api/resource/[id]` handlers.
+2. Apply rate limiting to all public GET endpoints using centralized utilities like `getClientIP`.
+3. Use `findFirst` instead of `findUnique` in Prisma when query criteria include non-unique fields like visibility status or expiration dates.
