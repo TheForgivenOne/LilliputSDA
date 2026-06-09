@@ -1,0 +1,330 @@
+$ next dev
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+✓ Ready in 806ms
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+
+  We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+  The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
+
+	- include was updated to add '.next/types/**/*.ts'
+	- include was updated to add '.next/dev/types/**/*.ts'
+
+- Experiments (use with caution):
+  · optimizePackageImports
+
+◇ injected env (0) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+◇ injected env (0) from .env.development // tip: ⌘ override existing { override: true }
+○ Compiling / ...
+ GET / 200 in 9.1s (next.js: 7.4s, proxy.ts: 776ms, application-code: 898ms)
+[browser] eval() is not supported in this environment. If this page was served with a `Content-Security-Policy` header, make sure that `unsafe-eval` is included. React requires eval() in development mode for various debugging features like reconstructing callstacks from a different environment.
+React will never use eval() in production mode
+[RateLimit] Redis not configured — rate limiting disabled
+Error fetching YouTube videos: Error: YouTube API key not configured
+    at GET (src/app/api/youtube/videos/route.ts:270:13)
+  268 |   try {
+  269 |     if (!YOUTUBE_API_KEY) {
+> 270 |       throw new Error("YouTube API key not configured");
+      |             ^
+  271 |     }
+  272 |
+  273 |     const { searchParams } = new URL(request.url);
+ GET /api/youtube/videos?maxResults=6 503 in 2.3s (next.js: 2.1s, application-code: 244ms)
+◇ injected env (0) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+◇ injected env (0) from .env.development // tip: ⌘ override existing { override: true }
+[RateLimit] Redis not configured — rate limiting disabled
+Error fetching testimonials: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/testimonials/route.ts:8:39)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/testimonials 500 in 2.8s (next.js: 2.6s, application-code: 210ms)
+Error fetching site content: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/site-content/route.ts:8:34)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/site-content 500 in 3.0s (next.js: 2.8s, application-code: 160ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:513:16)
+    at Auth (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:5344:204)
+    at runNextTicks (node:internal/process/task_queues:64:5)
+    at process.processTimers (node:internal/timers:518:9)
+Failed to fetch announcements: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/announcements/route.ts:40:40)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/announcements 500 in 3.2s (next.js: 2.5s, application-code: 652ms)
+○ Compiling /api/events ...
+Failed to fetch events: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/events/route.ts:18:33)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/events 500 in 3.5s (next.js: 3.3s, application-code: 161ms)
+ GET /api/auth/session 200 in 3.4s
+◇ injected env (0) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+◇ injected env (0) from .env.development // tip: ◈ secrets for agents [www.dotenvx.com]
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:513:16)
+    at Auth (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:5344:204)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async AppRouteRouteModule.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:40115)
+ GET / 200 in 172ms (next.js: 8ms, proxy.ts: 13ms, application-code: 151ms)
+[browser] eval() is not supported in this environment. If this page was served with a `Content-Security-Policy` header, make sure that `unsafe-eval` is included. React requires eval() in development mode for various debugging features like reconstructing callstacks from a different environment.
+React will never use eval() in production mode
+Failed to fetch events: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/events/route.ts:18:33)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/events 500 in 269ms (next.js: 16ms, application-code: 253ms)
+[RateLimit] Redis not configured — rate limiting disabled
+[RateLimit] Redis not configured — rate limiting disabled
+Error fetching YouTube videos: Error: YouTube API key not configured
+    at GET (src/app/api/youtube/videos/route.ts:270:13)
+  268 |   try {
+  269 |     if (!YOUTUBE_API_KEY) {
+> 270 |       throw new Error("YouTube API key not configured");
+      |             ^
+  271 |     }
+  272 |
+  273 |     const { searchParams } = new URL(request.url);
+ GET /api/youtube/videos?maxResults=6 503 in 163ms (next.js: 33ms, application-code: 130ms)
+Error fetching testimonials: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/testimonials/route.ts:8:39)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/testimonials 500 in 304ms (next.js: 164ms, application-code: 140ms)
+Error fetching site content: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/site-content/route.ts:8:34)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/site-content 500 in 459ms (next.js: 306ms, application-code: 153ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:513:16)
+    at Auth (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:5344:204)
+    at runNextTicks (node:internal/process/task_queues:64:5)
+    at process.processTimers (node:internal/timers:518:9)
+Failed to fetch announcements: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/announcements/route.ts:40:40)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/announcements 500 in 640ms (next.js: 17ms, application-code: 622ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:513:16)
+    at Auth (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:5344:204)
+    at async AppRouteRouteModule.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:40115)
+ GET /api/auth/session 500 in 64ms (next.js: 48ms, application-code: 17ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:513:16)
+    at Auth (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:5344:204)
+    at async AppRouteRouteModule.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:40115)
+ GET /api/auth/session 500 in 43ms (next.js: 12ms, application-code: 30ms)
+[browser] ClientFetchError: There was a problem with the server configuration. Check the server logs for more information.. Read more at https://errors.authjs.dev#autherror
+[browser] ClientFetchError: There was a problem with the server configuration. Check the server logs for more information.. Read more at https://errors.authjs.dev#autherror
+◇ injected env (0) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+◇ injected env (0) from .env.development // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+ GET / 200 in 129ms (next.js: 4ms, proxy.ts: 6ms, application-code: 119ms)
+[browser] eval() is not supported in this environment. If this page was served with a `Content-Security-Policy` header, make sure that `unsafe-eval` is included. React requires eval() in development mode for various debugging features like reconstructing callstacks from a different environment.
+React will never use eval() in production mode
+Failed to fetch events: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/events/route.ts:18:33)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/events 500 in 186ms (next.js: 2ms, application-code: 184ms)
+[RateLimit] Redis not configured — rate limiting disabled
+Error fetching testimonials: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/testimonials/route.ts:8:39)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/testimonials 500 in 186ms (next.js: 11ms, application-code: 175ms)
+[RateLimit] Redis not configured — rate limiting disabled
+Error fetching YouTube videos: Error: YouTube API key not configured
+    at GET (src/app/api/youtube/videos/route.ts:270:13)
+  268 |   try {
+  269 |     if (!YOUTUBE_API_KEY) {
+> 270 |       throw new Error("YouTube API key not configured");
+      |             ^
+  271 |     }
+  272 |
+  273 |     const { searchParams } = new URL(request.url);
+ GET /api/youtube/videos?maxResults=6 503 in 273ms (next.js: 188ms, application-code: 86ms)
+Error fetching site content: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/site-content/route.ts:8:34)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/site-content 500 in 476ms (next.js: 275ms, application-code: 201ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:513:16)
+    at Auth (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:5344:204)
+Failed to fetch announcements: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/announcements/route.ts:40:40)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/announcements 500 in 599ms (next.js: 8ms, application-code: 591ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:513:16)
+    at Auth (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:5344:204)
+    at async AppRouteRouteModule.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:40115)
+ GET /api/auth/session 500 in 67ms (next.js: 53ms, application-code: 14ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:513:16)
+    at Auth (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:5344:204)
+    at async AppRouteRouteModule.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:40115)
+ GET /api/auth/session 500 in 12ms (next.js: 3ms, application-code: 9ms)
+[browser] ClientFetchError: There was a problem with the server configuration. Check the server logs for more information.. Read more at https://errors.authjs.dev#autherror
+[browser] ClientFetchError: There was a problem with the server configuration. Check the server logs for more information.. Read more at https://errors.authjs.dev#autherror
+◇ injected env (0) from .env // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (0) from .env.development // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+ GET / 200 in 137ms (next.js: 7ms, proxy.ts: 7ms, application-code: 124ms)
+[browser] eval() is not supported in this environment. If this page was served with a `Content-Security-Policy` header, make sure that `unsafe-eval` is included. React requires eval() in development mode for various debugging features like reconstructing callstacks from a different environment.
+React will never use eval() in production mode
+Failed to fetch events: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/events/route.ts:18:33)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/events 500 in 254ms (next.js: 17ms, application-code: 237ms)
+[RateLimit] Redis not configured — rate limiting disabled
+[RateLimit] Redis not configured — rate limiting disabled
+Error fetching YouTube videos: Error: YouTube API key not configured
+    at GET (src/app/api/youtube/videos/route.ts:270:13)
+  268 |   try {
+  269 |     if (!YOUTUBE_API_KEY) {
+> 270 |       throw new Error("YouTube API key not configured");
+      |             ^
+  271 |     }
+  272 |
+  273 |     const { searchParams } = new URL(request.url);
+ GET /api/youtube/videos?maxResults=6 503 in 433ms (next.js: 289ms, application-code: 144ms)
+Error fetching testimonials: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/testimonials/route.ts:8:39)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/testimonials 500 in 567ms (next.js: 435ms, application-code: 132ms)
+Error fetching site content: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/site-content/route.ts:8:34)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/site-content 500 in 708ms (next.js: 568ms, application-code: 140ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:513:16)
+    at Auth (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:5344:204)
+    at runNextTicks (node:internal/process/task_queues:64:5)
+    at process.processTimers (node:internal/timers:518:9)
+Failed to fetch announcements: Error: PrismaClient is not initialized. Set the DATABASE_URL environment variable.
+    at Object.get (src/lib/db.ts:19:15)
+    at GET (src/app/api/announcements/route.ts:40:40)
+  17 |     return new Proxy({} as PrismaClient, {
+  18 |       get(_, _prop: string | symbol) {
+> 19 |         throw new Error(
+     |               ^
+  20 |           "PrismaClient is not initialized. Set the DATABASE_URL environment variable."
+  21 |         );
+  22 |       },
+ GET /api/announcements 500 in 848ms (next.js: 268ms, application-code: 580ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:513:16)
+    at Auth (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:5344:204)
+    at async AppRouteRouteModule.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:40115)
+ GET /api/auth/session 500 in 38ms (next.js: 32ms, application-code: 6ms)
+[browser] ClientFetchError: There was a problem with the server configuration. Check the server logs for more information.. Read more at https://errors.authjs.dev#autherror
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:513:16)
+    at Auth (/app/.next/dev/server/chunks/node_modules_@auth_core_09h2y9.._.js:5344:204)
+    at async AppRouteRouteModule.do (/app/node_modules/next/dist/compiled/next-server/app-route-turbo.runtime.dev.js:5:40115)
+ GET /api/auth/session 500 in 16ms (next.js: 3ms, application-code: 14ms)
+[browser] ClientFetchError: There was a problem with the server configuration. Check the server logs for more information.. Read more at https://errors.authjs.dev#autherror
+◇ injected env (0) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+◇ injected env (0) from .env.development // tip: ◈ secrets for agents [www.dotenvx.com]

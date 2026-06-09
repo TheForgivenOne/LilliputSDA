@@ -22,3 +22,13 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - Information Leak via Direct ID Lookup for Inactive/Expired Records
+**Vulnerability:** API endpoints for SiteContent, Testimonials, and Announcements allowed non-admin users to retrieve inactive or expired records if they knew the specific record ID, even though these records were hidden from list views. This occurred because `findUnique` by ID did not include status filters.
+
+**Learning:** `findUnique` in Prisma by ID bypasses other filters unless they are explicitly included. Security checks must be applied to both collection and item detail routes.
+
+**Prevention:**
+1. Use `findFirst` instead of `findUnique` when you need to combine a unique ID with other security-related filters (like `isActive: true` or `expiresAt > now`).
+2. Always implement Role-Based Access Control (RBAC) in both list and detail views to ensure consistent data visibility.
+3. Treat hidden records as non-existent (404) for unauthorized users to prevent enumeration.
