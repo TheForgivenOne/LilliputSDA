@@ -22,3 +22,14 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - Information Leak via Expired Announcements
+**Vulnerability:** The Announcements API endpoints (`/api/announcements` and `/api/announcements/[id]`) returned all records regardless of their expiration date (`expiresAt`). This leaked sensitive or outdated information to unauthenticated and non-admin users.
+
+**Learning:** Data lifecycle management is a security concern. Records that are "inactive" or "expired" should be treated as unauthorized for public access unless explicitly requested by an administrator. Prisma's `findUnique` is restrictive when trying to filter by non-unique fields like `expiresAt` or `isActive`; switching to `findFirst` allows for more complex access control queries in detail endpoints.
+
+**Prevention:**
+1. Implement expiration-aware filtering in all public-facing API endpoints.
+2. Use `findFirst` in Prisma when an ID-based lookup needs to be combined with status or role-based visibility filters.
+3. Ensure that rate limiting is applied to all public-facing GET collection endpoints to prevent resource exhaustion/DoS.
+4. When mocking internal libraries in tests (e.g., `getUserRole`), ensure that all functions used by the target code are explicitly mocked to prevent runtime errors during test execution.
