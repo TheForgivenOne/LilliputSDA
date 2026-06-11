@@ -22,3 +22,13 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - Information Leakage via Direct ID Access (IDOR)
+**Vulnerability:** While collection endpoints (GET /api/resource) filtered inactive or expired records, the detail endpoints (GET /api/resource/[id]) lacked these checks. This allowed unauthenticated users to access unpublished testimonials, site content, or expired announcements if they knew or guessed the record ID.
+
+**Learning:** Authorization must be consistent across the entire API surface. Filtering "lists" is insufficient if the "item" view remains unprotected. In Prisma 7, adding non-unique filters (like `isActive: true`) to a query targeting a unique ID requires switching from `findUnique` to `findFirst`, as `findUnique` only supports unique fields in its `where` clause.
+
+**Prevention:**
+1. Always apply the same visibility and authorization logic to both collection and item detail routes.
+2. Use `findFirst` in Prisma when combining a unique ID with other status-based filters.
+3. Centralize RBAC checks using utilities like `getUserRole()` and apply them uniformly.
