@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { checkRateLimit, youtubeLimiter, redis } from "@/lib/rate-limit";
+import { checkRateLimit, youtubeLimiter, redis, getClientIP } from "@/lib/rate-limit";
 import type { VideoStatus } from "@/types";
 
 export const dynamic = 'force-dynamic';
@@ -67,18 +67,6 @@ interface YouTubeVideoItem {
     scheduledEndTime?: string;
     concurrentViewers?: string;
   };
-}
-
-function getClientIP(request: Request): string {
-  const headers = request.headers.get("x-forwarded-for");
-  if (headers) {
-    return headers.split(",")[0].trim();
-  }
-  const realIp = request.headers.get("x-real-ip");
-  if (realIp) {
-    return realIp;
-  }
-  return "anonymous";
 }
 
 function decodeHtmlEntities(text: string): string {
@@ -370,11 +358,10 @@ export async function GET(request: NextRequest) {
 
     let detailsResponse: Response;
     try {
-      detailsResponse = await fetch(detailsUrl, {
-        signal: AbortSignal.timeout(FETCH_TIMEOUT),
-      });
+      detailsResponse = await fetchWithTimeout(detailsUrl);
     } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") {
+      const message = error instanceof Error ? error.message : "";
+      if (message === "TIMEOUT" || (error instanceof Error && error.name === "AbortError")) {
         return NextResponse.json(
           { error: "Request timed out", code: "TIMEOUT" },
           { status: 504 }
