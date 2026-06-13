@@ -42,7 +42,7 @@ export default function MinistriesAdminPage() {
       render: (ministry) => (
         <div className="flex items-center gap-3">
           {ministry.imageUrl ? (
-            <img src={ministry.imageUrl} alt="" className="w-12 h-12 rounded-lg object-cover" />
+            <img src={ministry.imageUrl} alt={`${ministry.name} - ministração`} className="w-12 h-12 rounded-lg object-cover" />
           ) : (
             <div className="w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
               <span className="text-lg font-semibold text-amber-700 dark:text-amber-400">{ministry.name.charAt(0)}</span>

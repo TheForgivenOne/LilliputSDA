@@ -56,7 +56,7 @@ export default function EventsAdminPage() {
       render: (event) => (
         <div className="flex items-center gap-3">
           {event.imageUrl ? (
-            <img src={event.imageUrl} alt="" className="w-12 h-12 rounded-lg object-cover" />
+            <img src={event.imageUrl} alt={`${event.title} - imagem do evento`} className="w-12 h-12 rounded-lg object-cover" />
           ) : (
             <div className="w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
               <Calendar className="w-6 h-6 text-amber-600" />
