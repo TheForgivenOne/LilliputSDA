@@ -35,7 +35,7 @@ export default function StaffAdminPage() {
       render: (person) => (
         <div className="flex items-center gap-3">
           {person.photoUrl ? (
-            <img src={person.photoUrl} alt="" className="w-12 h-12 rounded-full object-cover" />
+            <img src={person.photoUrl} alt={`${person.name} - foto do colaborador`} className="w-12 h-12 rounded-full object-cover" />
           ) : (
             <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
               <span className="text-lg font-semibold text-amber-700 dark:text-amber-400">{person.name.charAt(0)}</span>
