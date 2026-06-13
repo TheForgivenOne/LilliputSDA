@@ -1,0 +1,23 @@
+
+> lilliput-sda@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://192.168.0.2:3001
+✓ Ready in 782ms
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3000
+- PID:          149135
+- Dir:          /app
+- Log:          .next/dev/logs/next-development.log
+
+Run kill 149135 to stop it.
+[?25h
+npm notice
+npm notice New minor version of npm available! 11.11.0 -> 11.17.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.17.0
+npm notice To update run: npm install -g npm@11.17.0
+npm notice

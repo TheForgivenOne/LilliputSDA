@@ -22,3 +22,14 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-05-24 - API Information Leak via Missing Visibility Filters
+**Vulnerability:** Several API routes (Testimonials, SiteContent, and Announcements) lacked consistent role-based visibility filtering. While some collection routes filtered for `isActive: true`, their corresponding detail routes (`/api/.../[id]`) did not, allowing unauthenticated users to access hidden or expired records if they knew the ID (IDOR). Additionally, some collection routes (SiteContent) were leaking inactive records entirely.
+
+**Learning:** IDOR vulnerabilities often exist in detail routes even when collection routes are properly filtered. Security filters must be applied consistently across all access patterns (lists and direct lookups). In Prisma, `findUnique` cannot be used with non-unique filters like `isActive`; `findFirst` is required to combine unique IDs with visibility constraints.
+
+**Prevention:**
+1. Always apply the same visibility and authorization filters to both collection and detail routes.
+2. For direct object references, use `findFirst` (or equivalent) to include status checks (e.g., `isActive: true`, `expiresAt` checks) in the query itself.
+3. Implement automated tests that specifically attempt to access inactive or restricted records via direct IDs to detect IDOR/Visibility gaps.
+4. Ensure that administrators retain full access by using conditional query parameters based on the authenticated user's role.
