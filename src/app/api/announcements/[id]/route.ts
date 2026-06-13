@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { adminGuard } from "@/lib/auth";
+import { adminGuard, getUserRole } from "@/lib/auth";
 
 export const dynamic = 'force-dynamic';
 export async function GET(
@@ -9,8 +9,19 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const announcement = await prisma.announcement.findUnique({
-      where: { id },
+    const role = await getUserRole();
+    const isAdmin = role === "admin";
+
+    const announcement = await prisma.announcement.findFirst({
+      where: {
+        id,
+        ...(isAdmin ? {} : {
+          OR: [
+            { expiresAt: null },
+            { expiresAt: { gt: new Date() } }
+          ]
+        }),
+      },
     });
 
     if (!announcement) {
