@@ -143,7 +143,7 @@ export default function MediaPage() {
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1">
               <Input
-                placeholder="Search videos..."
+                placeholder="Buscar vídeos..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 leftIcon={<Search className="w-5 h-5" />}
