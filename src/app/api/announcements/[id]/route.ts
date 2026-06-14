@@ -1,12 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { adminGuard } from "@/lib/auth";
+import { checkRateLimit, announcementLimiter, getClientIP } from "@/lib/rate-limit";
 
 export const dynamic = 'force-dynamic';
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(announcementLimiter, ip);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   try {
     const { id } = await params;
     const announcement = await prisma.announcement.findUnique({
@@ -28,6 +39,16 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(announcementLimiter, ip);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   const guard = await adminGuard();
   if (guard) return guard;
 
@@ -60,6 +81,16 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(announcementLimiter, ip);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   const guard = await adminGuard();
   if (guard) return guard;
 
