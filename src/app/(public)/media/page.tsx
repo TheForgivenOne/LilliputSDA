@@ -38,7 +38,7 @@ export default function MediaPage() {
     async function loadVideos() {
       try {
         setLoading(true);
-        const response = await fetch("/api/youtube/videos?maxResults=50");
+        const response = await fetch("/api/youtube/videos?maxResults=48");
 
         if (!response.ok) {
           const errorData = await response.json();

@@ -188,6 +188,15 @@ async function fetchSearchResults(url: string): Promise<YouTubeSearchItem[]> {
   if (!response.ok) {
     if (response.status === 403) throw new Error("QUOTA_EXCEEDED");
     if (response.status === 401) throw new Error("INVALID_KEY");
+
+    // Log the error body for debugging 400 Bad Request and other errors
+    try {
+      const errorData = await response.json();
+      console.error(`YouTube API error details (${response.status}):`, JSON.stringify(errorData, null, 2));
+    } catch {
+      console.error(`YouTube API error: ${response.status} (could not parse error body)`);
+    }
+
     throw new Error(`YouTube API error: ${response.status}`);
   }
 

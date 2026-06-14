@@ -226,9 +226,9 @@ export default function Home() {
             />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
               <div className="lg:col-span-2">
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--primary)] dark:text-[var(--accent-lilac)] mb-4">
+                <h4 className="text-sm font-semibold uppercase tracking-wider text-[var(--primary)] dark:text-[var(--accent-lilac)] mb-4">
                   Upcoming Events
-                </h3>
+                </h4>
                 <EventsList
                   events={events}
                   isLoading={eventsLoading}
@@ -237,9 +237,9 @@ export default function Home() {
                 />
               </div>
               <aside className="lg:col-span-1">
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--primary)] dark:text-[var(--accent-lilac)] mb-4">
+                <h4 className="text-sm font-semibold uppercase tracking-wider text-[var(--primary)] dark:text-[var(--accent-lilac)] mb-4">
                   Announcements
-                </h3>
+                </h4>
                 <AnnouncementsList
                   announcements={announcements}
                   isLoading={announcementsLoading}
@@ -248,17 +248,6 @@ export default function Home() {
                 />
               </aside>
             </div>
-            <aside className="lg:col-span-1">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--primary)] dark:text-[var(--accent-lilac)] mb-4">
-                Announcements
-              </h3>
-              <AnnouncementsList
-                announcements={announcements}
-                isLoading={announcementsLoading}
-                isError={announcementsError}
-                onRetry={refetch}
-              />
-            </aside>
           </div>
       </section>
       )}
