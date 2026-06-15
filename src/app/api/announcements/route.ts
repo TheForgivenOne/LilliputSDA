@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     const limit = searchParams.get("limit");
     const pinned = searchParams.get("pinned");
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
 
     // RBAC: Non-admins can only see non-expired announcements
     if (!isAdmin) {
