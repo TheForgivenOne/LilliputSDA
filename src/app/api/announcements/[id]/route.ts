@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { adminGuard } from "@/lib/auth";
+import { adminGuard, getUserRole } from "@/lib/auth";
+import { announcementLimiter, checkRateLimit, getClientIP } from "@/lib/rate-limit";
 
 export const dynamic = 'force-dynamic';
 export async function GET(
@@ -8,12 +9,26 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const ip = getClientIP(request);
+    const { success } = await checkRateLimit(announcementLimiter, ip);
+    if (!success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const { id } = await params;
+    const role = await getUserRole();
+    const isAdmin = role === "admin";
+
     const announcement = await prisma.announcement.findUnique({
       where: { id },
     });
 
     if (!announcement) {
+      return NextResponse.json({ error: "Announcement not found" }, { status: 404 });
+    }
+
+    // RBAC: Non-admins cannot see expired announcements
+    if (!isAdmin && announcement.expiresAt && announcement.expiresAt < new Date()) {
       return NextResponse.json({ error: "Announcement not found" }, { status: 404 });
     }
 
@@ -28,6 +43,12 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(announcementLimiter, ip);
+  if (!success) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   const guard = await adminGuard();
   if (guard) return guard;
 
@@ -60,6 +81,12 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(announcementLimiter, ip);
+  if (!success) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   const guard = await adminGuard();
   if (guard) return guard;
 
