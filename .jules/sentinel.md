@@ -22,3 +22,14 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 2. Implement and enforce a comprehensive `validatePassword` function that checks for length, casing, and numeric requirements.
 3. Add unit tests specifically for validation utilities to prevent regressions.
 4. Always verify that actual implementation matches security specifications recorded in project documentation.
+
+## 2025-06-12 - Announcements Information Disclosure and Rate Limiting Gap
+**Vulnerability:** The Announcements API lacked both Role-Based Access Control (RBAC) for expired records and rate limiting. Non-admin users could access expired announcements via direct ID lookups or the collection endpoint, and the API was susceptible to DoS or scraping due to missing rate limits.
+
+**Learning:** Securing some resources (like Staff or Testimonials) doesn't guarantee others are safe. Each new public-facing entity must be audited for both visibility logic (least privilege) and resource protection (rate limiting). "Expired" or "Inactive" flags are security boundaries, not just UI filters.
+
+**Prevention:**
+1. Apply a "Security Checklist" for every new API route: Auth, RBAC, Input Validation, Rate Limiting, and PII Filtering.
+2. Ensure that "Detail" routes (`/[id]`) implement the same visibility filters as "List" routes to prevent IDOR/Information Disclosure.
+3. Centralize rate-limiting definitions to make them easy to apply to new endpoints.
+4. Use dedicated security tests to verify visibility boundaries for different user roles.
