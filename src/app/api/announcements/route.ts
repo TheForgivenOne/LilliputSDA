@@ -1,18 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { adminGuard } from "@/lib/auth";
+import { adminGuard, getUserRole } from "@/lib/auth";
+import { checkRateLimit, announcementLimiter, getClientIP } from "@/lib/rate-limit";
 
 export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(announcementLimiter, ip);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   try {
+    const role = await getUserRole();
+    const isAdmin = role === "admin";
+
     const { searchParams } = new URL(request.url);
     const limit = searchParams.get("limit");
     const pinned = searchParams.get("pinned");
 
-    const where: Record<string, unknown> = {};
+    const where: Record<string, any> = {};
 
     if (pinned === "true") {
       where.isPinned = true;
+    }
+
+    // Security: Non-admins can only see non-expired announcements
+    if (!isAdmin) {
+      where.OR = [
+        { expiresAt: null },
+        { expiresAt: { gt: new Date() } }
+      ];
     }
 
     const announcements = await prisma.announcement.findMany({
@@ -32,6 +54,16 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIP(request);
+  const { success } = await checkRateLimit(announcementLimiter, ip);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   const guard = await adminGuard();
   if (guard) return guard;
 
