@@ -12,6 +12,16 @@ Next.js Middleware must be correctly named `middleware.ts` in the `src/` directo
 4. Implement role-based access control (RBAC) by verifying the user's role in the session object.
 5. Configure authentication providers to include necessary authorization metadata (like roles) in the session.
 
+## 2025-05-24 - API Visibility Filter Inconsistency
+**Vulnerability:** API detail routes (`/api/resource/[id]`) often lacked the same visibility filters (e.g., `isActive: true`) as their corresponding collection routes. This allowed unauthenticated users to access "inactive" or "draft" content if they could guess or obtain the record ID (IDOR-like information disclosure).
+
+**Learning:** When implementing visibility logic in collection routes, it is easy to overlook the detail/item routes. Prisma's `findUnique` does not support additional filtering on non-unique fields, which often leads developers to skip the check or use `findUnique` incorrectly.
+
+**Prevention:**
+1. Always implement identical visibility filters in both collection and detail routes.
+2. Use Prisma's `findFirst` instead of `findUnique` when you need to combine a unique ID with other visibility constraints (like `isActive: true`).
+3. Create security tests that specifically target the detail routes of resources with visibility toggles.
+
 ## 2025-05-23 - Password Complexity Enforcement Gap
 **Vulnerability:** The application's registration endpoint (`/api/auth/register`) only enforced a minimum password length of 6 characters, despite project documentation suggesting much stricter requirements (8-100 characters with mixed case and numbers). This allowed users to create weak accounts susceptible to brute-force attacks.
 
