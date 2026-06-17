@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { adminGuard } from "@/lib/auth";
+import { adminGuard, getUserRole } from "@/lib/auth";
 
 export const dynamic = 'force-dynamic';
 export async function GET(
@@ -9,8 +9,15 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const testimonial = await prisma.testimonial.findUnique({
-      where: { id },
+    const role = await getUserRole();
+    const isAdmin = role === "admin";
+
+    const testimonial = await prisma.testimonial.findFirst({
+      // Security: Non-admins can only see the testimonial if it is active
+      where: {
+        id,
+        ...(isAdmin ? {} : { isActive: true }),
+      },
     });
 
     if (!testimonial) {
