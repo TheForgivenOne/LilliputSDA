@@ -63,95 +63,94 @@
   /* ══════════════════════════════════════════════════
      SEMANTIC COLOR SCALES
      Exposes bg-primary-500, text-wine-600, etc. as
-     Tailwind utilities. All values resolve from
-     tokens.css via var() — a single edit to tokens.css
-     propagates to both utility classes and var() usage.
+     Tailwind utilities. Values are hardcoded here and
+     duplicated in tokens.css for direct var() usage.
      ═════════════════════════════════════════════════ */
 
   /* Primary — Yellow / Brass */
-  --color-primary-50:  var(--color-primary-50);
-  --color-primary-100: var(--color-primary-100);
-  --color-primary-200: var(--color-primary-200);
-  --color-primary-300: var(--color-primary-300);
-  --color-primary-400: var(--color-primary-400);
-  --color-primary-500: var(--color-primary-500);
-  --color-primary-600: var(--color-primary-600);
-  --color-primary-700: var(--color-primary-700);
-  --color-primary-800: var(--color-primary-800);
-  --color-primary-900: var(--color-primary-900);
+  --color-primary-50:  #FFFBEB;
+  --color-primary-100: #FEF3C7;
+  --color-primary-200: #FDE68A;
+  --color-primary-300: #FCD34D;
+  --color-primary-400: #FBBF24;
+  --color-primary-500: #EAB308;
+  --color-primary-600: #CA8A04;
+  --color-primary-700: #A16207;
+  --color-primary-800: #854D0E;
+  --color-primary-900: #713F12;
 
   /* Secondary — Slate-Mauve neutrals */
-  --color-secondary-50:  var(--color-secondary-50);
-  --color-secondary-100: var(--color-secondary-100);
-  --color-secondary-200: var(--color-secondary-200);
-  --color-secondary-300: var(--color-secondary-300);
-  --color-secondary-400: var(--color-secondary-400);
-  --color-secondary-500: var(--color-secondary-500);
-  --color-secondary-600: var(--color-secondary-600);
-  --color-secondary-700: var(--color-secondary-700);
-  --color-secondary-800: var(--color-secondary-800);
-  --color-secondary-900: var(--color-secondary-900);
+  --color-secondary-50:  #FDFBF5;
+  --color-secondary-100: #F6F1E7;
+  --color-secondary-200: #E5DDCB;
+  --color-secondary-300: #C9C1B0;
+  --color-secondary-400: #9C95A9;
+  --color-secondary-500: #6F6883;
+  --color-secondary-600: #524F6B;
+  --color-secondary-700: #3B3950;
+  --color-secondary-800: #25243A;
+  --color-secondary-900: #1B1A2E;
 
   /* Wine — Mulberry */
-  --color-wine-50:  var(--color-wine-50);
-  --color-wine-100: var(--color-wine-100);
-  --color-wine-200: var(--color-wine-200);
-  --color-wine-300: var(--color-wine-300);
-  --color-wine-400: var(--color-wine-400);
-  --color-wine-500: var(--color-wine-500);
-  --color-wine-600: var(--color-wine-600);
-  --color-wine-700: var(--color-wine-700);
-  --color-wine-800: var(--color-wine-800);
-  --color-wine-900: var(--color-wine-900);
+  --color-wine-50:  #FBF2F4;
+  --color-wine-100: #F4DCE2;
+  --color-wine-200: #E5B5C0;
+  --color-wine-300: #CD8395;
+  --color-wine-400: #B05A72;
+  --color-wine-500: #8A3E55;
+  --color-wine-600: #6E2A3E;
+  --color-wine-700: #561F30;
+  --color-wine-800: #3E1722;
+  --color-wine-900: #2A0F18;
 
   /* Lilac — Heaven highlight */
-  --color-lilac-100: var(--color-lilac-100);
-  --color-lilac-200: var(--color-lilac-200);
-  --color-lilac-300: var(--color-lilac-300);
-  --color-lilac-400: var(--color-lilac-400);
+  --color-lilac-100: #ECE5F7;
+  --color-lilac-200: #D7C9EE;
+  --color-lilac-300: #B8A8D4;
+  --color-lilac-400: #9783BD;
 
   /* Info — Deep Indigo */
-  --color-info-50:  var(--color-info-50);
-  --color-info-100: var(--color-info-100);
-  --color-info-200: var(--color-info-200);
-  --color-info-300: var(--color-info-300);
-  --color-info-400: var(--color-info-400);
-  --color-info-500: var(--color-info-500);
-  --color-info-600: var(--color-info-600);
-  --color-info-700: var(--color-info-700);
-  --color-info-800: var(--color-info-800);
-  --color-info-900: var(--color-info-900);
+  --color-info-50:  #EEEEF8;
+  --color-info-100: #D6D5EC;
+  --color-info-200: #C8C3E8;
+  --color-info-300: #A39CD8;
+  --color-info-400: #7C76C4;
+  --color-info-500: #5B4FA0;
+  --color-info-600: #3B3A8F;
+  --color-info-700: #2D2C73;
+  --color-info-800: #232358;
+  --color-info-900: #181842;
 
   /* Success — Desaturated Teal */
-  --color-success-50:  var(--color-success-50);
-  --color-success-100: var(--color-success-100);
-  --color-success-200: var(--color-success-200);
-  --color-success-300: var(--color-success-300);
-  --color-success-400: var(--color-success-400);
-  --color-success-500: var(--color-success-500);
-  --color-success-600: var(--color-success-600);
-  --color-success-700: var(--color-success-700);
-  --color-success-800: var(--color-success-800);
-  --color-success-900: var(--color-success-900);
+  --color-success-50:  #ECF5F2;
+  --color-success-100: #D2EBE3;
+  --color-success-200: #ACD9CD;
+  --color-success-300: #7FC0AF;
+  --color-success-400: #54A290;
+  --color-success-500: #3F7A6E;
+  --color-success-600: #2E6256;
+  --color-success-700: #214A42;
+  --color-success-800: #143028;
+  --color-success-900: #0B1F1A;
 
   /* Error — Mulberry/Crimson */
-  --color-error-50:  var(--color-error-50);
-  --color-error-100: var(--color-error-100);
-  --color-error-200: var(--color-error-200);
-  --color-error-300: var(--color-error-300);
-  --color-error-400: var(--color-error-400);
-  --color-error-500: var(--color-error-500);
-  --color-error-600: var(--color-error-600);
-  --color-error-700: var(--color-error-700);
-  --color-error-800: var(--color-error-800);
-  --color-error-900: var(--color-error-900);
+  --color-error-50:  #FBEEF0;
+  --color-error-100: #F4D2D8;
+  --color-error-200: #E5B5C0;
+  --color-error-300: #CD8395;
+  --color-error-400: #B05A72;
+  --color-error-500: #A23545;
+  --color-error-600: #862936;
+  --color-error-700: #66202B;
+  --color-error-800: #3E1722;
+  --color-error-900: #2A0F18;
 
   /* Warning — Yellow (shares hue with primary) */
-  --color-warning-50:  var(--color-warning-50);
-  --color-warning-100: var(--color-warning-100);
-  --color-warning-500: var(--color-warning-500);
-  --color-warning-600: var(--color-warning-600);
-  --color-warning-700: var(--color-warning-700);
+  --color-warning-50:  #FFFBEB;
+  --color-warning-100: #FEF3C7;
+  --color-warning-500: #EAB308;
+  --color-warning-600: #CA8A04;
+  --color-warning-700: #A16207;
 
   /* ══════════════════════════════════════════════════
      LEGACY COMPAT ALIASES
