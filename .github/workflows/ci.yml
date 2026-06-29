@@ -144,6 +144,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           AUTH_URL: http://localhost:3000
+          AUTH_TRUST_HOST: true
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           NEXT_PUBLIC_SITE_URL: https://lilliputsda.org
       - uses: actions/upload-artifact@v7
