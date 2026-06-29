@@ -26,7 +26,7 @@ test.describe('Home Page', () => {
   });
 
   test('announcements section renders', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'Announcements' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Announcements' }).first()).toBeVisible();
   });
 
   test('ministry section renders', async ({ page }) => {
