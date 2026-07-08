@@ -1,5 +1,7 @@
 # Lilliput Seventh-day Adventist Church Website
 
+> **ARCHIVED** — This repository is archived and read-only. No further updates or maintenance will be provided.
+
 Official website for the Lilliput SDA Church, part of the West Jamaica Conference of Seventh-day Adventists.
 
 ## About
