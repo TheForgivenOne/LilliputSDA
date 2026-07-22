@@ -295,7 +295,7 @@ export default function DecisionCardPage() {
                           required
                           value={formData.name}
                           onChange={(e) => handleChange("name", e.target.value)}
-                          placeholder="Enter your full name"
+                          placeholder="Digite seu nome completo"
                           error={attempted && !formData.name.trim() ? "Required" : undefined}
                         />
                         <Input
@@ -315,7 +315,7 @@ export default function DecisionCardPage() {
                           value={formData.ageGroup}
                           onChange={(e) => handleChange("ageGroup", e.target.value)}
                           options={ageOptions}
-                          placeholder="Select your age group"
+                          placeholder="Selecione sua faixa etária"
                         />
                         <Input
                           label="Email Address"
@@ -337,7 +337,7 @@ export default function DecisionCardPage() {
                         value={formData.decision}
                         onChange={(e) => handleChange("decision", e.target.value)}
                         options={decisionOptions}
-                        placeholder="Please select the appropriate response"
+                        placeholder="Selecione a resposta apropriada"
                         error={attempted && !formData.decision ? "Required" : undefined}
                       />
                       <Select
@@ -346,14 +346,14 @@ export default function DecisionCardPage() {
                         value={formData.isAdventist}
                         onChange={(e) => handleChange("isAdventist", e.target.value)}
                         options={adventistOptions}
-                        placeholder="Select your membership status"
+                        placeholder="Selecione seu status de filiação"
                         error={attempted && !formData.isAdventist ? "Required" : undefined}
                       />
                       <Textarea
                         label="Prayer Requests"
                         value={formData.prayerRequest}
                         onChange={(e) => handleChange("prayerRequest", e.target.value)}
-                        placeholder="What would you like us to pray for?"
+                        placeholder="O que você gostaria que orássemos por?"
                         rows={4}
                       />
                     </div>
@@ -365,7 +365,7 @@ export default function DecisionCardPage() {
                         label="Street Address"
                         value={formData.address}
                         onChange={(e) => handleChange("address", e.target.value)}
-                        placeholder="Enter your street address"
+                        placeholder="Digite seu endereço"
                       />
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <Input
@@ -389,14 +389,14 @@ export default function DecisionCardPage() {
                         value={formData.source}
                         onChange={(e) => handleChange("source", e.target.value)}
                         options={sourceOptions}
-                        placeholder="Select how you found us"
+                        placeholder="Selecione como nos encontrou"
                         error={attempted && !formData.source ? "Required" : undefined}
                       />
                       <Textarea
                         label="Questions or Comments"
                         value={formData.comments}
                         onChange={(e) => handleChange("comments", e.target.value)}
-                        placeholder="Anything else you'd like us to know?"
+                        placeholder="Algo mais que gostaria de nos contar?"
                         rows={3}
                       />
                     </div>

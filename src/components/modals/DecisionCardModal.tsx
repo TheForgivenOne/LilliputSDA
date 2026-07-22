@@ -336,37 +336,37 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
                       </div>
 
                       <Input
-                        label="Your full name"
+                        label="Seu nome completo"
                         required
                         maxLength={100}
                         value={formData.name}
                         onChange={(e) => handleChange("name", e.target.value)}
-                        placeholder="Your full name"
+                        placeholder="Seu nome completo"
                         error={validationErrors.name}
                       />
 
                       <Select
-                        label="My decision"
+                        label="Minha decisão"
                         required
                         value={formData.decision}
                         onChange={(e) => handleChange("decision", e.target.value)}
                         options={decisionOptions}
-                        placeholder="Please select the appropriate response"
+                        placeholder="Selecione a resposta apropriada"
                         error={validationErrors.decision}
                       />
 
                       <Select
-                        label="Are you a member of the Adventist Church?"
+                        label="Você é membro da Igreja Adventista?"
                         required
                         value={formData.isAdventist}
                         onChange={(e) => handleChange("isAdventist", e.target.value)}
                         options={adventistOptions}
-                        placeholder="Select your membership status"
+                        placeholder="Selecione seu status de filiação"
                         error={validationErrors.isAdventist}
                       />
 
                       <Input
-                        label="Phone number"
+                        label="Número de telefone"
                         type="tel"
                         required
                         maxLength={20}
@@ -378,20 +378,20 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
                       />
 
                       <Select
-                        label="Please select your age group"
+                        label="Selecione sua faixa etária"
                         value={formData.ageGroup}
                         onChange={(e) => handleChange("ageGroup", e.target.value)}
                         options={ageOptions}
-                        placeholder="Select age group"
+                        placeholder="Selecione sua faixa etária"
                       />
 
                       <Input
-                        label="Street address"
+                        label="Endereço"
                         required
                         maxLength={200}
                         value={formData.address}
                         onChange={(e) => handleChange("address", e.target.value)}
-                        placeholder="Street address"
+                        placeholder="Endereço"
                         error={validationErrors.address}
                       />
                     </div>
@@ -404,11 +404,11 @@ export function DecisionCardModal({ isOpen, onClose }: DecisionCardModalProps) {
                       </div>
 
                       <Input
-                        label="What Parish/State do you live in?"
+                        label="Em que paróquia/estado você mora?"
                         maxLength={100}
                         value={formData.parish}
                         onChange={(e) => handleChange("parish", e.target.value)}
-                        placeholder="e.g., St. James"
+                        placeholder="ex.: São Tiago"
                       />
 
                       <Input

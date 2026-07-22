@@ -177,7 +177,7 @@ export default function ScriptureSearch() {
                 }
               }}
               onKeyDown={handleKeyDown}
-              placeholder="Search scripture..."
+              placeholder="Buscar escritura..."
               className="w-full pl-10 pr-4 py-2 bg-white dark:bg-stone-800 border border-amber-300 dark:border-amber-700 rounded-lg text-stone-700 dark:text-stone-300 placeholder-stone-400 focus:ring-2 focus:ring-amber-500 focus:border-transparent text-sm truncate"
               aria-label="Search scriptures"
             />
